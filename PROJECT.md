@@ -1,6 +1,6 @@
 # PROJECT.md — Documentação Viva do Somnitide
 
-> Atualizado após: **ETAPA 1 — Bootstrap backend + domínio + TDD**
+> Atualizado após: **ETAPA 2 — Persistência + Flyway + Repositories + Testcontainers**
 
 ---
 
@@ -36,9 +36,13 @@ dev.somnitide/
 │   ├── service/        # serviços de domínio (puro Java)
 │   └── exception/      # exceções de domínio
 ├── application/
+│   ├── port/           # interfaces de repositório (ports)
 │   └── usecase/        # casos de uso (orquestração)
 └── infrastructure/
-    ├── persistence/    # repositories JPA (ETAPA 2)
+    ├── persistence/
+    │   ├── entity/     # JPA entities (mapeamento infra)
+    │   ├── jpa/        # Spring Data JPA repositories
+    │   └── adapter/    # adapters: porta domínio → JPA
     └── web/            # controllers REST (ETAPA 3)
 ```
 
@@ -70,6 +74,21 @@ dev.somnitide/
 - `.gitignore` cobrindo `.env`, `target/`, IDE files
 - `.env.exemple` sanitizado (sem credenciais reais)
 - `.env` criado (gitignored) com credenciais Supabase reais
+
+---
+
+## Etapa 2 — O que foi feito
+
+### Resumo
+- Arquitetura Port/Adapter: JPA entities em `infrastructure/persistence/entity/`, interfaces de repositório em `application/port/`
+- Flyway migrations: `V1__create_user_preferences.sql` e `V2__create_sleep_sessions.sql`
+- `UserPreferencesEntity`, `SleepSessionEntity` com `fromDomain()` / `toDomain()`
+- Spring Data JPA: `UserPreferencesJpaRepository`, `SleepSessionJpaRepository` (com derived queries)
+- Adapters: `UserPreferencesRepositoryImpl`, `SleepSessionRepositoryImpl`
+- `application.properties` com datasource via env vars, Flyway habilitado, Security ainda excluída
+- Testcontainers no `pom.xml` + Surefire configurado para `*IT` classes
+- **7 testes de integração** (Testcontainers PostgreSQL) — pulados com `disabledWithoutDocker=true` quando Docker ausente
+- **Tests run: 15, Failures: 0, Errors: 0, Skipped: 7** → **BUILD SUCCESS** ✅
 
 ---
 
@@ -113,27 +132,31 @@ mvn -pl backend spring-boot:run
 | Spring Boot auto-config falha sem datasource | Excluiu `DataSourceAutoConfiguration`, `HibernateJpaAutoConfiguration`, `FlywayAutoConfiguration`, `SecurityAutoConfiguration` em `application.properties` para ETAPA 1 |
 | `.env.exemple` continha credenciais reais | Substituídas por placeholders; `.env` real criado e adicionado ao `.gitignore` |
 | `SleepCycleCalculator` precisa ser testável sem Spring | Adotou domínio puro Java, sem injeção de dependência do framework; `SleepCycleCalculator` é instanciado diretamente no teste com `new` |
+| Surefire não descobria classes `*IT` | Padrão do Surefire é `*Test`/`*Tests`; adicionado `<include>**/*IT.java</include>` na config do plugin |
+| `@DynamicPropertySource` com datasource ausente | Criado `src/test/resources/application.properties` com placeholder values sobrescritos em runtime pelo Testcontainers |
+| Docker indisponível na máquina de dev | Adicionado `@Testcontainers(disabledWithoutDocker = true)`: testes IT são `SKIPPED`, não `FAILED` |
 
 ---
 
-## Checklist Pós-ETAPA 1
+## Checklist Pós-ETAPA 2
 
-- [x] Estrutura Maven criada (root + backend)
-- [x] Domínio puro Java implementado
-- [x] `SleepCycleCalculator` implementado
-- [x] Testes unitários passando (8 casos)
-- [x] Sem imports Spring no pacote `domain/`
-- [x] `.env` criado e gitignored
-- [x] `.env.exemple` sanitizado
+- [x] Migrations Flyway criadas (V1 + V2)
+- [x] JPA entities com mapeamento bidirecional (fromDomain/toDomain)
+- [x] Domain port interfaces criadas (`application/port/`)
+- [x] Spring Data JPA repositories criados
+- [x] Repository adapters implementados
+- [x] `application.properties` com datasource, Flyway e JPA habilitados
+- [x] Testcontainers adicionado ao pom.xml
+- [x] 7 testes de integração escritos (Testcontainers PostgreSQL)
+- [x] Tests run: 15, Failures: 0, Errors: 0, Skipped: 7 ✅ (sem Docker)
 - [x] `PROJECT.md` atualizado
-- [x] Comandos documentados
 
 ---
 
 ## Roadmap das Etapas
 
 - **ETAPA 1** ✅ Bootstrap backend + domínio + TDD
-- **ETAPA 2** 🔲 Persistência + Flyway migrations + repositories + teste integração Testcontainers
+- **ETAPA 2** ✅ Persistência + Flyway migrations + repositories + Testcontainers
 - **ETAPA 3** 🔲 Use cases + controllers REST + validação JWT Supabase via JWKS
 - **ETAPA 4** 🔲 Bootstrap Angular + design system + Home (relógio UTC) + integração com endpoints
 - **ETAPA 5** 🔲 Preferences + History + UX (loading/error/empty states) + testes frontend
