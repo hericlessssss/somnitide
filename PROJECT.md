@@ -1,0 +1,140 @@
+# PROJECT.md — Documentação Viva do Somnitide
+
+> Atualizado após: **ETAPA 1 — Bootstrap backend + domínio + TDD**
+
+---
+
+## O que é este projeto
+
+Web-app de controle de ciclo do sono. O usuário clica "Vou dormir agora" e recebe sugestões de horários para acordar descansado, evitando interromper ciclos de sono profundo. Monorepo monolítico: Angular (frontend) + Spring Boot (backend) + PostgreSQL via Supabase.
+
+---
+
+## Decisões Técnicas
+
+### Migration: Flyway ✅ (vs Liquibase ❌)
+**Escolhido:** Flyway  
+**Motivo:** sintaxe SQL pura, integração nativa com Spring Boot auto-config, menor boilerplate para projetos novos. Liquibase requer XML/YAML de change sets, overhead desnecessário para MVP.  
+**Consequence:** migrations em `backend/src/main/resources/db/migration/V{n}__{descricao}.sql`.
+
+### UI: Angular Material ✅ (vs Tailwind ❌)
+**Escolhido:** Angular Material  
+**Motivo:** componentes prontos (cards, botões, forms) já integrados ao ecossistema Angular com a11y e dark mode built-in. Tailwind exige mais CSS custom para atingir o mesmo resultado.  
+**Status:** será configurado na ETAPA 4.
+
+### Domínio puro Java (sem Spring)
+Todo código em `dev.somnitide.domain` não tem import de `org.springframework`. Isso garante testabilidade com JUnit puro, sem Spring context booting.
+
+### Java 21 + Records
+`UserPreferences` e `WakeSuggestion` são `record` (imutáveis). `SleepSession` é classe mutável (estado evolui com `end()`).
+
+### Padrão de Pacotes
+```
+dev.somnitide/
+├── domain/
+│   ├── model/          # entidades e value objects (puro Java)
+│   ├── service/        # serviços de domínio (puro Java)
+│   └── exception/      # exceções de domínio
+├── application/
+│   └── usecase/        # casos de uso (orquestração)
+└── infrastructure/
+    ├── persistence/    # repositories JPA (ETAPA 2)
+    └── web/            # controllers REST (ETAPA 3)
+```
+
+### Recommended Cycle Logic
+- Se ciclo 5 está na faixa `[minCycles..maxCycles]` → recomendado = 5
+- Senão → recomendado = ciclo no índice **meio** da lista (`size / 2`)
+  - Exemplo: faixa 1..3 (size=3) → índice 1 → ciclo 2 é recomendado
+
+---
+
+## Etapa 1 — O que foi feito
+
+### Resumo
+- Criada estrutura Maven monorepo (root `pom.xml` + módulo `backend/pom.xml`)
+- Implementado **domínio puro** (zero Spring):
+  - `UserPreferences` (record com factory `defaults()`)
+  - `WakeSuggestion` (record imutável)
+  - `SleepSession` (entidade com `end()`)
+  - `DomainException` (RuntimeException com `errorCode`)
+  - `SleepCycleCalculator` (serviço: `validatePreferences` + `calculateWakeSuggestions`)
+- **8 testes unitários** escritos com TDD (Red → Green):
+  - Happy path com defaults (horários confirmados matematicamente)
+  - Edge case: minCycles == maxCycles → 1 sugestão
+  - Edge case: ciclo 5 fora da faixa → recomendado é o do meio
+  - 4 erros de preferências inválidas
+- 5 use-case stubs criados (ETAPA 3)
+- `SomnitideApplication.java` (main Spring Boot)
+- `application.properties` com auto-configs desabilitadas (sem DB/Security até ETAPA 2/3)
+- `.gitignore` cobrindo `.env`, `target/`, IDE files
+- `.env.exemple` sanitizado (sem credenciais reais)
+- `.env` criado (gitignored) com credenciais Supabase reais
+
+---
+
+## Env Vars
+
+| Variável | Descrição | Onde usada |
+|---|---|---|
+| `PUBLIC_SUPABASE_URL` | URL do projeto Supabase | Frontend (ETAPA 4) |
+| `PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY` | Chave publicável Supabase | Frontend (ETAPA 4) |
+| `ANON_KEY` | JWT anon do Supabase | Frontend (ETAPA 4) |
+| `DATABASE_URL` | JDBC URL do Postgres Supabase | Backend (ETAPA 2) |
+| `DATABASE_USERNAME` | Usuário do banco | Backend (ETAPA 2) |
+| `DATABASE_PASSWORD` | Senha do banco | Backend (ETAPA 2) |
+| `SUPABASE_JWKS_URI` | Endpoint JWKS para validar JWTs | Backend (ETAPA 3) |
+
+---
+
+## Comandos
+
+```bash
+# Rodar testes do backend (do diretório raiz)
+cd backend
+mvn test
+
+# Rodar testes do módulo backend a partir da raiz
+mvn -pl backend test
+
+# Compilar sem rodar testes
+mvn -pl backend compile -DskipTests
+
+# Rodar a aplicação (ETAPA 2+, com banco configurado)
+mvn -pl backend spring-boot:run
+```
+
+---
+
+## Hurdles & Fixes
+
+| Problema | Solução |
+|---|---|
+| Spring Boot auto-config falha sem datasource | Excluiu `DataSourceAutoConfiguration`, `HibernateJpaAutoConfiguration`, `FlywayAutoConfiguration`, `SecurityAutoConfiguration` em `application.properties` para ETAPA 1 |
+| `.env.exemple` continha credenciais reais | Substituídas por placeholders; `.env` real criado e adicionado ao `.gitignore` |
+| `SleepCycleCalculator` precisa ser testável sem Spring | Adotou domínio puro Java, sem injeção de dependência do framework; `SleepCycleCalculator` é instanciado diretamente no teste com `new` |
+
+---
+
+## Checklist Pós-ETAPA 1
+
+- [x] Estrutura Maven criada (root + backend)
+- [x] Domínio puro Java implementado
+- [x] `SleepCycleCalculator` implementado
+- [x] Testes unitários passando (8 casos)
+- [x] Sem imports Spring no pacote `domain/`
+- [x] `.env` criado e gitignored
+- [x] `.env.exemple` sanitizado
+- [x] `PROJECT.md` atualizado
+- [x] Comandos documentados
+
+---
+
+## Roadmap das Etapas
+
+- **ETAPA 1** ✅ Bootstrap backend + domínio + TDD
+- **ETAPA 2** 🔲 Persistência + Flyway migrations + repositories + teste integração Testcontainers
+- **ETAPA 3** 🔲 Use cases + controllers REST + validação JWT Supabase via JWKS
+- **ETAPA 4** 🔲 Bootstrap Angular + design system + Home (relógio UTC) + integração com endpoints
+- **ETAPA 5** 🔲 Preferences + History + UX (loading/error/empty states) + testes frontend
+- **ETAPA 6** 🔲 CI (lint/test/build) + docs finais + hardening
