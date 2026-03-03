@@ -1,1 +1,14 @@
-<router-outlet />
+<mat-toolbar color="primary" *ngIf="auth.isAuthenticated" class="main-toolbar">
+    <span routerLink="/" style="cursor: pointer">Somnitide</span>
+    <span class="spacer"></span>
+    <button mat-button routerLink="/">Home</button>
+    <button mat-button routerLink="/history">Histórico</button>
+    <button mat-button routerLink="/preferences">Preferências</button>
+    <button mat-icon-button (click)="auth.signOut()">
+        <mat-icon>logout</mat-icon>
+    </button>
+</mat-toolbar>
+
+<main [class.has-toolbar]="auth.isAuthenticated">
+    <router-outlet />
+</main>

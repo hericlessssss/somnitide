@@ -113,6 +113,19 @@ dev.somnitide/
 - **Home Page**: Implementada com layout Material, relógio em tempo real, botões de ação (Vou dormir/Acordei) e visualização de sugestões.
 - **Conexão Backend**: `ApiService` centralizado que injeta o JWT automaticamente em todas as chamadas.
 
+- **Conexão Backend**: `ApiService` centralizado que injeta o JWT automaticamente em todas as chamadas.
+
+---
+
+## Etapa 5 — O que foi feito
+
+### Resumo
+- **Preferências**: Criada página de configurações com formulário reativo para latência, duração do ciclo e limites de ciclos.
+- **Histórico**: Implementada lista de sessões passadas com visualização de avaliação (estrelas) e notas.
+- **Navegação Global**: Adicionado menu superior (Toolbar) fixo para transição entre as funcionalidades.
+- **UX**: Melhorados feedbacks visuais de carregamento e mensagens de erro via SnackBar.
+- **Roteamento**: Rotas `/history` e `/preferences` registradas e protegidas via `AuthGuard`.
+
 ---
 
 ## Env Vars
@@ -184,5 +197,5 @@ mvn -pl backend spring-boot:run
 - **ETAPA 2** ✅ Persistência + Flyway migrations + repositories + Testcontainers
 - **ETAPA 3** ✅ Use cases + controllers REST + validação JWT Supabase via JWKS
 - **ETAPA 4** ✅ Bootstrap Angular + design system + Home (relógio UTC) + integração com endpoints
-- **ETAPA 5** 🔲 Preferences + History + UX (loading/error/empty states) + testes frontend
+- **ETAPA 5** ✅ Preferences + History + UX (loading/error/empty states) + testes frontend
 - **ETAPA 6** 🔲 CI (lint/test/build) + docs finais + hardening
