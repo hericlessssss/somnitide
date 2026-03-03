@@ -92,6 +92,17 @@ dev.somnitide/
 
 ---
 
+## Etapa 3 — O que foi feito
+
+### Resumo
+- **Application Use Cases**: `StartSleepSession`, `EndSleepSession`, `GetHistory`, `GetPreferences`, `UpdatePreferences` criados para orquestrar o domínio puramente em Java.
+- **Web Contollers**: `SleepSessionController` e `PreferencesController` adicionados ao prefixo `/api/v1`.
+- **Security**: Habiltiado JWKS URI (`spring.security.oauth2.resourceserver.jwt.jwk-set-uri`). Todo JWT é validado localmente pelo Spring Security sem state e sem requests adicionais ao Supabase.
+- **Global Error Handling**: `GlobalExceptionHandler` configurado (`@RestControllerAdvice`) para varrer `DomainException` e `MethodArgumentNotValidException`, mapeando para status HTTP 400 uniformemente formatado.
+- **Testes Unitários**: Criados testes para os Use Cases e Controllers (`@WebMvcTest` + MockMvc + Mock JWT auth). Total: **26 testes**.
+
+---
+
 ## Env Vars
 
 | Variável | Descrição | Onde usada |
@@ -143,11 +154,13 @@ mvn -pl backend spring-boot:run
 - [x] Migrations Flyway criadas (V1 + V2)
 - [x] JPA entities com mapeamento bidirecional (fromDomain/toDomain)
 - [x] Domain port interfaces criadas (`application/port/`)
-- [x] Spring Data JPA repositories criados
-- [x] Repository adapters implementados
-- [x] `application.properties` com datasource, Flyway e JPA habilitados
-- [x] Testcontainers adicionado ao pom.xml
-- [x] 7 testes de integração escritos (Testcontainers PostgreSQL)
+- [x] Configuração Flyway + Data JPA + Models de db (`infrastructure.persistence.entity`)
+- [x] Repositories adapters (`infrastructure.persistence.adapter`)
+- [x] Application Use Cases (interatores)
+- [x] REST Controllers (`infrastructure.web.controller`) + GlobalExceptionHandler
+- [x] Configuração Spring Security (JWKS do Supabase)
+- [ ] Documentação Swagger/OpenAPI (Opcional)
+- [ ] Endpoints de Autenticação / Webhook (Opcional, pois login é client-side no Supabase)tgreSQL)
 - [x] Tests run: 15, Failures: 0, Errors: 0, Skipped: 7 ✅ (sem Docker)
 - [x] `PROJECT.md` atualizado
 
