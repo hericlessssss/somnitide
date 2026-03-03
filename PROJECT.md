@@ -103,6 +103,18 @@ dev.somnitide/
 
 ---
 
+## Etapa 4 — O que foi feito
+
+### Resumo
+- **Bootstrap Angular**: Inicializado projeto Angular 17+ em `frontend/` com componentes standalone e roteamento.
+- **Design System**: Angular Material adicionado (Indigo-Pink theme) para uma experiência premium.
+- **Integração Supabase**: Cliente Supabase configurado via `@supabase/supabase-js`.
+- **Autenticação**: `AuthService` reativo com Signals e `AuthGuard` para proteção de rotas.
+- **Home Page**: Implementada com layout Material, relógio em tempo real, botões de ação (Vou dormir/Acordei) e visualização de sugestões.
+- **Conexão Backend**: `ApiService` centralizado que injeta o JWT automaticamente em todas as chamadas.
+
+---
+
 ## Env Vars
 
 | Variável | Descrição | Onde usada |
@@ -170,7 +182,7 @@ mvn -pl backend spring-boot:run
 
 - **ETAPA 1** ✅ Bootstrap backend + domínio + TDD
 - **ETAPA 2** ✅ Persistência + Flyway migrations + repositories + Testcontainers
-- **ETAPA 3** 🔲 Use cases + controllers REST + validação JWT Supabase via JWKS
-- **ETAPA 4** 🔲 Bootstrap Angular + design system + Home (relógio UTC) + integração com endpoints
+- **ETAPA 3** ✅ Use cases + controllers REST + validação JWT Supabase via JWKS
+- **ETAPA 4** ✅ Bootstrap Angular + design system + Home (relógio UTC) + integração com endpoints
 - **ETAPA 5** 🔲 Preferences + History + UX (loading/error/empty states) + testes frontend
 - **ETAPA 6** 🔲 CI (lint/test/build) + docs finais + hardening
