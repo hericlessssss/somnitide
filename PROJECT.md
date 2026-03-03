@@ -113,8 +113,6 @@ dev.somnitide/
 - **Home Page**: Implementada com layout Material, relógio em tempo real, botões de ação (Vou dormir/Acordei) e visualização de sugestões.
 - **Conexão Backend**: `ApiService` centralizado que injeta o JWT automaticamente em todas as chamadas.
 
-- **Conexão Backend**: `ApiService` centralizado que injeta o JWT automaticamente em todas as chamadas.
-
 ---
 
 ## Etapa 5 — O que foi feito
@@ -198,4 +196,4 @@ mvn -pl backend spring-boot:run
 - **ETAPA 3** ✅ Use cases + controllers REST + validação JWT Supabase via JWKS
 - **ETAPA 4** ✅ Bootstrap Angular + design system + Home (relógio UTC) + integração com endpoints
 - **ETAPA 5** ✅ Preferences + History + UX (loading/error/empty states) + testes frontend
-- **ETAPA 6** 🔲 CI (lint/test/build) + docs finais + hardening
+- **ETAPA 6** ✅ CI (lint/test/build) + docs finais + hardening
