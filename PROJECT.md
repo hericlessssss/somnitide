@@ -86,6 +86,12 @@ dev.somnitide/
 - Spring Data JPA: `UserPreferencesJpaRepository`, `SleepSessionJpaRepository` (com derived queries)
 - Adapters: `UserPreferencesRepositoryImpl`, `SleepSessionRepositoryImpl`
 - `application.properties` com datasource via env vars, Flyway habilitado, Security ainda excluída
+- [x] Cadastro/Login com email/senha (Supabase Auth)
+- [x] Persistência de sessão e Guard de rotas
+- [x] Layout Base (Public vs Private)
+- [x] Correção de Erros de Auth (JWKS/ES256)
+- [x] Refinamento Visual (Header duplicado/Sobreposição)
+- [ ] Testes de integração (Etapa 3 - em andamento)
 - Testcontainers no `pom.xml` + Surefire configurado para `*IT` classes
 - **7 testes de integração** (Testcontainers PostgreSQL) — pulados com `disabledWithoutDocker=true` quando Docker ausente
 - **Tests run: 15, Failures: 0, Errors: 0, Skipped: 7** → **BUILD SUCCESS** ✅
@@ -135,7 +141,7 @@ dev.somnitide/
 | `DATABASE_URL` | JDBC URL do Postgres Supabase | Backend (ETAPA 2) |
 | `DATABASE_USERNAME` | Usuário do banco | Backend (ETAPA 2) |
 | `DATABASE_PASSWORD` | Senha do banco | Backend (ETAPA 2) |
-| `SUPABASE_JWKS_URI` | Endpoint JWKS para validar JWTs | Backend (ETAPA 3) |
+| `SUPABASE_JWKS_URI` | Endpoint JWKS para validar JWTs (`/.well-known/jwks.json`) | Backend (ETAPA 3) |
 
 ---
 

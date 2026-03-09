@@ -37,9 +37,10 @@ public class SleepSessionRepositoryImpl implements SleepSessionRepository {
 
     @Override
     public List<SleepSession> findClosedByUserId(String userId, int limit) {
+        int safeLimit = Math.max(1, limit);
         return jpaRepository
                 .findByUserIdAndEndedAtUtcIsNotNullOrderByStartedAtUtcDesc(
-                        userId, PageRequest.of(0, limit))
+                        userId, PageRequest.of(0, safeLimit))
                 .stream()
                 .map(SleepSessionEntity::toDomain)
                 .toList();

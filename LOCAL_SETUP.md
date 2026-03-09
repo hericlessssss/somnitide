@@ -24,7 +24,7 @@ ANON_KEY=your-anon-key
 DATABASE_URL=jdbc:postgresql://db.your-project.supabase.co:5432/postgres
 DATABASE_USERNAME=postgres
 DATABASE_PASSWORD=your-password
-SUPABASE_JWKS_URI=https://your-project.supabase.co/auth/v1/keys
+SUPABASE_JWKS_URI=https://your-project.supabase.co/auth/v1/.well-known/jwks.json
 ```
 
 ### 1.1 Supabase Auth Configuration (Mandatory)

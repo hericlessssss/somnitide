@@ -150,11 +150,17 @@ export class HomeComponent {
 
   constructor() {
     setInterval(() => this.currentTime.set(new Date()), 1000);
-    this.refreshStatus();
+
+    // Only refresh status once authenticated
+    effect(() => {
+      if (this.auth.isAuthenticated) {
+        this.refreshStatus();
+      }
+    });
   }
 
   refreshStatus() {
-    this.sleepService.getHistory(0).subscribe({
+    this.sleepService.getHistory(1).subscribe({
       next: (res) => {
         this.activeSession.set(res.activeSession);
       },

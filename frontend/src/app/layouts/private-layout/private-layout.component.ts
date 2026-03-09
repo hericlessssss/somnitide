@@ -59,7 +59,7 @@ import { Router } from '@angular/router';
   `
 })
 export class PrivateLayoutComponent {
-  private auth = inject(AuthService);
+  public auth = inject(AuthService);
   private router = inject(Router);
 
   async onLogout() {

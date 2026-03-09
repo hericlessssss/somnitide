@@ -13,8 +13,12 @@ export class ApiService {
     private auth = inject(AuthService);
 
     private get headers(): HttpHeaders {
+        const token = this.auth.session?.access_token;
+        if (!token) {
+            console.warn('ApiService: No access token available for request');
+        }
         return new HttpHeaders({
-            'Authorization': `Bearer ${this.auth.session?.access_token ?? ''}`,
+            'Authorization': `Bearer ${token ?? ''}`,
             'Content-Type': 'application/json'
         });
     }
