@@ -10,7 +10,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   standalone: true,
   imports: [
     CommonModule,
@@ -25,11 +25,11 @@ import { Router, RouterLink } from '@angular/router';
   template: `
     <mat-card class="auth-card">
       <mat-card-header>
-        <mat-card-title>Somnitide</mat-card-title>
-        <mat-card-subtitle>Seu assistente de sono</mat-card-subtitle>
+        <mat-card-title>Criar Conta</mat-card-title>
+        <mat-card-subtitle>Comece a melhorar suas noites agora</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+        <form (ngSubmit)="onRegister()" #registerForm="ngForm">
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>E-mail</mat-label>
             <input matInput type="email" name="email" [(ngModel)]="email" placeholder="exemplo@email.com" required email>
@@ -37,20 +37,25 @@ import { Router, RouterLink } from '@angular/router';
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Senha</mat-label>
-            <input matInput type="password" name="password" [(ngModel)]="password" required>
+            <input matInput type="password" name="password" [(ngModel)]="password" required minlength="6">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Confirmar Senha</mat-label>
+            <input matInput type="password" name="confirmPassword" [(ngModel)]="confirmPassword" required>
           </mat-form-field>
 
           <div class="auth-note">
             <p>Armazenamos suas sessões para personalizar e melhorar suas recomendações de sono. Não é necessário confirmar e-mail.</p>
           </div>
 
-          <button mat-flat-button color="primary" class="full-width" [disabled]="loading() || !loginForm.form.valid">
-            {{ loading() ? 'Entrando...' : 'Entrar' }}
+          <button mat-flat-button color="primary" class="full-width" [disabled]="loading() || !registerForm.form.valid">
+            {{ loading() ? 'Criando conta...' : 'Criar Conta' }}
           </button>
         </form>
       </mat-card-content>
       <mat-card-actions align="end">
-        <a routerLink="/register" class="auth-link">Não tem uma conta? Criar agora</a>
+        <a routerLink="/login" class="auth-link">Já tenho uma conta</a>
       </mat-card-actions>
     </mat-card>
   `,
@@ -86,30 +91,34 @@ import { Router, RouterLink } from '@angular/router';
     }
   `
 })
-export class LoginComponent {
+export class RegisterComponent {
   email = '';
   password = '';
+  confirmPassword = '';
   loading = signal(false);
 
   private auth = inject(AuthService);
   private snack = inject(MatSnackBar);
   private router = inject(Router);
 
-  async onLogin() {
+  async onRegister() {
+    if (this.password !== this.confirmPassword) {
+      this.snack.open('As senhas não conferem.', 'Fechar', { duration: 3000 });
+      return;
+    }
+
     this.loading.set(true);
-    const { error } = await this.auth.signInWithPassword(this.email, this.password);
+    const { data, error } = await this.auth.signUp(this.email, this.password);
     this.loading.set(false);
 
     if (error) {
       this.snack.open(`Erro: ${error.message}`, 'Fechar', { duration: 5000 });
+    } else if (data.session) {
+      this.snack.open('Conta criada e logada com sucesso!', 'OK', { duration: 5000 });
+      this.router.navigate(['/home']);
     } else {
-      this.router.navigate(['/home']);
-    }
-  }
-
-  constructor() {
-    if (this.auth.isAuthenticated) {
-      this.router.navigate(['/home']);
+      this.snack.open('Conta criada! Verifique seu e-mail para confirmar (ou peça ao admin para desativar a confirmação).', 'OK', { duration: 10000 });
+      this.router.navigate(['/login']);
     }
   }
 }

@@ -27,6 +27,14 @@ DATABASE_PASSWORD=your-password
 SUPABASE_JWKS_URI=https://your-project.supabase.co/auth/v1/keys
 ```
 
+### 1.1 Supabase Auth Configuration (Mandatory)
+
+To use the authentication flow, you must configure your Supabase Dashboard:
+1. Go to **Authentication** -> **Providers** -> **Email**.
+2. Ensure **Enable Email provider** is **ON**.
+3. Set **Confirm email** to **OFF** (to allow immediate login without clicking a link).
+4. Ensure **Enable password-based signup** is **ON**.
+
 ---
 
 ## 2. Running the Backend (Spring Boot)

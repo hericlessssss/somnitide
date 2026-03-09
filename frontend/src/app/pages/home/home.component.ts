@@ -10,29 +10,19 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-    selector: 'app-home',
-    standalone: true,
-    imports: [
-        CommonModule,
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        MatDividerModule,
-        MatListModule,
-        MatSnackBarModule
-    ],
-    template: `
+  selector: 'app-home',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDividerModule,
+    MatListModule,
+    MatSnackBarModule
+  ],
+  template: `
     <div class="home-container">
-      <header class="top-bar">
-        <h1>Somnitide</h1>
-        <div class="user-menu">
-          <span>{{ auth.user?.email }}</span>
-          <button mat-icon-button (click)="auth.signOut()">
-            <mat-icon>logout</mat-icon>
-          </button>
-        </div>
-      </header>
-
       <main class="content">
         <mat-card class="hero-card">
           <mat-card-header>
@@ -82,23 +72,11 @@ import { AuthService } from '../../services/auth.service';
       </main>
     </div>
   `,
-    styles: `
+  styles: `
     .home-container {
-      min-height: 100vh;
-      background-color: #f5f5f5;
+      min-height: calc(100vh - 64px);
+      background-color: #f8f9fa;
     }
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 24px;
-      background-color: #3f51b5;
-      color: white;
-      height: 64px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .top-bar h1 { margin: 0; font-weight: 300; }
-    .user-menu { display: flex; align-items: center; gap: 12px; }
 
     .content {
       max-width: 800px;
@@ -119,10 +97,25 @@ import { AuthService } from '../../services/auth.service';
     }
     .current-time {
       text-align: center;
-      margin-bottom: 24px;
+      margin-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
-    .current-time .label { display: block; font-size: 0.9rem; color: #666; text-transform: uppercase; }
-    .current-time .time { font-size: 4rem; font-weight: 200; color: #3f51b5; }
+    .current-time .label { 
+      font-size: 0.8rem; 
+      color: #7986cb; 
+      text-transform: uppercase; 
+      letter-spacing: 1.5px;
+      font-weight: 500;
+    }
+    .current-time .time { 
+      font-size: 5rem; 
+      font-weight: 100; 
+      color: #1a237e; 
+      line-height: 1;
+      font-family: 'Roboto', sans-serif;
+    }
 
     .suggestions-section h3 {
       font-weight: 400;
@@ -147,57 +140,57 @@ import { AuthService } from '../../services/auth.service';
   `
 })
 export class HomeComponent {
-    auth = inject(AuthService);
-    private sleepService = inject(SleepService);
-    private snack = inject(MatSnackBar);
+  auth = inject(AuthService);
+  private sleepService = inject(SleepService);
+  private snack = inject(MatSnackBar);
 
-    currentTime = signal(new Date());
-    activeSession = signal<SessionResponse | null>(null);
-    loading = signal(false);
+  currentTime = signal(new Date());
+  activeSession = signal<SessionResponse | null>(null);
+  loading = signal(false);
 
-    constructor() {
-        setInterval(() => this.currentTime.set(new Date()), 1000);
-        this.refreshStatus();
-    }
+  constructor() {
+    setInterval(() => this.currentTime.set(new Date()), 1000);
+    this.refreshStatus();
+  }
 
-    refreshStatus() {
-        this.sleepService.getHistory(0).subscribe({
-            next: (res) => {
-                this.activeSession.set(res.activeSession);
-            },
-            error: (err) => console.error('Failed to load status', err)
-        });
-    }
+  refreshStatus() {
+    this.sleepService.getHistory(0).subscribe({
+      next: (res) => {
+        this.activeSession.set(res.activeSession);
+      },
+      error: (err) => console.error('Failed to load status', err)
+    });
+  }
 
-    startSession() {
-        this.loading.set(true);
-        this.sleepService.startSession().subscribe({
-            next: (res) => {
-                this.activeSession.set(res);
-                this.loading.set(false);
-                this.snack.open('Bons sonhos! Sessão iniciada.', 'OK', { duration: 3000 });
-            },
-            error: (err) => {
-                this.loading.set(false);
-                this.snack.open('Erro ao iniciar sessão.', 'Fechar', { duration: 5000 });
-            }
-        });
-    }
+  startSession() {
+    this.loading.set(true);
+    this.sleepService.startSession().subscribe({
+      next: (res) => {
+        this.activeSession.set(res);
+        this.loading.set(false);
+        this.snack.open('Bons sonhos! Sessão iniciada.', 'OK', { duration: 3000 });
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this.snack.open('Erro ao iniciar sessão.', 'Fechar', { duration: 5000 });
+      }
+    });
+  }
 
-    endSession() {
-        // For simplicity, we assume 4 stars and no note for now. 
-        // In a real app we'd show a dialog.
-        this.loading.set(true);
-        this.sleepService.endSession(4, 'Acordei via web app').subscribe({
-            next: () => {
-                this.activeSession.set(null);
-                this.loading.set(false);
-                this.snack.open('Bem-vindo de volta! Sessão finalizada.', 'OK', { duration: 3000 });
-            },
-            error: (err) => {
-                this.loading.set(false);
-                this.snack.open('Erro ao finalizar sessão.', 'Fechar', { duration: 5000 });
-            }
-        });
-    }
+  endSession() {
+    // For simplicity, we assume 4 stars and no note for now. 
+    // In a real app we'd show a dialog.
+    this.loading.set(true);
+    this.sleepService.endSession(4, 'Acordei via web app').subscribe({
+      next: () => {
+        this.activeSession.set(null);
+        this.loading.set(false);
+        this.snack.open('Bem-vindo de volta! Sessão finalizada.', 'OK', { duration: 3000 });
+      },
+      error: (err) => {
+        this.loading.set(false);
+        this.snack.open('Erro ao finalizar sessão.', 'Fechar', { duration: 5000 });
+      }
+    });
+  }
 }

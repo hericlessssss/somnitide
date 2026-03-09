@@ -31,17 +31,29 @@ export class AuthService {
     }
 
     async signOut() {
-        await this.supabase.client.auth.signOut();
+        const { error } = await this.supabase.client.auth.signOut();
+        if (!error) {
+            this._session.set(null);
+        }
+        return { error };
     }
 
-    // Basic email/password sign-in for testing/dev
-    async signIn(email: string) {
-        const { error } = await this.supabase.client.auth.signInWithOtp({
+    async signInWithPassword(email: string, password: string) {
+        const { data, error } = await this.supabase.client.auth.signInWithPassword({
             email,
-            options: {
-                emailRedirectTo: window.location.origin
-            }
+            password
         });
-        return { error };
+        if (data.session) {
+            this._session.set(data.session);
+        }
+        return { data, error };
+    }
+
+    async signUp(email: string, password: string) {
+        const { data, error } = await this.supabase.client.auth.signUp({
+            email,
+            password
+        });
+        return { data, error };
     }
 }

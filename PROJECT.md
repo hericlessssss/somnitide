@@ -1,6 +1,6 @@
 # PROJECT.md — Documentação Viva do Somnitide
 
-> Atualizado após: **ETAPA 5 — Preferências + Histórico + UX + Fixes Locais**
+> Atualizado após: **Frontend ETAPA 1 — Recriação Auth (Email/Senha) + Rotas + Layouts**
 
 ---
 
@@ -106,12 +106,11 @@ dev.somnitide/
 ## Etapa 4 — O que foi feito
 
 ### Resumo
-- **Bootstrap Angular**: Inicializado projeto Angular 17+ em `frontend/` com componentes standalone e roteamento.
-- **Design System**: Angular Material adicionado (Indigo-Pink theme) para uma experiência premium.
-- **Integração Supabase**: Cliente Supabase configurado via `@supabase/supabase-js`.
-- **Autenticação**: `AuthService` reativo com Signals e `AuthGuard` para proteção de rotas.
-- **Home Page**: Implementada com layout Material, relógio em tempo real, botões de ação (Vou dormir/Acordei) e visualização de sugestões.
-- **Conexão Backend**: `ApiService` centralizado que injeta o JWT automaticamente em todas as chamadas.
+- **Refatoração de Autenticação**: Substituído Magic Link por fluxo completo de Email/Senha (`signUp`, `signInWithPassword`).
+- **Arquitetura de Layouts**: Implementada separação entre `PublicLayout` (Auth) e `PrivateLayout` (App Shell com Toolbar).
+- **Roteamento Organizado**: Rotas aninhadas por layout; `/login` e `/register` são públicas, demais são protegidas por `AuthGuard`.
+- **UX**: Adicionadas notas de privacidade e feedback visual (loading/snackbars) nos formulários de auth.
+- **TDD**: Cobertura de testes para `AuthService`, `AuthGuard`, `LoginComponent`, `RegisterComponent` e Layouts (Vitest).
 
 ---
 
@@ -177,6 +176,9 @@ mvn -pl backend spring-boot:run
 | Erro de `./mvnw` (JAR ausente) | Restaurado `maven-wrapper.jar` usando `mvn wrapper:wrapper -Dtype=bin`. |
 | Erro "missing table user_preferences" | O Flyway baselined em v1 e ignorou scripts. Corrigido com `baseline-version=0` e `hibernate.ddl-auto=update` no `application.properties`. |
 | Erro "required a bean of type SleepCycleCalculator" | O serviço de domínio é "Pure Java" e não tinha anotação `@Service`. Criado `DomainConfig` para registrá-lo como bean. |
+| `align="center"` inválido em `mat-card-actions` | A propriedade `align` só aceita `"start"` ou `"end"`. Corrigido para `"end"`. |
+| Mock de `MatSnackBar` falha em standalone components | Standalone components podem re-prover o serviço via imports de módulos. Resolvido usando `TestBed.overrideComponent` com `add.providers`. |
+| Redirecionamento cíclico no AuthGuard | Ajustada lógica de redirecionamento para garantir que usuário logado caia em `/home` e deslogado em `/login`. |
 
 ---
 
