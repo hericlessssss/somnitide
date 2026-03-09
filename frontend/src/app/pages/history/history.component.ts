@@ -20,166 +20,224 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
   ],
   template: `
     <div class="history-container">
-      <header class="section-header">
-        <h1>Seu Histórico de Sono</h1>
-        <p>Acompanhe a jornada para uma vida mais descansada.</p>
+      <header class="section-header fade-in">
+        <h1>Seu Histórico</h1>
+        <p>A jornada para o seu melhor despertar.</p>
       </header>
 
-      <div *ngIf="loading() && history().length === 0" class="status-state">
+      <div *ngIf="loading() && history().length === 0" class="status-state fade-in">
+        <div class="loading-shimmer"></div>
         <p>Buscando suas noites de descanso...</p>
       </div>
 
-      <div *ngIf="!loading() && history().length === 0" class="status-state empty">
-        <mat-icon>nights_stay</mat-icon>
+      <div *ngIf="!loading() && history().length === 0" class="status-state empty fade-in">
+        <div class="empty-icon-wrapper">
+          <mat-icon ripple>nights_stay</mat-icon>
+        </div>
+        <h3>O silêncio das estrelas</h3>
         <p>Sua jornada começa aqui. Finalize sua primeira sessão para ver seu histórico!</p>
       </div>
 
-      <div class="history-list">
-        <mat-card *ngFor="let session of history()" class="history-card">
-          <mat-card-header>
-            <div mat-card-avatar class="session-avatar" [class.good]="session.qualityRating && session.qualityRating >= 3">
-              <mat-icon>{{ session.qualityRating && session.qualityRating >= 3 ? 'sentiment_satisfied' : 'sentiment_dissatisfied' }}</mat-icon>
-            </div>
-            <mat-card-title>{{ session.startedAtUtc | date:'dd ' }} de {{ session.startedAtUtc | date:'MMMM' }}</mat-card-title>
-            <mat-card-subtitle>
-              {{ session.startedAtUtc | date:'HH:mm' }} às {{ session.endedAtUtc | date:'HH:mm' }}
-            </mat-card-subtitle>
-          </mat-card-header>
-
-          <mat-card-content class="card-body">
-            <div class="metrics-row">
-              <div class="rating-badge" *ngIf="session.qualityRating">
-                <div class="stars">
-                  <mat-icon *ngFor="let star of [1,2,3,4,5]" [class.filled]="session.qualityRating >= star">
-                    {{ session.qualityRating >= star ? 'star' : 'star_outline' }}
-                  </mat-icon>
+      <div class="history-timeline" *ngIf="history().length > 0">
+        <div *ngFor="let session of history()" class="timeline-item fade-in">
+          <div class="timeline-connector"></div>
+          
+          <mat-card class="history-card" 
+            [class.border-good]="session.qualityRating && session.qualityRating >= 4"
+            [class.border-regular]="session.qualityRating === 3"
+            [class.border-bad]="session.qualityRating && session.qualityRating <= 2">
+            
+            <div class="card-header-premium">
+              <div class="session-avatar" 
+                [class.avatar-good]="session.qualityRating && session.qualityRating >= 4"
+                [class.avatar-regular]="session.qualityRating === 3"
+                [class.avatar-bad]="session.qualityRating && session.qualityRating <= 2">
+                <mat-icon>{{ getQualityIcon(session.qualityRating) }}</mat-icon>
+              </div>
+              <div class="header-text">
+                <div class="card-title-premium">{{ session.startedAtUtc | date:'dd' }} de {{ session.startedAtUtc | date:'MMMM' }}</div>
+                <div class="card-subtitle-premium">
+                  {{ session.startedAtUtc | date:'HH:mm' }} — {{ session.endedAtUtc | date:'HH:mm' }}
                 </div>
-                <span class="rating-text">Qualidade</span>
               </div>
             </div>
 
-            <div *ngIf="session.note" class="note-box">
-              <mat-icon>short_text</mat-icon>
-              <p>"{{ session.note }}"</p>
-            </div>
-          </mat-card-content>
-        </mat-card>
+            <mat-card-content class="card-body">
+              <div class="metrics-row">
+                <div class="rating-badge" *ngIf="session.qualityRating">
+                  <div class="stars">
+                    <mat-icon *ngFor="let star of [1,2,3,4,5]" [class.filled]="session.qualityRating >= star">
+                      {{ session.qualityRating >= star ? 'star' : 'star_outline' }}
+                    </mat-icon>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="session.note" class="note-box">
+                <p>"{{ session.note }}"</p>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
       </div>
     </div>
   `,
   styles: [`
     .history-container {
-      max-width: 700px;
-      margin: 48px auto;
-      padding: 0 24px;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--space-2xl) var(--space-md);
+      padding-bottom: 120px;
     }
     .section-header {
-      margin-bottom: 48px;
+      margin-bottom: var(--space-2xl);
       text-align: center;
     }
     .section-header h1 { 
-      font-weight: 300; 
-      font-size: 2.8rem; 
-      color: #1a237e; 
-      margin-bottom: 12px; 
-      letter-spacing: -0.5px;
+      font-family: var(--font-title);
+      font-weight: 800; 
+      font-size: 2.2rem; 
+      color: var(--color-text); 
+      margin-bottom: var(--space-xs);
+      letter-spacing: -1px;
     }
     .section-header p { 
-      color: #7986cb; 
-      font-size: 1.1rem;
-      font-weight: 400;
+      color: var(--color-text-muted); 
+      font-size: 1rem;
+      font-weight: 500;
     }
 
-    .status-state {
+    /* Timeline Structure */
+    .history-timeline {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      margin-top: 80px;
-      color: #999;
-      text-align: center;
+      gap: var(--space-lg);
+      position: relative;
     }
-    .status-state.empty mat-icon { 
-      font-size: 5rem; 
-      height: 5rem; 
-      width: 5rem; 
-      color: #e8eaf6;
-      margin-bottom: 24px; 
-    }
-    .status-state p { font-size: 1.1rem; max-width: 300px; }
 
-    .history-list {
+    .timeline-item {
+      position: relative;
       display: flex;
-      flex-direction: column;
-      gap: 24px;
+      gap: var(--space-lg);
     }
+
+    .timeline-connector {
+      position: absolute;
+      left: 24px;
+      top: 60px;
+      bottom: -20px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--color-border), transparent);
+      opacity: 0.5;
+    }
+    .timeline-item:last-child .timeline-connector { display: none; }
+
+    /* Premium Glass Cards */
     .history-card {
-      border-radius: 20px;
-      padding: 12px;
-      border: 1px solid #f0f2f5;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-      transition: all 0.3s ease;
+      flex: 1;
+      background: rgba(17, 24, 38, 0.4) !important;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--color-border) !important;
+      border-left-width: 4px !important;
+      border-radius: var(--radius-lg);
+      padding: var(--space-md);
+      transition: all var(--transition-normal);
+      overflow: hidden;
     }
     .history-card:hover {
-      box-shadow: 0 8px 30px rgba(26, 35, 126, 0.08);
-      transform: translateY(-2px);
+      transform: translateX(4px);
+      background: rgba(17, 24, 38, 0.6) !important;
+      border-color: rgba(255, 255, 255, 0.15) !important;
     }
+
+    /* Quality Semantic Borders */
+    .border-good { border-left-color: var(--color-primary) !important; }
+    .border-regular { border-left-color: var(--color-warning) !important; }
+    .border-bad { border-left-color: var(--color-danger) !important; }
+
     .session-avatar {
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: #ffebee;
-      color: #e53935;
-      border-radius: 12px;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--color-surface-2);
+      transition: all var(--transition-fast);
     }
-    .session-avatar.good {
-      background-color: #e8eaf6;
-      color: #3f51b5;
-    }
-    .card-body {
-      padding: 16px 8px 8px;
-    }
-    .metrics-row {
+    .avatar-good { color: var(--color-primary); background: rgba(66, 214, 198, 0.1); }
+    .avatar-regular { color: var(--color-warning); background: rgba(255, 200, 87, 0.1); }
+    .avatar-bad { color: var(--color-danger); background: rgba(255, 92, 122, 0.1); }
+
+    .card-header-premium {
       display: flex;
       align-items: center;
-      gap: 20px;
-      margin-bottom: 16px;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-md);
     }
-    .rating-badge {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+
+    .header-text { display: flex; flex-direction: column; gap: 4px; }
+    .card-title-premium { 
+      font-family: var(--font-title); 
+      font-weight: 700;
+      font-size: 1.2rem; 
+      color: var(--color-text); 
+      margin: 0;
+      line-height: 1.2;
     }
-    .stars { display: flex; color: #e0e0e0; gap: 2px; }
-    .stars mat-icon { font-size: 22px; width: 22px; height: 22px; }
-    .stars mat-icon.filled { color: #fbc02d; }
-    .rating-text {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #999;
-      font-weight: 600;
+    .card-subtitle-premium { 
+      color: var(--color-text-muted); 
+      font-size: 0.85rem;
+      font-weight: 600; 
     }
+
+    .card-body { padding: var(--space-md) 0 0; }
+    
+    .stars { display: flex; color: rgba(255,255,255,0.05); gap: 2px; }
+    .stars mat-icon { font-size: 18px; width: 18px; height: 18px; }
+    .stars mat-icon.filled { color: var(--color-warning); filter: drop-shadow(0 0 4px rgba(255, 200, 87, 0.3)); }
 
     .note-box {
-      display: flex;
-      gap: 12px;
-      background-color: #f8f9fa;
-      padding: 16px;
-      border-radius: 12px;
-      align-items: flex-start;
+      margin-top: var(--space-md);
+      background: rgba(255, 255, 255, 0.03);
+      padding: var(--space-md);
+      border-radius: var(--radius-md);
     }
-    .note-box mat-icon { color: #999; font-size: 20px; width: 20px; height: 20px; }
     .note-box p {
       margin: 0;
+      color: var(--color-text-muted);
       font-style: italic;
-      color: #444;
-      line-height: 1.5;
-      font-size: 0.95rem;
+      line-height: 1.4;
+      font-size: 0.9rem;
     }
 
-    mat-card-title { font-size: 1.25rem !important; color: #1a237e; }
-    mat-card-subtitle { color: #7986cb; font-weight: 500; }
+    /* Empty State Refinement */
+    .status-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 100px var(--space-xl);
+      text-align: center;
+      color: var(--color-text-muted);
+    }
+    .empty-icon-wrapper {
+      width: 80px;
+      height: 80px;
+      background: var(--color-surface-2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--space-xl);
+      border: 1px solid var(--color-border);
+    }
+    .empty-icon-wrapper mat-icon { font-size: 40px; width: 40px; height: 40px; opacity: 0.5; }
+    .status-state h3 { color: var(--color-text); font-weight: 700; margin-bottom: var(--space-sm); }
+    .status-state p { max-width: 320px; line-height: 1.6; }
   `]
+
 })
 export class HistoryComponent implements OnInit {
   private sleepService = inject(SleepService);
@@ -203,5 +261,12 @@ export class HistoryComponent implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  getQualityIcon(rating: number | null): string {
+    if (!rating) return 'sentiment_neutral';
+    if (rating >= 4) return 'sentiment_very_satisfied';
+    if (rating === 3) return 'sentiment_satisfied';
+    return 'sentiment_dissatisfied';
   }
 }

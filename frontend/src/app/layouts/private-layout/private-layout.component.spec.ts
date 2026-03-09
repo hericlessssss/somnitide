@@ -28,14 +28,24 @@ describe('PrivateLayoutComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should render title and links', () => {
+    it('should render title and navigation links', () => {
         const fixture = TestBed.createComponent(PrivateLayoutComponent);
         fixture.detectChanges();
         const compiled = fixture.nativeElement as HTMLElement;
-        expect(compiled.querySelector('span[routerLink="/home"]')?.textContent).toContain('Somnitide');
-        expect(compiled.querySelector('button[routerLink="/history"]')).toBeTruthy();
-        expect(compiled.querySelector('button[routerLink="/preferences"]')).toBeTruthy();
+
+        // Brand
+        expect(compiled.querySelector('.app-title')?.textContent).toContain('SomniTide');
+
+        // Desktop Nav
+        expect(compiled.querySelector('.desktop-nav a[routerLink="/home"]')).toBeTruthy();
+        expect(compiled.querySelector('.desktop-nav a[routerLink="/history"]')).toBeTruthy();
+        expect(compiled.querySelector('.desktop-nav a[routerLink="/insights"]')).toBeTruthy();
+
+        // Mobile Nav
+        expect(compiled.querySelector('.mobile-nav a[routerLink="/home"]')).toBeTruthy();
+        expect(compiled.querySelector('.mobile-nav a[routerLink="/history"]')).toBeTruthy();
     });
+
 
     it('should call signOut and navigate on logout click', async () => {
         const fixture = TestBed.createComponent(PrivateLayoutComponent);

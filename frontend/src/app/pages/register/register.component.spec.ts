@@ -8,25 +8,18 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('RegisterComponent', () => {
     let mockAuthService: any;
-    let mockSnackBar: any;
 
     beforeEach(async () => {
         mockAuthService = {
             signUp: vi.fn()
-        };
-        mockSnackBar = {
-            open: vi.fn()
         };
 
         await TestBed.configureTestingModule({
             imports: [RegisterComponent, NoopAnimationsModule],
             providers: [
                 { provide: AuthService, useValue: mockAuthService },
-                { provide: MatSnackBar, useValue: mockSnackBar },
                 provideRouter([])
             ]
-        }).overrideComponent(RegisterComponent, {
-            add: { providers: [{ provide: MatSnackBar, useValue: mockSnackBar }] }
         }).compileComponents();
     });
 
@@ -36,7 +29,7 @@ describe('RegisterComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('should call signUp on submit if passwords match', async () => {
+    it('should call signUp on submit if passwords match and are valid', async () => {
         const fixture = TestBed.createComponent(RegisterComponent);
         const component = fixture.componentInstance;
         const router = TestBed.inject(Router);
@@ -45,25 +38,51 @@ describe('RegisterComponent', () => {
         component.email = 'new@example.com';
         component.password = 'password123';
         component.confirmPassword = 'password123';
-        mockAuthService.signUp.mockResolvedValue({ data: {}, error: null });
+        mockAuthService.signUp.mockResolvedValue({ data: { session: {} }, error: null });
 
         await component.onRegister();
 
         expect(mockAuthService.signUp).toHaveBeenCalledWith('new@example.com', 'password123');
         expect(navigateSpy).toHaveBeenCalledWith(['/home']);
+        expect(component.registerError()).toBeNull();
     });
 
-    it('should show error if passwords do not match', async () => {
+    it('should set registerError if passwords do not match', async () => {
         const fixture = TestBed.createComponent(RegisterComponent);
         const component = fixture.componentInstance;
 
         component.password = 'password123';
         component.confirmPassword = 'different';
 
-        const snack = TestBed.inject(MatSnackBar);
         await component.onRegister();
 
-        expect(snack.open).toHaveBeenCalledWith('As senhas não conferem.', expect.anything(), expect.anything());
+        expect(component.registerError()).toBe('As senhas não conferem.');
         expect(mockAuthService.signUp).not.toHaveBeenCalled();
+    });
+
+    it('should set registerError if password is too short', async () => {
+        const fixture = TestBed.createComponent(RegisterComponent);
+        const component = fixture.componentInstance;
+
+        component.password = '123';
+        component.confirmPassword = '123';
+
+        await component.onRegister();
+
+        expect(component.registerError()).toBe('A senha deve ter pelo menos 6 caracteres.');
+        expect(mockAuthService.signUp).not.toHaveBeenCalled();
+    });
+
+    it('should toggle visibility signals when requested', () => {
+        const fixture = TestBed.createComponent(RegisterComponent);
+        const component = fixture.componentInstance;
+
+        expect(component.hidePassword()).toBe(true);
+        component.hidePassword.set(false);
+        expect(component.hidePassword()).toBe(false);
+
+        expect(component.hideConfirmPassword()).toBe(true);
+        component.hideConfirmPassword.set(false);
+        expect(component.hideConfirmPassword()).toBe(false);
     });
 });

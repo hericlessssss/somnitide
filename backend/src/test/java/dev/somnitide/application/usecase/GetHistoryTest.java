@@ -4,7 +4,6 @@ import dev.somnitide.application.port.SleepSessionRepository;
 import dev.somnitide.domain.model.SleepSession;
 import dev.somnitide.domain.model.UserPreferences;
 import dev.somnitide.domain.service.SleepCycleCalculator;
-import dev.somnitide.infrastructure.web.dto.response.SessionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

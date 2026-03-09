@@ -1,5 +1,245 @@
-/* You can add global styles to this file, and also import other style files */
 @import "@angular/material/prebuilt-themes/indigo-pink.css";
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+:root {
+  /* --- Premium Design Tokens --- */
+  --color-bg: #0B0F14;
+  --color-surface: #111826;
+  --color-surface-2: #0F1622;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-text: rgba(255, 255, 255, 0.92);
+  --color-text-muted: rgba(255, 255, 255, 0.64);
+  --color-placeholder: rgba(255, 255, 255, 0.42);
+
+  --color-primary: #42D6C6;
+  --color-primary-600: #2CC7B6;
+  --color-primary-glow: rgba(66, 214, 198, 0.22);
+
+  --color-danger: #FF5C7A;
+  --color-warning: #FFC857;
+  --color-success: #3DE19A;
+
+  /* Shadows */
+  --shadow-1: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 16px 48px rgba(0, 0, 0, 0.45);
+  --shadow-3: 0 24px 64px rgba(0, 0, 0, 0.55);
+
+  /* Radius */
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 12px;
+
+  /* Legacy Mapping (for compatibility during migration) */
+  --primary: var(--color-primary);
+  --primary-hover: var(--color-primary-600);
+  --accent: #6366F1;
+  /* Keeping indigo for now */
+  --bg-main: var(--color-bg);
+  --bg-surface: var(--color-surface);
+  --bg-surface-hover: #1A2234;
+  --text-main: var(--color-text);
+  --text-header: var(--color-text);
+  --text-muted: var(--color-text-muted);
+  --border: var(--color-border);
+
+  --font-main: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  --font-title: 'Plus Jakarta Sans', sans-serif;
+
+  /* Spacing Scale */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+.app-title {
+  font-family: var(--font-title);
+  color: var(--text-header);
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Material Overrides for Dark Theme */
+.mat-toolbar.mat-primary {
+  background: var(--bg-surface) !important;
+  color: var(--text-header) !important;
+  border-bottom: 1px solid var(--border);
+}
+
+.mat-mdc-card {
+  background-color: var(--bg-surface) !important;
+  color: var(--text-main) !important;
+  border-radius: var(--radius-md) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+/* Fix for Button and Input contrast */
+.mat-mdc-button.mat-primary,
+.mat-mdc-unelevated-button.mat-primary,
+.mat-mdc-raised-button.mat-primary,
+.mat-mdc-flat-button.mat-primary {
+  --mdc-filled-button-container-color: var(--primary) !important;
+  --mdc-filled-button-label-text-color: var(--text-on-primary) !important;
+  background-color: var(--primary) !important;
+  color: var(--text-on-primary) !important;
+}
+
+/* --- Material Form Field Overrides (Robust Contrast) --- */
+.mat-mdc-form-field {
+  width: 100%;
+  margin-bottom: var(--space-xs);
+}
+
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input {
+  color: #FFFFFF !important;
+}
+
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-floating-label {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label {
+  color: var(--primary) !important;
+}
+
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Ensure labels are visible even when floating */
+.mat-mdc-form-field.mat-form-field-appearance-outline .mdc-floating-label {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.mat-mdc-form-field.mat-form-field-appearance-outline.mat-focused .mdc-floating-label {
+  color: var(--primary) !important;
+}
+
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-input-text-color: #FFFFFF !important;
+  --mdc-outlined-text-field-label-text-color: rgba(255, 255, 255, 0.8) !important;
+  --mdc-outlined-text-field-outline-color: var(--border) !important;
+  --mdc-outlined-text-field-focus-outline-color: var(--primary) !important;
+  --mdc-outlined-text-field-focus-label-text-color: var(--primary) !important;
+  --mdc-outlined-text-field-hover-outline-color: var(--text-muted) !important;
+  --mat-mdc-form-field-floating-label-scale: 0.75;
+}
+
+/* Ensure input text is bright */
+.mat-mdc-form-field input {
+  color: var(--text-main) !important;
+  caret-color: var(--primary) !important;
+}
+
+/* Placeholder fix */
+::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 0.5 !important;
+}
+
+/* Material Snack Bar Fix */
+.mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: var(--bg-surface);
+  --mdc-snackbar-supporting-text-color: var(--text-main);
+  --mat-mdc-snack-bar-button-color: var(--primary);
+}
+
+/* Global Link Styles */
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: opacity var(--transition-fast);
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+/* Micro-interactions */
+@media (prefers-reduced-motion: no-preference) {
+  .clickable {
+    transition: transform var(--transition-fast), background-color var(--transition-fast), opacity var(--transition-fast);
+  }
+
+  .clickable:active {
+    transform: scale(0.97);
+  }
+
+  .fade-in {
+    animation: fadeIn var(--transition-normal);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Base Component Classes */
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--text-on-primary);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-lg);
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+.text-primary {
+  color: var(--primary) !important;
+}
+
+.text-accent {
+  color: var(--accent) !important;
+}
+
+.full-height {
+  min-height: 100vh;
+}

@@ -8,26 +8,19 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('LoginComponent', () => {
     let mockAuthService: any;
-    let mockSnackBar: any;
 
     beforeEach(async () => {
         mockAuthService = {
             isAuthenticated: false,
             signInWithPassword: vi.fn()
         };
-        mockSnackBar = {
-            open: vi.fn()
-        };
 
         await TestBed.configureTestingModule({
             imports: [LoginComponent, NoopAnimationsModule],
             providers: [
                 { provide: AuthService, useValue: mockAuthService },
-                { provide: MatSnackBar, useValue: mockSnackBar },
                 provideRouter([])
             ]
-        }).overrideComponent(LoginComponent, {
-            add: { providers: [{ provide: MatSnackBar, useValue: mockSnackBar }] }
         }).compileComponents();
     });
 
@@ -51,17 +44,29 @@ describe('LoginComponent', () => {
 
         expect(mockAuthService.signInWithPassword).toHaveBeenCalledWith('test@example.com', 'password123');
         expect(navigateSpy).toHaveBeenCalledWith(['/home']);
+        expect(component.loginError()).toBeNull();
     });
 
-    it('should show snackbar on error', async () => {
+    it('should set loginError signal on auth failure', async () => {
         const fixture = TestBed.createComponent(LoginComponent);
         const component = fixture.componentInstance;
 
-        mockAuthService.signInWithPassword.mockResolvedValue({ data: {}, error: { message: 'Failed' } });
+        mockAuthService.signInWithPassword.mockResolvedValue({
+            data: {},
+            error: { status: 400, message: 'Invalid login credentials' }
+        });
 
-        const snack = TestBed.inject(MatSnackBar);
         await component.onLogin();
 
-        expect(snack.open).toHaveBeenCalledWith(expect.stringContaining('Erro: Failed'), expect.anything(), expect.anything());
+        expect(component.loginError()).toBe('E-mail ou senha incorretos.');
+    });
+
+    it('should toggle password visibility when requested', () => {
+        const fixture = TestBed.createComponent(LoginComponent);
+        const component = fixture.componentInstance;
+
+        expect(component.hidePassword()).toBe(true);
+        component.hidePassword.set(false);
+        expect(component.hidePassword()).toBe(false);
     });
 });

@@ -224,3 +224,38 @@ O sistema agora é **"Opinionated"**. Para garantir a integridade do estudo do s
 - **Latência**: 14 minutos (média para início do sono).
 - **Duração Ideal**: 4 a 6 ciclos (6 a 9 horas de sono).
 - **Sugestões**: Sempre centradas no ciclo 5 (7.5 horas).
+
+---
+
+## UI/UX Redesign (Dark Comfort) — 2026-03-09
+
+### Design Decisions (Premium Refactor)
+
+*   **Theme**: "Midnight Premium" - A refined dark mode using `#0B0F14` for deep backgrounds and `rgba(255,255,255,0.08)` for subtle borders.
+*   **Typography**: **Plus Jakarta Sans** (chosen for its geometric precision and premium readability in tech-focused dark themes).
+*   **Color Palette**:
+    *   **Primary**: `#42D6C6` (Premium Teal).
+    *   **Surface**: `#111826` (Clean elevated surfaces).
+    *   **Status**: Ruby Red (`#FF5C7A`) for errors, Gold (`#FFC857`) for warnings.
+*   **Inputs**: Modern outlined style with background `#0F1622`, focus glows, and secondary opacities for icons.
+*   **Micro-interactions**: 150-250ms transitions, `scale(0.98)` on active state for buttons, and fade-in entry for cards.
+
+### Current Status
+
+- [x] Stage 1: Premium Login (Tokens, Typography, Component, Tests)
+    - *Refinement*: Increased form gap (16-20px), refined focus glow (3px), fixed label clipping, and added safety margins to prevent field overlap.
+- [x] Stage 2: Premium Register (Toggles, Error Banner, Signals)
+- [x] Stage 3: Private Layout & App Shell (Glassmorphism, Fixed Nav Bar)
+    - *Refinement*: Replaced floating mobile nav with a fixed glassmorphism bar for better UI integration.
+- [x] Stage 4: Internal Screens & Clock (Refined Weight, No Glow, Harmonized Cards)
+    - *Refinement*: Removed neon text-shadow from home clock and increased weight to 800 per user request. Harmonized Home, History, and Insights with the "Midnight Premium" palette.
+
+### Commands
+
+*   `npm start`: Start the frontend development server.
+*   `npm test -- --include src/app/pages/login/login.component.spec.ts`: Run login tests.
+
+### Próximos Passos
+- [x] Stage 5: Deep History & Insights Refactor (Glassmorphism, Timeline, Pro Charts)
+    - *Refinement*: Implemented a session timeline with glassmorphic cards and semantic indicators. Enhanced insights with professional charts and robust stat-cards.
+- [ ] Stage 6: Final Mobile Adjustments & A11y (Roadmap)

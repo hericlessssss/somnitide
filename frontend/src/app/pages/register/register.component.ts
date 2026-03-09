@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
+import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
@@ -20,105 +21,324 @@ import { Router, RouterLink } from '@angular/router';
     MatInputModule,
     MatButtonModule,
     MatSnackBarModule,
-    RouterLink
+    RouterLink,
+    MatIconModule
   ],
   template: `
-    <mat-card class="auth-card">
-      <mat-card-header>
-        <mat-card-title>Criar Conta</mat-card-title>
-        <mat-card-subtitle>Comece a melhorar suas noites agora</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <form (ngSubmit)="onRegister()" #registerForm="ngForm">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>E-mail</mat-label>
-            <input matInput type="email" name="email" [(ngModel)]="email" placeholder="exemplo@email.com" required email>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Senha</mat-label>
-            <input matInput type="password" name="password" [(ngModel)]="password" required minlength="6">
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Confirmar Senha</mat-label>
-            <input matInput type="password" name="confirmPassword" [(ngModel)]="confirmPassword" required>
-          </mat-form-field>
-
-          <div class="auth-note">
-            <p>Armazenamos suas sessões para personalizar e melhorar suas recomendações de sono. Não é necessário confirmar e-mail.</p>
+    <div class="auth-container fade-in">
+      <mat-card class="auth-card">
+        <mat-card-header class="auth-card-header">
+          <div class="brand-container">
+            <mat-icon class="brand-icon">waves</mat-icon>
+            <h1 class="brand-name">SomniTide</h1>
+          </div>
+          <p class="brand-caption">Acorde no fim do ciclo.</p>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div *ngIf="registerError()" class="error-banner">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ registerError() }}</span>
           </div>
 
-          <button mat-flat-button color="primary" class="full-width" [disabled]="loading() || !registerForm.form.valid">
-            {{ loading() ? 'Criando conta...' : 'Criar Conta' }}
-          </button>
-        </form>
-      </mat-card-content>
-      <mat-card-actions align="end">
-        <a routerLink="/login" class="auth-link">Já tenho uma conta</a>
-      </mat-card-actions>
-    </mat-card>
+          <form (ngSubmit)="onRegister()" #registerForm="ngForm" class="auth-form">
+            <mat-form-field appearance="outline" floatLabel="always">
+              <mat-label>E-mail</mat-label>
+              <input matInput type="email" name="email" [(ngModel)]="email" 
+                     placeholder="seu@email.com" required email 
+                     autocomplete="email">
+              <mat-icon matPrefix class="secondary-icon">email</mat-icon>
+            </mat-form-field>
+   
+            <mat-form-field appearance="outline" floatLabel="always">
+              <mat-label>Senha</mat-label>
+              <input matInput [type]="hidePassword() ? 'password' : 'text'" 
+                     name="password" [(ngModel)]="password" 
+                     placeholder="Sua senha" required minlength="6"
+                     autocomplete="new-password">
+              <mat-icon matPrefix class="secondary-icon">lock</mat-icon>
+              <button mat-icon-button matSuffix (click)="hidePassword.set(!hidePassword())" 
+                      type="button" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword()">
+                <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+            </mat-form-field>
+   
+            <mat-form-field appearance="outline" floatLabel="always">
+              <mat-label>Confirmar Senha</mat-label>
+              <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" 
+                     name="confirmPassword" [(ngModel)]="confirmPassword" 
+                     placeholder="Repita a senha" required
+                     autocomplete="new-password">
+              <mat-icon matPrefix class="secondary-icon">lock_reset</mat-icon>
+              <button mat-icon-button matSuffix (click)="hideConfirmPassword.set(!hideConfirmPassword())" 
+                      type="button" [attr.aria-label]="'Hide confirm password'" [attr.aria-pressed]="hideConfirmPassword()">
+                <mat-icon>{{hideConfirmPassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+              </button>
+            </mat-form-field>
+   
+            <div class="privacy-callout">
+              <mat-icon>info_outline</mat-icon>
+              <p>Sua privacidade é nossa prioridade. Não enviamos e-mails desnecessários.</p>
+            </div>
+   
+            <button mat-flat-button color="primary" class="cta-button" 
+                    [disabled]="loading() || !registerForm.form.valid"
+                    [attr.aria-busy]="loading()">
+              <span *ngIf="!loading()">Criar Conta</span>
+              <div *ngIf="loading()" class="loading-state">
+                <mat-icon class="spin">refresh</mat-icon>
+                <span>Criando conta...</span>
+              </div>
+            </button>
+          </form>
+        </mat-card-content>
+        
+        <mat-card-footer class="auth-footer">
+          <p class="footer-text">
+            Já tem uma conta? 
+            <a routerLink="/login" class="footer-link">Fazer Login</a>
+          </p>
+        </mat-card-footer>
+      </mat-card>
+    </div>
   `,
   styles: `
+    .auth-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 5vh; /* Slightly more bias for longer form */
+      min-height: 100vh;
+      width: 100%;
+    }
     .auth-card {
       width: 100%;
-      max-width: 400px;
-      padding: 16px;
-      border-radius: 12px;
+      max-width: 420px;
+      padding: var(--space-xl);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface) !important;
+      border: 1px solid var(--color-border) !important;
+      box-shadow: var(--shadow-2) !important;
     }
-    .full-width {
+    .auth-card-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: var(--space-xl);
+      padding: 0;
+    }
+    .brand-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-xs);
       width: 100%;
-      margin-top: 8px;
     }
-    .auth-note {
-      font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.7);
-      margin: 16px 0;
+    .brand-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .brand-name {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--color-text);
+      letter-spacing: -0.5px;
+      margin: 0;
+    }
+    .brand-caption {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text-muted);
+      margin: 0;
+    }
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px; /* Optimized gap for 3 fields */
+    }
+    .secondary-icon {
+      color: var(--color-text-muted);
+      opacity: 0.7;
+    }
+    .error-banner {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      background: rgba(255, 92, 122, 0.1);
+      border: 1px solid var(--color-danger);
+      color: var(--color-danger);
+      padding: var(--space-md);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-md);
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .privacy-callout {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--color-border);
+      padding: 12px var(--space-md);
+      border-radius: var(--radius-md);
+      margin: 4px 0;
+    }
+    .privacy-callout mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: var(--color-text-muted);
+    }
+    .privacy-callout p {
+      font-size: 11px;
+      color: var(--color-text-muted);
       line-height: 1.4;
+      margin: 0;
     }
-    .auth-link {
-      color: #3f51b5;
+    .cta-button {
+      width: 100%;
+      height: 52px;
+      border-radius: var(--radius-md);
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 8px;
+      transition: all var(--transition-fast);
+    }
+    .cta-button:not(:disabled):active {
+      transform: scale(0.98);
+    }
+    .loading-state {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+    }
+    .spin {
+      animation: rotate 1s linear infinite;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .auth-footer {
+      padding: var(--space-xl) 0 0;
+      margin-top: var(--space-xl);
+      text-align: center;
+    }
+    .footer-text {
+      font-size: 14px;
+      color: var(--color-text-muted);
+    }
+    .footer-link {
+      color: var(--color-primary);
       text-decoration: none;
-      font-size: 0.9rem;
+      font-weight: 600;
+      margin-left: 4px;
+      padding: 4px 8px;
     }
-    .auth-link:hover {
-      text-decoration: underline;
+    
+    /* Material Overrides for Premium Inputs */
+    ::ng-deep .mat-mdc-form-field-subscript-wrapper { display: none; }
+    ::ng-deep .mat-mdc-form-field { margin-bottom: 4px; }
+    ::ng-deep .mat-mdc-form-field-wrapper { padding-bottom: 0; }
+    ::ng-deep .mat-mdc-text-field-outlined {
+      background-color: var(--color-surface-2) !important;
+      border-radius: var(--radius-md) !important;
+      transition: all var(--transition-fast) !important;
     }
-    mat-card-title {
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: #3f51b5;
+    ::ng-deep .mat-mdc-form-field-focus-overlay { background: transparent !important; }
+    
+    ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+    ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+    ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+      border-width: 2px !important;
+      border-color: var(--color-primary) !important;
+    }
+    ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-text-field-outlined {
+      box-shadow: 0 0 0 3px var(--color-primary-glow) !important;
+      border-radius: var(--radius-md) !important;
+    }
+
+    ::ng-deep .mat-mdc-form-field .mdc-notched-outline__notch { border-right: none !important; }
+    ::ng-deep .mat-mdc-form-field .mdc-floating-label {
+      color: var(--color-text-muted) !important;
+      font-size: 16px !important;
+    }
+    ::ng-deep .mat-mdc-form-field.mat-focused .mdc-floating-label {
+      color: var(--color-primary) !important;
+    }
+
+    @media (max-width: 480px) {
+      .auth-card {
+        max-width: 100%;
+        margin: 0 var(--space-lg);
+        padding: var(--space-lg);
+      }
     }
   `
+
+
+
 })
 export class RegisterComponent {
   email = '';
   password = '';
   confirmPassword = '';
+  hidePassword = signal(true);
+  hideConfirmPassword = signal(true);
   loading = signal(false);
+  registerError = signal<string | null>(null);
 
   private auth = inject(AuthService);
-  private snack = inject(MatSnackBar);
   private router = inject(Router);
 
   async onRegister() {
+    this.registerError.set(null);
+
     if (this.password !== this.confirmPassword) {
-      this.snack.open('As senhas não conferem.', 'Fechar', { duration: 3000 });
+      this.registerError.set('As senhas não conferem.');
+      return;
+    }
+
+    if (this.password.length < 6) {
+      this.registerError.set('A senha deve ter pelo menos 6 caracteres.');
       return;
     }
 
     this.loading.set(true);
-    const { data, error } = await this.auth.signUp(this.email, this.password);
-    this.loading.set(false);
 
-    if (error) {
-      this.snack.open(`Erro: ${error.message}`, 'Fechar', { duration: 5000 });
-    } else if (data.session) {
-      this.snack.open('Conta criada e logada com sucesso!', 'OK', { duration: 5000 });
-      this.router.navigate(['/home']);
-    } else {
-      this.snack.open('Conta criada! Verifique seu e-mail para confirmar (ou peça ao admin para desativar a confirmação).', 'OK', { duration: 10000 });
-      this.router.navigate(['/login']);
+    try {
+      const { data, error } = await this.auth.signUp(this.email, this.password);
+
+      if (error) {
+        this.registerError.set(this.getErrorMessage(error));
+      } else if (data.session) {
+        this.router.navigate(['/home']);
+      } else {
+        // Explicit success feedback for email confirmation flow
+        this.router.navigate(['/login'], { queryParams: { registered: 'true' } });
+      }
+    } catch (err) {
+      this.registerError.set('Ocorreu um erro inesperado. Tente novamente.');
+    } finally {
+      this.loading.set(false);
     }
+  }
+
+  private getErrorMessage(error: any): string {
+    if (error.status === 400 || error.message?.includes('User already registered')) {
+      return 'Este e-mail já está cadastrado.';
+    }
+    return error.message || 'Falha ao criar conta. Verifique sua conexão.';
   }
 }
