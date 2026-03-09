@@ -91,6 +91,7 @@ dev.somnitide/
 - [x] Layout Base (Public vs Private)
 - [x] Correção de Erros de Auth (JWKS/ES256)
 - [x] Refinamento Visual (Header duplicado/Sobreposição)
+- [x] Avaliação de Qualidade do Sono (Questionário 5-perguntas)
 - [ ] Testes de integração (Etapa 3 - em andamento)
 - Testcontainers no `pom.xml` + Surefire configurado para `*IT` classes
 - **7 testes de integração** (Testcontainers PostgreSQL) — pulados com `disabledWithoutDocker=true` quando Docker ausente
@@ -212,4 +213,14 @@ mvn -pl backend spring-boot:run
 - **ETAPA 3** ✅ Use cases + controllers REST + validação JWT Supabase via JWKS
 - **ETAPA 4** ✅ Bootstrap Angular + design system + Home (relógio UTC) + integração com endpoints
 - **ETAPA 5** ✅ Preferences + History + UX (loading/error/empty states) + testes frontend
-- **ETAPA 6** ✅ CI (lint/test/build) + docs finais + hardening
+- **ETAPA 6** ✅ Sistema travado em defaults científicos (90 min) + Remoção de Preferences UI + Docs Finais
+
+---
+
+## Estado Atual do Sistema (LOCKED)
+
+O sistema agora é **"Opinionated"**. Para garantir a integridade do estudo do sono, as seguintes métricas são fixas:
+- **Ciclo de Sono**: 90 minutos (padrão ouro).
+- **Latência**: 14 minutos (média para início do sono).
+- **Duração Ideal**: 4 a 6 ciclos (6 a 9 horas de sono).
+- **Sugestões**: Sempre centradas no ciclo 5 (7.5 horas).

@@ -37,8 +37,8 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/history/history.component').then(m => m.HistoryComponent)
             },
             {
-                path: 'preferences',
-                loadComponent: () => import('./pages/preferences/preferences.component').then(m => m.PreferencesComponent)
+                path: 'insights',
+                loadComponent: () => import('./pages/insights/insights.component').then(m => m.InsightsComponent)
             },
             {
                 path: '',

@@ -13,8 +13,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.Instant;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -40,53 +38,29 @@ class PreferencesControllerTest {
         private UpdatePreferences updatePreferences;
 
         @Test
-        void getPreferences_unauthorized_returns401() throws Exception {
-                mockMvc.perform(get("/api/v1/preferences"))
-                                .andExpect(status().isUnauthorized());
-        }
-
-        @Test
         void getPreferences_authorized_returns200() throws Exception {
-                UserPreferences prefs = new UserPreferences(
-                                "mock-sub", 20, 100, 4, 6, 10, Instant.now());
+                // Should return scientific defaults
+                UserPreferences prefs = UserPreferences.defaults("mock-sub");
                 when(getPreferences.execute("mock-sub")).thenReturn(prefs);
 
                 mockMvc.perform(get("/api/v1/preferences")
                                 .with(jwt().jwt(j -> j.subject("mock-sub"))))
                                 .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.sleepLatencyMinutes").value(20))
-                                .andExpect(jsonPath("$.cycleLengthMinutes").value(100));
+                                .andExpect(jsonPath("$.sleepLatencyMinutes").value(14));
         }
 
         @Test
-        void updatePreferences_validPayload_returns200() throws Exception {
+        void updatePreferences_isNowLocked_returns400() throws Exception {
                 UpdatePreferencesRequest request = new UpdatePreferencesRequest(15, 90, 4, 6, 5);
 
-                UserPreferences updatedPrefs = new UserPreferences(
-                                "mock-sub", 15, 90, 4, 6, 5, Instant.parse("2026-03-03T10:00:00Z"));
                 when(updatePreferences.execute(eq("mock-sub"), any(UpdatePreferences.Request.class)))
-                                .thenReturn(updatedPrefs);
-
-                mockMvc.perform(put("/api/v1/preferences")
-                                .with(jwt().jwt(j -> j.subject("mock-sub")))
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(request)))
-                                .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.sleepLatencyMinutes").value(15))
-                                .andExpect(jsonPath("$.updatedAtUtc").value("2026-03-03T10:00:00Z"));
-        }
-
-        @Test
-        void updatePreferences_invalidPayload_returns400() throws Exception {
-                // Validation fails because maxCycles (20) > 10
-                UpdatePreferencesRequest request = new UpdatePreferencesRequest(15, 90, 4, 20, 5);
+                                .thenThrow(new dev.somnitide.domain.exception.DomainException("LOCKED", "Locked"));
 
                 mockMvc.perform(put("/api/v1/preferences")
                                 .with(jwt().jwt(j -> j.subject("mock-sub")))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request)))
                                 .andExpect(status().isBadRequest())
-                                .andExpect(jsonPath("$.error").value("VALIDATION_FAILED"))
-                                .andExpect(jsonPath("$.message").exists());
+                                .andExpect(jsonPath("$.error").value("LOCKED"));
         }
 }

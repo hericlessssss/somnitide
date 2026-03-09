@@ -24,7 +24,7 @@ import { Router } from '@angular/router';
       <span class="spacer"></span>
       <button mat-button routerLink="/home">Home</button>
       <button mat-button routerLink="/history">Histórico</button>
-      <button mat-button routerLink="/preferences">Preferências</button>
+      <button mat-button routerLink="/insights">Insights</button>
       <span class="user-email">{{ auth.user?.email }}</span>
       <button mat-icon-button (click)="onLogout()">
         <mat-icon>logout</mat-icon>

@@ -2,6 +2,9 @@ package dev.somnitide.application.usecase;
 
 import dev.somnitide.application.port.SleepSessionRepository;
 import dev.somnitide.domain.model.SleepSession;
+import dev.somnitide.domain.model.UserPreferences;
+import dev.somnitide.domain.service.SleepCycleCalculator;
+import dev.somnitide.infrastructure.web.dto.response.SessionResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,47 +13,52 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class GetHistoryTest {
 
     private SleepSessionRepository repository;
+    private GetPreferences getPreferences;
+    private SleepCycleCalculator calculator;
     private GetHistory useCase;
 
     @BeforeEach
     void setUp() {
         repository = mock(SleepSessionRepository.class);
-        useCase = new GetHistory(repository);
+        getPreferences = mock(GetPreferences.class);
+        calculator = new SleepCycleCalculator();
+        useCase = new GetHistory(repository, getPreferences, calculator);
     }
 
     @Test
-    void execute_returnsOpenAndClosedSessions() {
-        String userId = "user-hist";
+    void execute_hasActiveAndHistory_returnsDtos() {
+        String userId = "user-1";
+        Instant now = Instant.now();
+        SleepSession active = new SleepSession(userId, now, 15);
+        SleepSession closed = new SleepSession(userId, now.minusSeconds(3600), 15);
+        closed.end(now, 5, "Good");
 
-        SleepSession openSession = new SleepSession(userId, Instant.now(), 14);
-        SleepSession closed1 = new SleepSession(userId, Instant.now().minusSeconds(86400), 14);
-        closed1.end(Instant.now().minusSeconds(50000), 5, null);
+        when(repository.findOpenByUserId(userId)).thenReturn(Optional.of(active));
+        when(repository.findClosedByUserId(userId, 10)).thenReturn(List.of(closed));
+        when(getPreferences.execute(userId)).thenReturn(UserPreferences.defaults(userId));
 
-        when(repository.findOpenByUserId(userId)).thenReturn(Optional.of(openSession));
-        when(repository.findClosedByUserId(userId, 10)).thenReturn(List.of(closed1));
+        GetHistory.Response result = useCase.execute(userId, 10);
 
-        GetHistory.Response response = useCase.execute(userId, 10);
-
-        assertThat(response.activeSession()).isPresent().contains(openSession);
-        assertThat(response.history()).containsExactly(closed1);
+        assertThat(result.activeSession()).isNotNull();
+        assertThat(result.activeSession().suggestions()).isNotEmpty();
+        assertThat(result.history()).hasSize(1);
+        assertThat(result.history().get(0).qualityRating()).isEqualTo(5);
     }
 
     @Test
-    void execute_noOpenSession_returnsEmptyActive() {
-        String userId = "user-empty";
-
+    void execute_noActive_returnsNullActive() {
+        String userId = "user-2";
         when(repository.findOpenByUserId(userId)).thenReturn(Optional.empty());
-        when(repository.findClosedByUserId(userId, 5)).thenReturn(List.of());
+        when(repository.findClosedByUserId(userId, 10)).thenReturn(List.of());
 
-        GetHistory.Response response = useCase.execute(userId, 5);
+        GetHistory.Response result = useCase.execute(userId, 10);
 
-        assertThat(response.activeSession()).isEmpty();
-        assertThat(response.history()).isEmpty();
+        assertThat(result.activeSession()).isNull();
+        assertThat(result.history()).isEmpty();
     }
 }

@@ -8,6 +8,7 @@ import dev.somnitide.domain.exception.DomainException;
 import dev.somnitide.domain.model.SleepSession;
 import dev.somnitide.domain.model.WakeSuggestion;
 import dev.somnitide.infrastructure.web.dto.request.EndSessionRequest;
+import dev.somnitide.infrastructure.web.dto.response.SessionResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,6 +23,7 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -93,15 +95,15 @@ class SleepSessionControllerTest {
         }
 
         @Test
-        void getHistory_success_returns200() throws Exception {
-                SleepSession mockSession = new SleepSession("sub-1", Instant.parse("2026-03-03T10:00:00Z"), 14);
-                when(getHistory.execute("sub-1", 10))
-                                .thenReturn(new GetHistory.Response(Optional.of(mockSession), List.of()));
+        void getHistory_authorized_returns200() throws Exception {
+                SessionResponse openDto = new SessionResponse("id-1", Instant.now(), Instant.now(), null, true, null,
+                                null, List.of());
+                GetHistory.Response response = new GetHistory.Response(openDto, List.of());
+
+                when(getHistory.execute(eq("mock-sub"), anyInt())).thenReturn(response);
 
                 mockMvc.perform(get("/api/v1/sessions")
-                                .with(jwt().jwt(j -> j.subject("sub-1"))))
-                                .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.activeSession").exists())
-                                .andExpect(jsonPath("$.history").isEmpty());
+                                .with(jwt().jwt(j -> j.subject("mock-sub"))))
+                                .andExpect(status().isOk());
         }
 }

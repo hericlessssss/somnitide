@@ -52,6 +52,9 @@ public class SleepSession {
     }
 
     public void end(Instant endedAtUtc, Integer qualityRating, String note) {
+        if (qualityRating != null && (qualityRating < 1 || qualityRating > 5)) {
+            throw new IllegalArgumentException("Quality rating must be between 1 and 5");
+        }
         this.endedAtUtc = endedAtUtc;
         this.qualityRating = qualityRating;
         this.note = note;

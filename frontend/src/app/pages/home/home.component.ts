@@ -6,8 +6,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { SleepService, SessionResponse } from '../../services/sleep.service';
 import { AuthService } from '../../services/auth.service';
+import { AssessmentDialogComponent, AssessmentResult } from './components/assessment-dialog/assessment-dialog.component';
 
 @Component({
   selector: 'app-home',
@@ -58,13 +60,17 @@ import { AuthService } from '../../services/auth.service';
         <section *ngIf="activeSession()?.suggestions" class="suggestions-section">
           <h3>Sugestões de Despertar</h3>
           <div class="suggestions-grid">
-            <mat-card *ngFor="let s of activeSession()?.suggestions" class="suggestion-card" [class.recommended]="s.isRecommended">
+            <mat-card *ngFor="let s of activeSession()?.suggestions" class="suggestion-card" [class.recommended]="s.isRecommended" [class.warning]="s.cycles < 4">
               <mat-card-header>
-                <mat-card-title>{{ s.wakeTimeUtc | date:'HH:mm' }}</mat-card-title>
-                <mat-card-subtitle>{{ s.cycles }} ciclos</mat-card-subtitle>
+                <mat-card-title>
+                  {{ s.wakeTimeUtc | date:'HH:mm' }}
+                  <mat-icon *ngIf="s.cycles < 4" class="warning-icon" title="Duração abaixo do recomendado (mínimo 6h)">report_problem</mat-icon>
+                </mat-card-title>
+                <mat-card-subtitle>{{ s.cycles }} ciclos ({{ (s.cycles * 1.5).toFixed(1) }}h)</mat-card-subtitle>
               </mat-card-header>
               <mat-card-content>
                 <p *ngIf="s.isRecommended"><strong>RECOMENDADO</strong></p>
+                <p *ngIf="s.cycles < 4" class="warning-text">Pouco sono. Risco de fadiga.</p>
               </mat-card-content>
             </mat-card>
           </div>
@@ -132,6 +138,22 @@ import { AuthService } from '../../services/auth.service';
       background-color: #e8eaf6;
       border: 2px solid #3f51b5;
     }
+    .suggestion-card.warning {
+      border: 1px dashed #ff9800;
+      background-color: #fff3e0;
+    }
+    .warning-icon {
+      font-size: 18px;
+      vertical-align: middle;
+      color: #f57c00;
+      margin-left: 4px;
+    }
+    .warning-text {
+      font-size: 0.75rem;
+      color: #e65100;
+      font-weight: 500;
+      margin-top: 4px;
+    }
     .actions-center {
       display: flex;
       justify-content: center;
@@ -142,6 +164,7 @@ import { AuthService } from '../../services/auth.service';
 export class HomeComponent {
   auth = inject(AuthService);
   private sleepService = inject(SleepService);
+  private dialog = inject(MatDialog);
   private snack = inject(MatSnackBar);
 
   currentTime = signal(new Date());
@@ -184,19 +207,26 @@ export class HomeComponent {
   }
 
   endSession() {
-    // For simplicity, we assume 4 stars and no note for now. 
-    // In a real app we'd show a dialog.
-    this.loading.set(true);
-    this.sleepService.endSession(4, 'Acordei via web app').subscribe({
-      next: () => {
-        this.activeSession.set(null);
-        this.loading.set(false);
-        this.snack.open('Bem-vindo de volta! Sessão finalizada.', 'OK', { duration: 3000 });
-      },
-      error: (err) => {
-        this.loading.set(false);
-        this.snack.open('Erro ao finalizar sessão.', 'Fechar', { duration: 5000 });
-      }
+    const dialogRef = this.dialog.open(AssessmentDialogComponent, {
+      width: '550px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe((result: AssessmentResult | undefined) => {
+      if (!result) return;
+
+      this.loading.set(true);
+      this.sleepService.endSession(result.qualityRating, result.note).subscribe({
+        next: () => {
+          this.activeSession.set(null);
+          this.loading.set(false);
+          this.snack.open('Bem-vindo de volta! Sessão finalizada.', 'OK', { duration: 3000 });
+        },
+        error: (err) => {
+          this.loading.set(false);
+          this.snack.open('Erro ao finalizar sessão.', 'Fechar', { duration: 5000 });
+        }
+      });
     });
   }
 }

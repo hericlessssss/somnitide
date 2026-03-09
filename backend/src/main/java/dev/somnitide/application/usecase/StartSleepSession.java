@@ -9,11 +9,15 @@ import dev.somnitide.domain.service.SleepCycleCalculator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.time.Instant;
 import java.util.List;
 
 @Service
 public class StartSleepSession {
+
+    private static final Logger log = LoggerFactory.getLogger(StartSleepSession.class);
 
     private final SleepSessionRepository sessionRepository;
     private final GetPreferences getPreferences;
@@ -44,6 +48,8 @@ public class StartSleepSession {
 
         // Get preferences (for latency to start session, and for calculating cycles)
         UserPreferences prefs = getPreferences.execute(userId);
+        log.info("Starting session for user {}. minCycles={}, maxCycles={}", userId, prefs.minCycles(),
+                prefs.maxCycles());
         Instant nowUtc = Instant.now();
 
         SleepSession session = new SleepSession(

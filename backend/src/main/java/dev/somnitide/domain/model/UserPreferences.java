@@ -14,18 +14,16 @@ public record UserPreferences(
         int minCycles,
         int maxCycles,
         int bufferMinutes,
-        Instant updatedAtUtc
-) {
+        Instant updatedAtUtc) {
     /** Factory that returns the recommended defaults for a given user. */
     public static UserPreferences defaults(String userId) {
         return new UserPreferences(
                 userId,
-                14,   // sleepLatencyMinutes
-                90,   // cycleLengthMinutes
-                4,    // minCycles
-                6,    // maxCycles
-                5,    // bufferMinutes
-                Instant.now()
-        );
+                14, // sleepLatencyMinutes
+                90, // cycleLengthMinutes
+                2, // minCycles
+                6, // maxCycles
+                5, // bufferMinutes
+                Instant.now());
     }
 }

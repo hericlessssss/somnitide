@@ -1,22 +1,13 @@
 package dev.somnitide.application.usecase;
 
-import dev.somnitide.application.port.UserPreferencesRepository;
 import dev.somnitide.domain.model.UserPreferences;
-import dev.somnitide.domain.service.SleepCycleCalculator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
 
 @Service
 public class UpdatePreferences {
 
-    private final UserPreferencesRepository repository;
-    private final SleepCycleCalculator calculator;
-
-    public UpdatePreferences(UserPreferencesRepository repository, SleepCycleCalculator calculator) {
-        this.repository = repository;
-        this.calculator = calculator;
+    public UpdatePreferences() {
     }
 
     /**
@@ -37,18 +28,8 @@ public class UpdatePreferences {
      */
     @Transactional
     public UserPreferences execute(String userId, Request request) {
-        UserPreferences newPrefs = new UserPreferences(
-                userId,
-                request.sleepLatencyMinutes(),
-                request.cycleLengthMinutes(),
-                request.minCycles(),
-                request.maxCycles(),
-                request.bufferMinutes(),
-                Instant.now() // Will be updated by adapter anyway, but required by constructor
-        );
-
-        calculator.validatePreferences(newPrefs);
-
-        return repository.save(newPrefs);
+        throw new dev.somnitide.domain.exception.DomainException(
+                "LOCKED",
+                "Individual preferences are disabled. Current parameters are strictly locked to scientific defaults.");
     }
 }
