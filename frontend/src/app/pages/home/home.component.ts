@@ -36,7 +36,7 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
               <span class="time">{{ currentTime() | date:'HH:mm:ss' }}</span>
             </div>
 
-            <div *ngIf="activeSession(); else noSession" class="active-session-info">
+            <div *ngIf="activeSession(); else noSession" class="active-session-info" role="status" aria-live="polite">
               <p>Sessão iniciada em: {{ activeSession()?.startedAtUtc | date:'HH:mm' }}</p>
               <p>Início do sono estimado: {{ activeSession()?.sleepStartEstimatedAtUtc | date:'HH:mm' }}</p>
             </div>
@@ -45,12 +45,12 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
             </ng-template>
           </mat-card-content>
           <mat-card-actions class="actions-center">
-            <button *ngIf="!activeSession()" mat-fab extended color="primary" (click)="startSession()" [disabled]="loading()">
-              <mat-icon>bedtime</mat-icon>
+            <button *ngIf="!activeSession()" mat-fab extended color="primary" (click)="startSession()" [disabled]="loading()" aria-label="Iniciar nova sessão de sono">
+              <mat-icon aria-hidden="true">bedtime</mat-icon>
               Vou dormir agora
             </button>
-            <button *ngIf="activeSession()" mat-fab extended color="warn" (click)="endSession()" [disabled]="loading()">
-              <mat-icon>sunny</mat-icon>
+            <button *ngIf="activeSession()" mat-fab extended color="warn" (click)="endSession()" [disabled]="loading()" aria-label="Acordar e encerrar sessão de sono">
+              <mat-icon aria-hidden="true">sunny</mat-icon>
               Acordei agora
             </button>
           </mat-card-actions>

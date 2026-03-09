@@ -75,6 +75,8 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Safe Area Support */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 h1,
@@ -112,6 +114,33 @@ h4,
   --mdc-filled-button-label-text-color: var(--text-on-primary) !important;
   background-color: var(--primary) !important;
   color: var(--text-on-primary) !important;
+  min-height: 48px;
+}
+
+/* Prevent native focus box and internal borders on inputs inside form fields */
+.mat-mdc-form-field .mdc-text-field__input {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* Enhanced Focus States for A11y (Global, excluding form inputs) */
+:focus-visible:not(input) {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* --- Autofill Neutralization --- */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 100px var(--color-surface-2) inset !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  border: none !important;
+  caret-color: #FFFFFF !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 /* --- Material Form Field Overrides (Robust Contrast) --- */
@@ -124,16 +153,8 @@ h4,
   color: #FFFFFF !important;
 }
 
-.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-floating-label {
-  color: rgba(255, 255, 255, 0.9) !important;
-}
-
-.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-floating-label {
-  color: var(--primary) !important;
-}
-
 .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input::placeholder {
-  color: rgba(255, 255, 255, 0.5) !important;
+  color: rgba(255, 255, 255, 0.4) !important;
 }
 
 /* Ensure labels are visible even when floating */
@@ -145,19 +166,9 @@ h4,
   color: var(--primary) !important;
 }
 
-.mat-mdc-form-field {
-  --mdc-outlined-text-field-input-text-color: #FFFFFF !important;
-  --mdc-outlined-text-field-label-text-color: rgba(255, 255, 255, 0.8) !important;
-  --mdc-outlined-text-field-outline-color: var(--border) !important;
-  --mdc-outlined-text-field-focus-outline-color: var(--primary) !important;
-  --mdc-outlined-text-field-focus-label-text-color: var(--primary) !important;
-  --mdc-outlined-text-field-hover-outline-color: var(--text-muted) !important;
-  --mat-mdc-form-field-floating-label-scale: 0.75;
-}
-
-/* Ensure input text is bright */
+/* Ensure input text is bright and caret matches theme */
 .mat-mdc-form-field input {
-  color: var(--text-main) !important;
+  color: #FFFFFF !important;
   caret-color: var(--primary) !important;
 }
 

@@ -48,24 +48,26 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
             [class.border-bad]="session.qualityRating && session.qualityRating <= 2">
             
             <div class="card-header-premium">
-              <div class="session-avatar" 
+              <div class="session-avatar" aria-hidden="true"
                 [class.avatar-good]="session.qualityRating && session.qualityRating >= 4"
                 [class.avatar-regular]="session.qualityRating === 3"
                 [class.avatar-bad]="session.qualityRating && session.qualityRating <= 2">
                 <mat-icon>{{ getQualityIcon(session.qualityRating) }}</mat-icon>
               </div>
               <div class="header-text">
-                <div class="card-title-premium">{{ session.startedAtUtc | date:'dd' }} de {{ session.startedAtUtc | date:'MMMM' }}</div>
-                <div class="card-subtitle-premium">
+                <div class="card-title-premium" [attr.aria-label]="(session.startedAtUtc | date:'dd') + ' de ' + (session.startedAtUtc | date:'MMMM')">
+                  {{ session.startedAtUtc | date:'dd' }} de {{ session.startedAtUtc | date:'MMMM' }}
+                </div>
+                <div class="card-subtitle-premium" [attr.aria-label]="'Horário: ' + (session.startedAtUtc | date:'HH:mm') + ' até ' + (session.endedAtUtc | date:'HH:mm')">
                   {{ session.startedAtUtc | date:'HH:mm' }} — {{ session.endedAtUtc | date:'HH:mm' }}
                 </div>
               </div>
             </div>
 
             <mat-card-content class="card-body">
-              <div class="metrics-row">
-                <div class="rating-badge" *ngIf="session.qualityRating">
-                  <div class="stars">
+              <div class="metrics-row" *ngIf="session.qualityRating" [attr.aria-label]="'Qualidade: ' + session.qualityRating + ' de 5 estrelas'">
+                <div class="rating-badge">
+                  <div class="stars" aria-hidden="true">
                     <mat-icon *ngFor="let star of [1,2,3,4,5]" [class.filled]="session.qualityRating >= star">
                       {{ session.qualityRating >= star ? 'star' : 'star_outline' }}
                     </mat-icon>

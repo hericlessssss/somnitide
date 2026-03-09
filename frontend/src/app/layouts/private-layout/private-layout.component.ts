@@ -20,14 +20,14 @@ import { Router } from '@angular/router';
   ],
   template: `
     <header class="app-header">
-      <mat-toolbar class="main-toolbar">
+      <mat-toolbar class="main-toolbar" role="banner">
         <div class="toolbar-content">
-          <div class="brand clickable" routerLink="/home">
-            <mat-icon class="brand-icon">waves</mat-icon>
+          <div class="brand clickable" routerLink="/home" aria-label="SomniTide Home">
+            <mat-icon class="brand-icon" aria-hidden="true">waves</mat-icon>
             <span class="brand-name">SomniTide</span>
           </div>
           
-          <nav class="desktop-nav">
+          <nav class="desktop-nav" aria-label="Navegação principal">
             <a routerLink="/home" routerLinkActive="active-link" class="nav-item">Home</a>
             <a routerLink="/history" routerLinkActive="active-link" class="nav-item">Histórico</a>
             <a routerLink="/insights" routerLinkActive="active-link" class="nav-item">Insights</a>
@@ -37,8 +37,8 @@ import { Router } from '@angular/router';
 
           <div class="user-section">
             <span class="user-email desktop-only">{{ auth.user?.email }}</span>
-            <button mat-icon-button (click)="onLogout()" title="Sair" class="logout-btn">
-              <mat-icon>logout</mat-icon>
+            <button mat-icon-button (click)="onLogout()" aria-label="Sair da conta" title="Sair" class="logout-btn">
+              <mat-icon aria-hidden="true">logout</mat-icon>
             </button>
           </div>
         </div>
@@ -51,18 +51,18 @@ import { Router } from '@angular/router';
       </div>
     </main>
 
-    <nav class="mobile-nav-container fade-in">
+    <nav class="mobile-nav-container fade-in" aria-label="Navegação inferior">
       <div class="mobile-nav-bar">
-        <a routerLink="/home" routerLinkActive="active" class="mobile-nav-item">
-          <mat-icon>home</mat-icon>
+        <a routerLink="/home" routerLinkActive="active" class="mobile-nav-item" aria-label="Ir para Home">
+          <mat-icon aria-hidden="true">home</mat-icon>
           <span>Home</span>
         </a>
-        <a routerLink="/history" routerLinkActive="active" class="mobile-nav-item">
-          <mat-icon>history</mat-icon>
+        <a routerLink="/history" routerLinkActive="active" class="mobile-nav-item" aria-label="Ir para Histórico">
+          <mat-icon aria-hidden="true">history</mat-icon>
           <span>Histórico</span>
         </a>
-        <a routerLink="/insights" routerLinkActive="active" class="mobile-nav-item">
-          <mat-icon>insights</mat-icon>
+        <a routerLink="/insights" routerLinkActive="active" class="mobile-nav-item" aria-label="Ir para Insights">
+          <mat-icon aria-hidden="true">insights</mat-icon>
           <span>Insights</span>
         </a>
       </div>

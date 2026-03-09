@@ -28,26 +28,26 @@ import { Router, RouterLink } from '@angular/router';
     <div class="auth-container fade-in">
       <mat-card class="auth-card">
         <mat-card-header class="auth-card-header">
-          <div class="brand-container">
-            <mat-icon class="brand-icon">waves</mat-icon>
+          <div class="brand-container" aria-label="SomniTide Brand">
+            <mat-icon class="brand-icon" aria-hidden="true">waves</mat-icon>
             <h1 class="brand-name">SomniTide</h1>
           </div>
           <p class="brand-caption">Acorde no fim do ciclo.</p>
         </mat-card-header>
         
         <mat-card-content>
-          <div *ngIf="loginError()" class="error-banner">
-            <mat-icon>error_outline</mat-icon>
+          <div *ngIf="loginError()" class="error-banner" role="alert" aria-live="assertive" id="login-error">
+            <mat-icon aria-hidden="true">error_outline</mat-icon>
             <span>{{ loginError() }}</span>
           </div>
 
-          <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="auth-form">
+          <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="auth-form" [attr.aria-describedby]="loginError() ? 'login-error' : null">
             <mat-form-field appearance="outline" floatLabel="always">
               <mat-label>E-mail</mat-label>
               <input matInput type="email" name="email" [(ngModel)]="email" 
                      placeholder="seu@email.com" required email 
-                     autocomplete="email">
-              <mat-icon matPrefix class="secondary-icon">email</mat-icon>
+                     autocomplete="email" [attr.aria-label]="'Endereço de e-mail'">
+              <mat-icon matPrefix class="secondary-icon" aria-hidden="true">email</mat-icon>
             </mat-form-field>
    
             <mat-form-field appearance="outline" floatLabel="always">
@@ -55,11 +55,13 @@ import { Router, RouterLink } from '@angular/router';
               <input matInput [type]="hidePassword() ? 'password' : 'text'" 
                      name="password" [(ngModel)]="password" 
                      placeholder="Sua senha" required
-                     autocomplete="current-password">
-              <mat-icon matPrefix class="secondary-icon">lock</mat-icon>
+                     autocomplete="current-password" [attr.aria-label]="'Senha'">
+              <mat-icon matPrefix class="secondary-icon" aria-hidden="true">lock</mat-icon>
               <button mat-icon-button matSuffix (click)="hidePassword.set(!hidePassword())" 
-                      type="button" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword()">
-                <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+                      type="button" 
+                      [attr.aria-label]="hidePassword() ? 'Mostrar senha' : 'Ocultar senha'" 
+                      [attr.aria-pressed]="!hidePassword()">
+                <mat-icon aria-hidden="true">{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
               </button>
             </mat-form-field>
    
@@ -249,12 +251,8 @@ import { Router, RouterLink } from '@angular/router';
     ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
     ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
     ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
-      border-width: 2px !important; /* Subtle but clear */
+      border-width: 2px !important;
       border-color: var(--color-primary) !important;
-    }
-    ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-text-field-outlined {
-      box-shadow: 0 0 0 3px var(--color-primary-glow) !important; /* Refined glow */
-      border-radius: var(--radius-md) !important;
     }
 
     /* Fixed Label Clipping for floatLabel="always" */

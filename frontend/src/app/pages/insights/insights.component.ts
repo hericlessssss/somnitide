@@ -17,9 +17,9 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
         <p>A ciência por trás do seu descanso.</p>
       </header>
 
-      <div class="stats-grid">
-        <mat-card class="stat-card fade-in">
-          <div class="stat-icon-bg primary">
+      <div class="stats-grid" role="group" aria-label="Estatísticas de sono">
+        <mat-card class="stat-card fade-in" [attr.aria-label]="'Média de Sono: ' + (avgHours() | number:'1.1-1') + ' horas'">
+          <div class="stat-icon-bg primary" aria-hidden="true">
             <mat-icon>schedule</mat-icon>
           </div>
           <mat-card-content>
@@ -31,8 +31,8 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
           </mat-card-content>
         </mat-card>
 
-        <mat-card class="stat-card fade-in">
-          <div class="stat-icon-bg accent">
+        <mat-card class="stat-card fade-in" [attr.aria-label]="'Qualidade Média: ' + (avgQuality() | number:'1.1-1')">
+          <div class="stat-icon-bg accent" aria-hidden="true">
             <mat-icon>stars</mat-icon>
           </div>
           <mat-card-content>
@@ -44,8 +44,8 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
           </mat-card-content>
         </mat-card>
 
-        <mat-card class="stat-card fade-in">
-          <div class="stat-icon-bg warn">
+        <mat-card class="stat-card fade-in" [attr.aria-label]="'Total de Noites: ' + totalSessions()">
+          <div class="stat-icon-bg warn" aria-hidden="true">
             <mat-icon>hotel</mat-icon>
           </div>
           <mat-card-content>

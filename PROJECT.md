@@ -258,4 +258,5 @@ O sistema agora é **"Opinionated"**. Para garantir a integridade do estudo do s
 ### Próximos Passos
 - [x] Stage 5: Deep History & Insights Refactor (Glassmorphism, Timeline, Pro Charts)
     - *Refinement*: Implemented a session timeline with glassmorphic cards and semantic indicators. Enhanced insights with professional charts and robust stat-cards.
-- [ ] Stage 6: Final Mobile Adjustments & A11y (Roadmap)
+- [x] Stage 6: Final Mobile Adjustments & A11y (Locale, Safe Areas, ARIA)
+    - *Refinement*: Configured pt-BR locale, implemented safe-area-inset support, and added comprehensive ARIA labels for blind and low-vision accessibility.
