@@ -1,6 +1,6 @@
 # PROJECT.md — Documentação Viva do Somnitide
 
-> Atualizado após: **ETAPA 2 — Persistência + Flyway + Repositories + Testcontainers**
+> Atualizado após: **ETAPA 5 — Preferências + Histórico + UX + Fixes Locais**
 
 ---
 
@@ -169,6 +169,14 @@ mvn -pl backend spring-boot:run
 | Surefire não descobria classes `*IT` | Padrão do Surefire é `*Test`/`*Tests`; adicionado `<include>**/*IT.java</include>` na config do plugin |
 | `@DynamicPropertySource` com datasource ausente | Criado `src/test/resources/application.properties` com placeholder values sobrescritos em runtime pelo Testcontainers |
 | Docker indisponível na máquina de dev | Adicionado `@Testcontainers(disabledWithoutDocker = true)`: testes IT são `SKIPPED`, não `FAILED` |
+| App falha ao iniciar em nova máquina (`SUPABASE_JWKS_URI` não resolvido) | Criado arquivo `.env` a partir do `.env.exemple`. Configurado `spring.config.import=optional:file:./.env[.properties],optional:file:../.env[.properties]` no `application.properties`. O sufixo `[.properties]` é mandatório para o Spring tratar arquivos `.env` sem extensão como formato de propriedades. |
+| Frontend falhava o comando `ng build` | Rodado `npm install` localmente para instalar dependências e o Angular CLI no escopo do projeto |
+| Warnings de imports não usados nos testes | Removidos imports de `WithMockUser` em `PreferencesControllerTest` e `SleepSessionControllerTest` que não estavam sendo utilizados. |
+| Teste do Frontend falhando (`app.spec.ts`) | O teste falhava porque o `AuthService` não estava mockado e a toolbar (com o título) só renderiza se autenticado. Mockado `AuthService` no `app.spec.ts`. |
+| Falta de guia para rodar local | Criado `LOCAL_SETUP.md` com instruções passo a passo para backend e frontend. |
+| Erro de `./mvnw` (JAR ausente) | Restaurado `maven-wrapper.jar` usando `mvn wrapper:wrapper -Dtype=bin`. |
+| Erro "missing table user_preferences" | O Flyway baselined em v1 e ignorou scripts. Corrigido com `baseline-version=0` e `hibernate.ddl-auto=update` no `application.properties`. |
+| Erro "required a bean of type SleepCycleCalculator" | O serviço de domínio é "Pure Java" e não tinha anotação `@Service`. Criado `DomainConfig` para registrá-lo como bean. |
 
 ---
 
