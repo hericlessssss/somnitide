@@ -443,11 +443,11 @@ Para máxima segurança, configure as seguintes regras na branch `main`:
 
 #### 1. No Coolify (Backend)
 - Variável de ambiente:
-  - `ALLOWED_ORIGINS`: `http://localhost:4200,https://seu-front.pages.dev,http://wwgsco00w04wos484ssosos0.201.23.78.147.sslip.io`
+  - `ALLOWED_ORIGINS`: `http://localhost:4200,https://seu-front.pages.dev,http://201.23.78.147`
 
 #### 2. No Cloudflare Pages (Frontend)
 - Variável de ambiente de build:
-  - `API_URL`: `http://wwgsco00w04wos484ssosos0.201.23.78.147.sslip.io`
+  - `API_URL`: `http://201.23.78.147`
 - **Comando de Build Final**:
   `sed -i "s|API_URL_PLACEHOLDER|$API_URL|g" src/environments/environment.ts && npm run build`
 

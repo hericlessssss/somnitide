@@ -21,8 +21,8 @@ RUN apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
 COPY --from=build /app/target/somnitide-backend-0.0.1-SNAPSHOT.jar app.jar
 
 # Environment variables defaults (can be overridden)
-ENV SERVER_PORT=8080
-EXPOSE 8080
+ENV SERVER_PORT=80
+EXPOSE 80
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
