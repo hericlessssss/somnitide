@@ -442,18 +442,18 @@ Para máxima segurança, configure as seguintes regras na branch `main`:
 ### Configurações Necessárias
 
 #### 1. No Coolify (Backend)
-- **URL por IP**: Mantenha o endereço como `http` (Ex: `http://201.23.78.147`). Não precisaremos de SSL no backend, pois usaremos um Proxy.
+- **Port Mapping (Acesso por IP)**: Por padrão, o Coolify não expõe a porta do container para o IP público. Para acessar via IP/Proxy, você **precisa** ir em:
+  - **Network -> Port Mappings**.
+  - Adicione: `80:80` (Isso mapeia a porta 80 do seu servidor para a 80 do container).
 - Variável de ambiente:
   - `ALLOWED_ORIGINS`: `http://localhost:4200,https://somnitide.pages.dev`
 
 #### 2. No Cloudflare Pages (Frontend)
-- **Solução de HTTPS (Proxy)**: Criamos uma Function no Cloudflare que faz a ponte segura (HTTPS -> HTTP).
+- **Solução de HTTPS (Proxy)**: O Cloudflare agora faz o papel de segurança (HTTPS -> HTTP).
 - **Variáveis de Ambiente (Cloudflare Dashboard)**:
-  - Vá em **Settings -> Functions -> Environment variables**.
-  - Adicione: `BACKEND_URL` = `http://201.23.78.147` (O campo **Variable name** deve ser exatamente este).
+  - `BACKEND_URL`: `http://201.23.78.147` (Sem a barra no final).
 - **Comando de Build Final**:
   `sh inject-api-url.sh && npm run build`
-  *(O script agora usará `/proxy` como padrão, que será processado pela Function).*
 
 ### Checklist Final de Integração
 
