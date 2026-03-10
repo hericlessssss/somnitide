@@ -95,7 +95,7 @@ jobs:
         working-directory: frontend
 
       - name: Run Tests
-        run: npm test
+        run: npm test -- --configuration ci
         working-directory: frontend
 
       - name: Test Report

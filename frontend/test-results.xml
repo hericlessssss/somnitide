@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="19" failures="0" errors="0" time="1.1339646">
+    <testsuite name="src/app/app.spec.ts" timestamp="2026-03-10T01:55:24.490Z" hostname="us" tests="2" failures="0" errors="0" skipped="0" time="0.0743798">
+        <testcase classname="src/app/app.spec.ts" name="App &gt; should create the app" time="0.0631086">
+        </testcase>
+        <testcase classname="src/app/app.spec.ts" name="App &gt; should have a router-outlet" time="0.0091738">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/services/auth.service.spec.ts" timestamp="2026-03-10T01:55:24.491Z" hostname="us" tests="5" failures="0" errors="0" skipped="0" time="0.0319047">
+        <testcase classname="src/app/services/auth.service.spec.ts" name="AuthService &gt; should be created" time="0.0193518">
+        </testcase>
+        <testcase classname="src/app/services/auth.service.spec.ts" name="AuthService &gt; should call signInWithPassword on login" time="0.005203">
+        </testcase>
+        <testcase classname="src/app/services/auth.service.spec.ts" name="AuthService &gt; should call signUp on register" time="0.0021633">
+        </testcase>
+        <testcase classname="src/app/services/auth.service.spec.ts" name="AuthService &gt; should call signOut and update session" time="0.001772">
+        </testcase>
+        <testcase classname="src/app/services/auth.service.spec.ts" name="AuthService &gt; should return error on failed login" time="0.0017799">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/layouts/private-layout/private-layout.component.spec.ts" timestamp="2026-03-10T01:55:24.492Z" hostname="us" tests="3" failures="0" errors="0" skipped="0" time="0.230848">
+        <testcase classname="src/app/layouts/private-layout/private-layout.component.spec.ts" name="PrivateLayoutComponent &gt; should create" time="0.1525286">
+        </testcase>
+        <testcase classname="src/app/layouts/private-layout/private-layout.component.spec.ts" name="PrivateLayoutComponent &gt; should render title and navigation links" time="0.0481386">
+        </testcase>
+        <testcase classname="src/app/layouts/private-layout/private-layout.component.spec.ts" name="PrivateLayoutComponent &gt; should call signOut and navigate on logout click" time="0.0289136">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/pages/login/login.component.spec.ts" timestamp="2026-03-10T01:55:24.493Z" hostname="us" tests="4" failures="0" errors="0" skipped="0" time="0.3690255">
+        <testcase classname="src/app/pages/login/login.component.spec.ts" name="LoginComponent &gt; should create" time="0.2362905">
+        </testcase>
+        <testcase classname="src/app/pages/login/login.component.spec.ts" name="LoginComponent &gt; should call signInWithPassword on submit" time="0.0556944">
+        </testcase>
+        <testcase classname="src/app/pages/login/login.component.spec.ts" name="LoginComponent &gt; should set loginError signal on auth failure" time="0.0470841">
+        </testcase>
+        <testcase classname="src/app/pages/login/login.component.spec.ts" name="LoginComponent &gt; should toggle password visibility when requested" time="0.0282419">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/pages/register/register.component.spec.ts" timestamp="2026-03-10T01:55:24.494Z" hostname="us" tests="5" failures="0" errors="0" skipped="0" time="0.4278066">
+        <testcase classname="src/app/pages/register/register.component.spec.ts" name="RegisterComponent &gt; should create" time="0.2164039">
+        </testcase>
+        <testcase classname="src/app/pages/register/register.component.spec.ts" name="RegisterComponent &gt; should call signUp on submit if passwords match and are valid" time="0.0691058">
+        </testcase>
+        <testcase classname="src/app/pages/register/register.component.spec.ts" name="RegisterComponent &gt; should set registerError if passwords do not match" time="0.0619742">
+        </testcase>
+        <testcase classname="src/app/pages/register/register.component.spec.ts" name="RegisterComponent &gt; should set registerError if password is too short" time="0.0413659">
+        </testcase>
+        <testcase classname="src/app/pages/register/register.component.spec.ts" name="RegisterComponent &gt; should toggle visibility signals when requested" time="0.0375382">
+        </testcase>
+    </testsuite>
+</testsuites>
