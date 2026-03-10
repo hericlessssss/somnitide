@@ -21,7 +21,7 @@ public record UserPreferences(
                 userId,
                 14, // sleepLatencyMinutes
                 90, // cycleLengthMinutes
-                2, // minCycles
+                4, // minCycles
                 6, // maxCycles
                 5, // bufferMinutes
                 Instant.now());

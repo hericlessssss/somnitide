@@ -39,3 +39,7 @@ Thumbs.db
 node_modules/
 dist/
 .angular/
+
+# Logs and temporaries
+*.log
+test_output.txt

@@ -34,7 +34,7 @@ describe('PrivateLayoutComponent', () => {
         const compiled = fixture.nativeElement as HTMLElement;
 
         // Brand
-        expect(compiled.querySelector('.app-title')?.textContent).toContain('SomniTide');
+        expect(compiled.querySelector('.brand-name')?.textContent).toContain('SomniTide');
 
         // Desktop Nav
         expect(compiled.querySelector('.desktop-nav a[routerLink="/home"]')).toBeTruthy();
@@ -42,8 +42,8 @@ describe('PrivateLayoutComponent', () => {
         expect(compiled.querySelector('.desktop-nav a[routerLink="/insights"]')).toBeTruthy();
 
         // Mobile Nav
-        expect(compiled.querySelector('.mobile-nav a[routerLink="/home"]')).toBeTruthy();
-        expect(compiled.querySelector('.mobile-nav a[routerLink="/history"]')).toBeTruthy();
+        expect(compiled.querySelector('.mobile-nav-bar a[routerLink="/home"]')).toBeTruthy();
+        expect(compiled.querySelector('.mobile-nav-bar a[routerLink="/history"]')).toBeTruthy();
     });
 
 
