@@ -95,7 +95,7 @@ jobs:
         working-directory: frontend
 
       - name: Run Tests
-        run: npm test -- --watch=false --reporter=default --reporter=junit --outputFile=test-results.xml
+        run: npx vitest run --reporter=default --reporter=junit --outputFile=test-results.xml
         working-directory: frontend
 
       - name: Test Report
