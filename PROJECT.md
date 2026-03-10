@@ -1,6 +1,6 @@
 # PROJECT.md — Documentação Viva do Somnitide
 
-> Atualizado após: **CI/CD ETAPA 6 — Hardening e Finalização**
+> Atualizado após: **CI/CD ETAPA INTEGRADA — Swagger, CORS e Prod Connection**
 
 ---
 
@@ -429,6 +429,36 @@ Para máxima segurança, configure as seguintes regras na branch `main`:
 - [x] Deploy Frontend (Cloudflare Pages) configurado com `_redirects`
 - [x] Job de verificação unificada (`ci-success`) implementado
 - [x] `PROJECT.md` atualizado com todas as etapas
+
+---
+
+## Integração Frontend-Backend e Swagger
+
+### O que foi feito
+- **Swagger UI**: Implementado usando `springdoc-openapi`. Disponível em `/swagger-ui.html`.
+- **CORS Dinâmico**: O backend agora aceita a variável de ambiente `ALLOWED_ORIGINS` (lista separada por vírgulas).
+- **Injeção de API_URL**: O frontend foi preparado para ter a URL da API injetada via `sed` no build.
+
+### Configurações Necessárias
+
+#### 1. No Coolify (Backend)
+- Variável de ambiente:
+  - `ALLOWED_ORIGINS`: `http://localhost:4200,https://seu-front.pages.dev,http://wwgsco00w04wos484ssosos0.201.23.78.147.sslip.io`
+
+#### 2. No Cloudflare Pages (Frontend)
+- Variável de ambiente de build:
+  - `API_URL`: `http://wwgsco00w04wos484ssosos0.201.23.78.147.sslip.io`
+- **Comando de Build Final**:
+  `sed -i "s|API_URL_PLACEHOLDER|$API_URL|g" src/environments/environment.ts && npm run build`
+
+### Checklist Final de Integração
+
+- [x] Swagger habilitado e acessível
+- [x] CORS configurado para origens dinâmicas
+- [x] Frontend preparado para injeção de URL
+- [x] Instruções de Deploy atualizadas no `PROJECT.md`
+
+---
 
 ---
 
