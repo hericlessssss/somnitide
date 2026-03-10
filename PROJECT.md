@@ -449,7 +449,7 @@ Para máxima segurança, configure as seguintes regras na branch `main`:
 - Variável de ambiente de build:
   - `API_URL`: `http://201.23.78.147`
 - **Comando de Build Final**:
-  `sed -i "s|API_URL_PLACEHOLDER|$API_URL|g" src/environments/environment.ts && npm run build`
+  `sh inject-api-url.sh && npm run build`
 
 ### Checklist Final de Integração
 
