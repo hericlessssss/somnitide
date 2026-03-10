@@ -249,6 +249,8 @@ O sistema agora é **"Opinionated"**. Para garantir a integridade do estudo do s
     - *Refinement*: Replaced floating mobile nav with a fixed glassmorphism bar for better UI integration.
 - [x] Stage 4: Internal Screens & Clock (Refined Weight, No Glow, Harmonized Cards)
     - *Refinement*: Removed neon text-shadow from home clock and increased weight to 800 per user request. Harmonized Home, History, and Insights with the "Midnight Premium" palette.
+- [x] Stage 5: Correct Bottom Nav & Safe Area (Layout fixes, Content Leakage, TDD)
+    - *Refinement*: Implemented fixed bottom bar with safe-area support and increased glassmorphism opacity.
 
 ### Commands
 
@@ -439,44 +441,71 @@ Para máxima segurança, configure as seguintes regras na branch `main`:
 - **CORS Dinâmico**: O backend agora aceita a variável de ambiente `ALLOWED_ORIGINS` (lista separada por vírgulas).
 - **Injeção de API_URL**: O frontend foi preparado para ter a URL da API injetada via `sed` no build.
 
-### Configurações Necessárias
+### Configurações Necessárias (Produção Final)
 
-#### 1. No Coolify (Backend)
-- **Domínio de Produção**: `https://somnitide-api.gratianovem.com.br`
-- **Port Mapping**: Certifique-se que o mapeamento `80:80` está ativo em **Network**.
-- Variável de ambiente:
-  - `ALLOWED_ORIGINS`: `http://localhost:4200,https://somnitide.pages.dev,https://somnitide-api.gratianovem.com.br`
+#### 1. No Cloudflare (DNS & Segurança) 🟠
+- **Registro A**: `somnitide-api` -> `201.23.78.147` (**Proxy Status: Proxied/Laranja**).
+- **SSL/TLS -> Overview**: Modo **Flexible** (Obrigatório para funcionar na porta 80).
+- **SSL/TLS -> Edge Certificates**: Ativar **Always Use HTTPS**.
 
-#### 2. No Cloudflare Pages (Frontend)
-- **Variáveis de Ambiente**:
-  - `API_URL`: `https://somnitide-api.gratianovem.com.br` (Pode deixar vazia para usar o padrão do script).
-- **Comando de Build Final**:
-  `sh inject-api-url.sh && npm run build`
+#### 2. No Coolify (Backend) 🐳
+- **Domains**: `http://somnitide-api.gratianovem.com.br` (Use apenas **HTTP** no painel).
+- **Network -> Port Mappings**: Deve conter **`80:80`**.
+- **Environment Variables**:
+  - `ALLOWED_ORIGINS`: `https://somnitide.pages.dev,https://somnitide-api.gratianovem.com.br,http://localhost:4200`
+  - `SPRING_PROFILES_ACTIVE`: `prod`
+
+#### 3. No Cloudflare Pages (Frontend) ⚡
+- **Build Command**: `sh inject-api-url.sh && npm run build`
+- **Variáveis de Build**:
+  - `API_URL`: (Deixe em branco para usar o padrão `https://somnitide-api.gratianovem.com.br`).
+
+### Checklist de Validação
+- [x] **Backend Health**: `https://somnitide-api.gratianovem.com.br/actuator/health` (Deve retornar UP).
+- [x] **Swagger Docs**: `https://somnitide-api.gratianovem.com.br/swagger-ui.html` (Deve carregar com cadeado seguro).
+- [x] **Frontend Login**: Tentar login em `https://somnitide.pages.dev/login`.
 
 ### Checklist Final de Integração
 
-- [x] Swagger habilitado e acessível
-- [x] CORS configurado para origens dinâmicas
-- [x] Frontend preparado para injeção de URL
-- [x] Instruções de Deploy atualizadas no `PROJECT.md`
+
+### Hurdles & Fixes
+| Problema | Solução |
+|---|---|
+| Espaçamento duplo no mobile | Removido `padding: env(...)` do `body` global; agora o Header e a Bottom Nav (ou o Main Content) gerenciam suas próprias áreas seguras. |
+| Testes Vitest falhando com `initTestEnvironment` | Ocorria ao rodar `npx vitest` direto; corrigido rodando via `ng test` ou `npm test -- --include ...` que inicializa o Angular corretamente. |
 
 ---
 
-## CI/CD Etapa Final — Visualização de Testes no GitHub
+## UI/UX Refactor 2026-03-10
 
-### O que foi feito
-- **Relatórios JUnit**: Configurada a exportação de resultados de testes em formato XML para Maven (Surefire) e Angular (Vitest).
-- **GitHub Test Reporter**: Integrada a Action `dorny/test-reporter` no `ci.yml`. Agora, ao final de cada execução da esteira, uma aba **"Tests"** aparecerá no GitHub Summary, mostrando detalhadamente quais testes passaram e quais falharam (incluindo stack traces de erro).
-- **Anotações de Código**: Falhas em testes agora geram anotações automáticas nas linhas de código correspondentes durante o Pull Request.
+- [x] **ETAPA 5: Inputs & Refinement** (Caret colors, Harmonization)
+- [ ] **ETAPA 6: Performance pass** (Lighthouse + bundle stats)
 
----
+### Detalhes das Etapas
 
----
+#### ETAPA 1: Refatoração UI/UX e Layout Base
+- **Resumo:** Implementação de Bottom Navigation fixo com glassmorphism e tratamento de safe areas.
+- **Destaque:** Uso de `env(safe-area-inset-bottom)` e token `--bottom-nav-height: 72px`.
 
----
+#### ETAPA 2: Assessment Dialog
+- **Resumo:** Upgrade completo do modal com clickable cards (`matRipple`) e sticky header/footer.
+- **Hurdle:** Resolvido erro `TS2322` via `setAnswer()` method e limpeza de duplicação de classe.
 
----
+#### ETAPA 3: Home Component
+- **Resumo:** Adicionado fuso horário automático no relógio e grid responsivo de sugestões.
+- **Técnica:** `Intl.DateTimeFormat().resolvedOptions().timeZone` para detecção local.
 
----
+#### ETAPA 4: Public Layout & Keyboard
+- **Resumo:** Transição para `min-height: 100dvh` e `overflow-y: auto` no `PublicLayout`.
+- **Fix:** Remoção de centralização forçada nas páginas de Login/Register para garantir scroll no mobile.
 
----
+#### ETAPA 5: Inputs & Refinement
+- **Resumo:** Harmonização de `::selection` e `caret-color` em todo o aplicativo.
+- **Destaque:** Globalização das regras de foco do Material (mdc-text-field) em `styles.css`.
+
+### Hurdles & Fixes (2026-03-10)
+| Problema | Solução |
+|---|---|
+| Teclado mobile cobria inputs | `PublicLayout` alterado para `min-height` + `overflow-y: auto`. |
+| Duplicação de arquivos/classes | Limpeza profunda e re-escrita via `multi_replace_file_content`. |
+| `NG0100` em testes de Form | Adicionado `fixture.whenStable()` e clicks simulados nos cards. |

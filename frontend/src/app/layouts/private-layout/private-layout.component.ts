@@ -198,7 +198,8 @@ import { Router } from '@angular/router';
       flex: 1;
       margin-top: 72px;
       padding: var(--space-lg);
-      padding-bottom: 100px; /* Space for mobile floating nav */
+      /* Dynamic padding-bottom: Nav height + safe area + margin */
+      padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + var(--space-lg));
     }
 
     @media (min-width: 768px) {
@@ -222,17 +223,20 @@ import { Router } from '@angular/router';
       display: flex;
       justify-content: center;
       z-index: 1000;
-      /* Glassmorphism Effect - Matching Header */
-      background: rgba(11, 15, 20, 0.7) !important;
-      backdrop-filter: blur(12px) saturate(180%);
-      -webkit-backdrop-filter: blur(12px) saturate(180%);
+      /* Glassmorphism Effect - Matching Header, slightly more opaque for coverage */
+      background: rgba(11, 15, 20, 0.9) !important;
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
       border-top: 1px solid var(--color-border);
+      /* Height handles nav + safe area */
+      height: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     .mobile-nav-bar {
       background: transparent !important;
       width: 100%;
-      height: 72px;
+      height: var(--bottom-nav-height);
       padding: 0 var(--space-md);
       display: flex;
       justify-content: space-around;

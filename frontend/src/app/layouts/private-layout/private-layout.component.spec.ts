@@ -46,6 +46,20 @@ describe('PrivateLayoutComponent', () => {
         expect(compiled.querySelector('.mobile-nav-bar a[routerLink="/history"]')).toBeTruthy();
     });
 
+    it('should have correct structural classes for main content and bottom nav', () => {
+        const fixture = TestBed.createComponent(PrivateLayoutComponent);
+        fixture.detectChanges();
+        const compiled = fixture.nativeElement as HTMLElement;
+
+        const mainContent = compiled.querySelector('.main-content');
+        expect(mainContent).toBeTruthy();
+        expect(mainContent?.classList.contains('fade-in')).toBe(true);
+
+        const navContainer = compiled.querySelector('.mobile-nav-container');
+        expect(navContainer).toBeTruthy();
+        expect(navContainer?.classList.contains('fade-in')).toBe(true);
+    });
+
 
     it('should call signOut and navigate on logout click', async () => {
         const fixture = TestBed.createComponent(PrivateLayoutComponent);

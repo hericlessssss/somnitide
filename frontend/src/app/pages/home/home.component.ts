@@ -24,192 +24,316 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
     MatSnackBarModule
   ],
   template: `
-    <div class="home-container">
+    <div class="home-container fade-in">
       <main class="content">
-        <mat-card class="hero-card">
-          <mat-card-header>
+        <mat-card class="hero-card glass">
+          <mat-card-header class="hero-header">
             <mat-card-title>Status do Sono</mat-card-title>
           </mat-card-header>
+          
           <mat-card-content class="hero-content">
-            <div class="current-time">
-              <span class="label">Hora Atual (Local)</span>
-              <span class="time">{{ currentTime() | date:'HH:mm:ss' }}</span>
+            <div class="clock-display">
+              <span class="label">Hora Atual</span>
+              <h1 class="time">{{ currentTime() | date:'HH:mm:ss' }}</h1>
+              <span class="timezone-label">{{ timezoneLabel() }}</span>
             </div>
 
-            <div *ngIf="activeSession(); else noSession" class="active-session-info" role="status" aria-live="polite">
-              <p>Sessão iniciada em: {{ activeSession()?.startedAtUtc | date:'HH:mm' }}</p>
-              <p>Início do sono estimado: {{ activeSession()?.sleepStartEstimatedAtUtc | date:'HH:mm' }}</p>
+            <div *ngIf="activeSession(); else noSession" class="active-session-status" role="status" aria-live="polite">
+              <div class="status-badge">
+                <mat-icon>nights_stay</mat-icon>
+                <span>Sessão em andamento</span>
+              </div>
+              <p class="session-detail">Início: {{ activeSession()?.startedAtUtc | date:'HH:mm' }}</p>
+              <p class="session-detail">Sono estimado: {{ activeSession()?.sleepStartEstimatedAtUtc | date:'HH:mm' }}</p>
             </div>
+            
             <ng-template #noSession>
-              <p>Clique no botão abaixo quando for deitar para receber as melhores sugestões de despertar.</p>
+              <div class="empty-status">
+                <p>Pronto para descansar? Inicie sua sessão de sono para monitorar seu ciclo.</p>
+              </div>
             </ng-template>
           </mat-card-content>
-          <mat-card-actions class="actions-center">
-            <button *ngIf="!activeSession()" mat-fab extended color="primary" (click)="startSession()" [disabled]="loading()" aria-label="Iniciar nova sessão de sono">
-              <mat-icon aria-hidden="true">bedtime</mat-icon>
-              Vou dormir agora
+
+          <mat-card-actions class="actions-container">
+            <button *ngIf="!activeSession()" 
+                    mat-flat-button 
+                    color="primary" 
+                    class="main-action-btn"
+                    (click)="startSession()" 
+                    [disabled]="loading()" 
+                    aria-label="Iniciar nova sessão de sono">
+              <mat-icon>bedtime</mat-icon>
+              VOU DORMIR AGORA
             </button>
-            <button *ngIf="activeSession()" mat-fab extended color="warn" (click)="endSession()" [disabled]="loading()" aria-label="Acordar e encerrar sessão de sono">
-              <mat-icon aria-hidden="true">sunny</mat-icon>
-              Acordei agora
+            <button *ngIf="activeSession()" 
+                    mat-flat-button 
+                    color="warn" 
+                    class="main-action-btn warn"
+                    (click)="endSession()" 
+                    [disabled]="loading()" 
+                    aria-label="Acordar e encerrar sessão de sono">
+              <mat-icon>wb_sunny</mat-icon>
+              ACORDEI AGORA
             </button>
           </mat-card-actions>
         </mat-card>
 
-        <section *ngIf="activeSession()?.suggestions" class="suggestions-section">
-          <h3>Sugestões de Despertar</h3>
+        <section *ngIf="activeSession()?.suggestions" class="suggestions-section fade-in">
+          <h3 class="section-title">Sugestões de Despertar</h3>
           <div class="suggestions-grid">
-            <mat-card *ngFor="let s of sortedSuggestions()" class="suggestion-card" [class.recommended]="s.isRecommended" [class.warning]="s.cycles < 4">
+            <mat-card *ngFor="let s of sortedSuggestions()" 
+                      class="suggestion-card clickable" 
+                      [class.recommended]="s.isRecommended" 
+                      [class.warning]="s.cycles < 4">
               <mat-card-header>
-                <mat-card-title>
+                <div class="suggestion-header-content">
                   <span class="wake-time">{{ s.wakeTimeUtc | date:'HH:mm' }}</span>
-                  <mat-icon *ngIf="s.cycles < 4" class="warning-icon" title="Duração abaixo do recomendado (mínimo 6h)">report_problem</mat-icon>
-                </mat-card-title>
-                <mat-card-subtitle class="suggestion-subtitle">{{ s.cycles }} ciclos ({{ (s.cycles * 1.5).toFixed(1) }}h)</mat-card-subtitle>
+                  <mat-icon *ngIf="s.cycles < 4" class="warning-icon" title="Duração abaixo do recomendado">report_problem</mat-icon>
+                </div>
+                <mat-card-subtitle class="suggestion-info">
+                  {{ s.cycles }} ciclos · {{ (s.cycles * 1.5).toFixed(1) }}h
+                </mat-card-subtitle>
               </mat-card-header>
               <mat-card-content class="suggestion-body">
-                <p *ngIf="s.isRecommended" class="recommended-text">RECOMENDADO</p>
-                <p *ngIf="s.cycles < 4" class="warning-text">Pouco sono. Risco de fadiga.</p>
+                <span *ngIf="s.isRecommended" class="recommended-badge">RECOMENDADO</span>
+                <p *ngIf="s.cycles < 4" class="warning-note">Risco de fadiga</p>
               </mat-card-content>
             </mat-card>
           </div>
         </section>
-
       </main>
     </div>
   `,
   styles: `
     .home-container {
-      min-height: calc(100vh - 64px);
-      background-color: var(--bg-primary);
+      min-height: calc(100vh - var(--bottom-nav-height) - 64px);
+      background-color: var(--color-bg);
+      display: flex;
+      flex-direction: column;
     }
 
     .content {
       max-width: 800px;
+      width: 100%;
       margin: 0 auto;
-      padding: var(--space-xl) var(--space-md);
+      padding: var(--space-xl) var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2xl);
+    }
+
+    .glass {
+      background: rgba(17, 24, 38, 0.6) !important;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--color-border) !important;
     }
 
     .hero-card {
       border-radius: var(--radius-lg);
-      overflow: hidden;
-      margin-bottom: var(--space-xl);
+      padding: var(--space-xl) 0;
+      text-align: center;
+      box-shadow: var(--shadow-2) !important;
     }
+
+    .hero-header {
+      justify-content: center;
+      margin-bottom: var(--space-lg);
+    }
+
+    .hero-header mat-card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
     .hero-content {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: var(--space-2xl) 0;
+      gap: var(--space-2xl);
     }
-    .current-time {
-      text-align: center;
-      margin-bottom: var(--space-xl);
+
+    .clock-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    .clock-display .label {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .clock-display .time {
+      font-size: 5rem;
+      font-weight: 800;
+      color: var(--color-primary);
+      margin: 0;
+      line-height: 1;
+      font-family: var(--font-title);
+      letter-spacing: -2px;
+    }
+
+    .timezone-label {
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 4px 12px;
+      border-radius: 100px;
+    }
+
+    .active-session-status {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--color-primary);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: var(--space-xs);
+    }
+
+    .status-badge mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    .session-detail {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+    }
+
+    .empty-status p {
+      max-width: 280px;
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    .actions-container {
+      padding: 0 var(--space-xl) var(--space-lg);
+      justify-content: center !important;
+    }
+
+    .main-action-btn {
+      width: 100%;
+      max-width: 320px;
+      height: 56px !important;
+      border-radius: var(--radius-md) !important;
+      font-weight: 700 !important;
+      font-size: 1rem !important;
+      letter-spacing: 0.5px !important;
+      display: flex !important;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .main-action-btn.warn {
+      background-color: var(--color-danger) !important;
+      color: #fff !important;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: var(--space-lg);
+    }
+
+    .suggestions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .suggestion-card {
+      background: var(--color-surface) !important;
+      border: 1px solid var(--color-border) !important;
+      border-radius: var(--radius-md) !important;
+      padding: var(--space-md) !important;
+      transition: all var(--transition-normal);
       display: flex;
       flex-direction: column;
       gap: var(--space-sm);
     }
-    .current-time .label { 
-      font-size: 0.75rem; 
-      color: var(--color-text-muted); 
-      text-transform: uppercase; 
-      letter-spacing: 2px;
-      font-weight: 700;
-    }
-    .current-time .time { 
-      font-size: 5.5rem; 
-      font-weight: 800; 
-      color: var(--color-primary); 
-      line-height: 1;
-      font-family: var(--font-title);
-      letter-spacing: -3px;
-      /* Removed neon glow per user request */
+
+    .suggestion-header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
     }
 
-    .suggestions-section h3 {
-      font-family: var(--font-title);
-      font-weight: 700;
-      color: var(--text-header);
-      margin-bottom: var(--space-lg);
-      text-align: center;
-    }
-    .active-session-info {
-      text-align: center;
-      margin-bottom: var(--space-xl);
-      color: var(--color-text-muted);
-      line-height: 1.25;
-    }
-    .active-session-info p {
-      margin: 0;
-      font-size: 0.8rem;
-      font-weight: 500;
-    }
-    .suggestions-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: var(--space-md);
-      justify-content: center;
-    }
-    .suggestion-card { 
-      border-radius: var(--radius-md); 
-      transition: all var(--transition-fast);
-      background-color: var(--bg-surface) !important;
-      border: 1px solid var(--border) !important;
-    }
-    .suggestion-card:hover {
-      transform: translateY(-4px);
-      background-color: var(--bg-surface-hover) !important;
-      box-shadow: var(--shadow-md) !important;
-    }
-    .suggestion-card.recommended {
-      border: 1px solid var(--color-primary) !important;
-      background: rgba(66, 214, 198, 0.04) !important;
-      box-shadow: 0 0 20px rgba(66, 214, 198, 0.05) !important;
-    }
-    .suggestion-card.warning {
-      border: 1px solid rgba(255, 200, 87, 0.3) !important;
-    }
     .wake-time {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--text-header);
-    }
-    .suggestion-subtitle {
-      color: var(--text-main) !important; /* Higher contrast */
-      font-weight: 600 !important;
-      font-size: 0.9rem !important;
-      opacity: 1 !important;
-      margin-top: 4px;
-    }
-    .suggestion-body {
-      padding-top: 8px;
-    }
-    .recommended-text {
-      color: var(--primary);
+      font-size: 1.75rem;
       font-weight: 800;
-      font-size: 0.75rem;
+      color: var(--color-text);
+      font-family: var(--font-title);
+    }
+
+    .suggestion-info {
+      color: var(--color-text-muted) !important;
+      font-weight: 500 !important;
+      font-size: 0.85rem !important;
+      margin-top: 2px !important;
+    }
+
+    .recommended-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--color-primary);
       letter-spacing: 1px;
+      border: 1px solid var(--color-primary);
+      padding: 2px 8px;
+      border-radius: 4px;
     }
+
+    .suggestion-card.recommended {
+      border-color: var(--color-primary) !important;
+      background: rgba(66, 214, 198, 0.05) !important;
+      box-shadow: 0 0 30px rgba(66, 214, 198, 0.05) !important;
+    }
+
+    .suggestion-card.warning {
+      border-color: rgba(255, 92, 122, 0.3) !important;
+    }
+
+    .warning-note {
+      color: var(--color-danger);
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin: 8px 0 0;
+    }
+
     .warning-icon {
+      color: var(--color-danger);
       font-size: 20px;
-      vertical-align: middle;
-      color: var(--warning);
-      margin-left: var(--space-xs);
     }
-    .warning-text {
-      font-size: 0.8rem;
-      color: var(--warning);
-      font-weight: 700;
-      margin-top: var(--space-xs);
-    }
-    .actions-center {
-      display: flex;
-      justify-content: center;
-      padding-bottom: var(--space-lg);
-    }
-    
+
     @media (max-width: 600px) {
-      .current-time .time {
-        font-size: 3.5rem;
+      .clock-display .time {
+        font-size: 4rem;
+      }
+      .content {
+        padding: var(--space-lg) var(--space-md);
       }
       .suggestions-grid {
         grid-template-columns: 1fr;
@@ -228,6 +352,19 @@ export class HomeComponent {
   currentTime = signal(new Date());
   activeSession = signal<SessionResponse | null>(null);
   loading = signal(false);
+
+  timezoneLabel = computed(() => {
+    try {
+      // Get human readable timezone name if possible, otherwise offset
+      const name = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const offset = new Date().getTimezoneOffset();
+      const offsetHours = Math.abs(Math.floor(offset / 60));
+      const offsetSign = offset <= 0 ? '+' : '-';
+      return `${name} (GMT${offsetSign}${offsetHours})`;
+    } catch {
+      return 'Horário Local';
+    }
+  });
 
   sortedSuggestions = computed(() => {
     const session = this.activeSession();

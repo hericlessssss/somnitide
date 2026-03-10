@@ -25,99 +25,88 @@ import { Router, RouterLink } from '@angular/router';
     MatIconModule
   ],
   template: `
-    <div class="auth-container fade-in">
-      <mat-card class="auth-card">
-        <mat-card-header class="auth-card-header">
-          <div class="brand-container" aria-label="SomniTide Brand">
-            <mat-icon class="brand-icon" aria-hidden="true">waves</mat-icon>
-            <h1 class="brand-name">SomniTide</h1>
-          </div>
-          <p class="brand-caption">Acorde no fim do ciclo.</p>
-        </mat-card-header>
-        
-        <mat-card-content>
-          <div *ngIf="registerError()" class="error-banner" role="alert" aria-live="assertive" id="register-error">
-            <mat-icon aria-hidden="true">error_outline</mat-icon>
-            <span>{{ registerError() }}</span>
-          </div>
+    <mat-card class="auth-card">
+      <mat-card-header class="auth-card-header">
+        <div class="brand-container" aria-label="SomniTide Brand">
+          <mat-icon class="brand-icon" aria-hidden="true">waves</mat-icon>
+          <h1 class="brand-name">SomniTide</h1>
+        </div>
+        <p class="brand-caption">Acorde no fim do ciclo.</p>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div *ngIf="registerError()" class="error-banner" role="alert" aria-live="assertive" id="register-error">
+          <mat-icon aria-hidden="true">error_outline</mat-icon>
+          <span>{{ registerError() }}</span>
+        </div>
 
-          <form (ngSubmit)="onRegister()" #registerForm="ngForm" class="auth-form" [attr.aria-describedby]="registerError() ? 'register-error' : null">
-            <mat-form-field appearance="outline" floatLabel="always">
-              <mat-label>E-mail</mat-label>
-              <input matInput type="email" name="email" [(ngModel)]="email" 
-                     placeholder="seu@email.com" required email 
-                     autocomplete="email" [attr.aria-label]="'Endereço de e-mail'">
-              <mat-icon matPrefix class="secondary-icon" aria-hidden="true">email</mat-icon>
-            </mat-form-field>
-   
-            <mat-form-field appearance="outline" floatLabel="always">
-              <mat-label>Senha</mat-label>
-              <input matInput [type]="hidePassword() ? 'password' : 'text'" 
-                     name="password" [(ngModel)]="password" 
-                     placeholder="Sua senha" required minlength="6"
-                     autocomplete="new-password" [attr.aria-label]="'Nova senha'">
-              <mat-icon matPrefix class="secondary-icon" aria-hidden="true">lock</mat-icon>
-              <button mat-icon-button matSuffix (click)="hidePassword.set(!hidePassword())" 
-                      type="button" 
-                      [attr.aria-label]="hidePassword() ? 'Mostrar senha' : 'Ocultar senha'" 
-                      [attr.aria-pressed]="!hidePassword()">
-                <mat-icon aria-hidden="true">{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
-              </button>
-            </mat-form-field>
-   
-            <mat-form-field appearance="outline" floatLabel="always">
-              <mat-label>Confirmar Senha</mat-label>
-              <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" 
-                     name="confirmPassword" [(ngModel)]="confirmPassword" 
-                     placeholder="Repita a senha" required
-                     autocomplete="new-password" [attr.aria-label]="'Confirmar senha'">
-              <mat-icon matPrefix class="secondary-icon" aria-hidden="true">lock_reset</mat-icon>
-              <button mat-icon-button matSuffix (click)="hideConfirmPassword.set(!hideConfirmPassword())" 
-                      type="button" 
-                      [attr.aria-label]="hideConfirmPassword() ? 'Mostrar confirmação de senha' : 'Ocultar confirmação de senha'" 
-                      [attr.aria-pressed]="!hideConfirmPassword()">
-                <mat-icon aria-hidden="true">{{hideConfirmPassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
-              </button>
-            </mat-form-field>
-   
-            <div class="privacy-callout">
-              <mat-icon>info_outline</mat-icon>
-              <p>Sua privacidade é nossa prioridade. Não enviamos e-mails desnecessários.</p>
-            </div>
-   
-            <button mat-flat-button color="primary" class="cta-button" 
-                    [disabled]="loading() || !registerForm.form.valid"
-                    [attr.aria-busy]="loading()">
-              <span *ngIf="!loading()">Criar Conta</span>
-              <div *ngIf="loading()" class="loading-state">
-                <mat-icon class="spin">refresh</mat-icon>
-                <span>Criando conta...</span>
-              </div>
+        <form (ngSubmit)="onRegister()" #registerForm="ngForm" class="auth-form" [attr.aria-describedby]="registerError() ? 'register-error' : null">
+          <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>E-mail</mat-label>
+            <input matInput type="email" name="email" [(ngModel)]="email" 
+                   placeholder="seu@email.com" required email 
+                   autocomplete="email" [attr.aria-label]="'Endereço de e-mail'">
+            <mat-icon matPrefix class="secondary-icon" aria-hidden="true">email</mat-icon>
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Senha</mat-label>
+            <input matInput [type]="hidePassword() ? 'password' : 'text'" 
+                   name="password" [(ngModel)]="password" 
+                   placeholder="Sua senha" required minlength="6"
+                   autocomplete="new-password" [attr.aria-label]="'Nova senha'">
+            <mat-icon matPrefix class="secondary-icon" aria-hidden="true">lock</mat-icon>
+            <button mat-icon-button matSuffix (click)="hidePassword.set(!hidePassword())" 
+                    type="button" 
+                    [attr.aria-label]="hidePassword() ? 'Mostrar senha' : 'Ocultar senha'" 
+                    [attr.aria-pressed]="!hidePassword()">
+              <mat-icon aria-hidden="true">{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
-          </form>
-        </mat-card-content>
-        
-        <mat-card-footer class="auth-footer">
-          <p class="footer-text">
-            Já tem uma conta? 
-            <a routerLink="/login" class="footer-link">Fazer Login</a>
-          </p>
-        </mat-card-footer>
-      </mat-card>
-    </div>
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Confirmar Senha</mat-label>
+            <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" 
+                   name="confirmPassword" [(ngModel)]="confirmPassword" 
+                   placeholder="Repita a senha" required
+                   autocomplete="new-password" [attr.aria-label]="'Confirmar senha'">
+            <mat-icon matPrefix class="secondary-icon" aria-hidden="true">lock_reset</mat-icon>
+            <button mat-icon-button matSuffix (click)="hideConfirmPassword.set(!hideConfirmPassword())" 
+                    type="button" 
+                    [attr.aria-label]="hideConfirmPassword() ? 'Mostrar confirmação de senha' : 'Ocultar confirmação de senha'" 
+                    [attr.aria-pressed]="!hideConfirmPassword()">
+              <mat-icon aria-hidden="true">{{hideConfirmPassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+  
+          <div class="privacy-callout">
+            <mat-icon>info_outline</mat-icon>
+            <p>Sua privacidade é nossa prioridade. Não enviamos e-mails desnecessários.</p>
+          </div>
+  
+          <button mat-flat-button color="primary" class="cta-button" 
+                  [disabled]="loading() || !registerForm.form.valid"
+                  [attr.aria-busy]="loading()">
+            <span *ngIf="!loading()">Criar Conta</span>
+            <div *ngIf="loading()" class="loading-state">
+              <mat-icon class="spin">refresh</mat-icon>
+              <span>Criando conta...</span>
+            </div>
+          </button>
+        </form>
+      </mat-card-content>
+      
+      <mat-card-footer class="auth-footer">
+        <p class="footer-text">
+          Já tem uma conta? 
+          <a routerLink="/login" class="footer-link">Fazer Login</a>
+        </p>
+      </mat-card-footer>
+    </mat-card>
   `,
   styles: `
-    .auth-container {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding-top: 5vh; /* Slightly more bias for longer form */
-      min-height: 100vh;
-      width: 100%;
-    }
     .auth-card {
       width: 100%;
-      max-width: 420px;
       padding: var(--space-xl);
       border-radius: var(--radius-lg);
       background: var(--color-surface) !important;
@@ -251,29 +240,6 @@ import { Router, RouterLink } from '@angular/router';
       padding: 4px 8px;
     }
     
-    /* Material Overrides for Premium Inputs */
-    ::ng-deep .mat-mdc-form-field-subscript-wrapper { display: none; }
-    ::ng-deep .mat-mdc-form-field { margin-bottom: 4px; }
-    ::ng-deep .mat-mdc-form-field-wrapper { padding-bottom: 0; }
-    ::ng-deep .mat-mdc-text-field-outlined {
-      background-color: var(--color-surface-2) !important;
-      border-radius: var(--radius-md) !important;
-      transition: all var(--transition-fast) !important;
-    }
-    ::ng-deep .mat-mdc-form-field-focus-overlay { background: transparent !important; }
-    
-    ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
-    ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
-    ::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
-      border-width: 2px !important;
-      border-color: var(--color-primary) !important;
-    }
-
-    ::ng-deep .mat-mdc-form-field .mdc-notched-outline__notch { border-right: none !important; }
-    ::ng-deep .mat-mdc-form-field .mdc-floating-label {
-      color: var(--color-text-muted) !important;
-      font-size: 16px !important;
-    }
     ::ng-deep .mat-mdc-form-field.mat-focused .mdc-floating-label {
       color: var(--color-primary) !important;
     }
