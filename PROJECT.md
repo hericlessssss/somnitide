@@ -442,16 +442,14 @@ Para máxima segurança, configure as seguintes regras na branch `main`:
 ### Configurações Necessárias
 
 #### 1. No Coolify (Backend)
-- **Port Mapping (Acesso por IP)**: Por padrão, o Coolify não expõe a porta do container para o IP público. Para acessar via IP/Proxy, você **precisa** ir em:
-  - **Network -> Port Mappings**.
-  - Adicione: `80:80` (Isso mapeia a porta 80 do seu servidor para a 80 do container).
+- **Domínio de Produção**: `https://somnitide-api.gratianovem.com.br`
+- **Port Mapping**: Certifique-se que o mapeamento `80:80` está ativo em **Network**.
 - Variável de ambiente:
-  - `ALLOWED_ORIGINS`: `http://localhost:4200,https://somnitide.pages.dev`
+  - `ALLOWED_ORIGINS`: `http://localhost:4200,https://somnitide.pages.dev,https://somnitide-api.gratianovem.com.br`
 
 #### 2. No Cloudflare Pages (Frontend)
-- **Solução de HTTPS (Proxy)**: O Cloudflare agora faz o papel de segurança (HTTPS -> HTTP).
-- **Variáveis de Ambiente (Cloudflare Dashboard)**:
-  - `BACKEND_URL`: `http://201.23.78.147` (Sem a barra no final).
+- **Variáveis de Ambiente**:
+  - `API_URL`: `https://somnitide-api.gratianovem.com.br` (Pode deixar vazia para usar o padrão do script).
 - **Comando de Build Final**:
   `sh inject-api-url.sh && npm run build`
 
