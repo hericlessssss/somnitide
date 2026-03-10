@@ -281,6 +281,7 @@ O sistema agora é **"Opinionated"**. Para garantir a integridade do estudo do s
 | Teste de layout falhando (`.app-title` não encontrado) | O template usa `.brand-name`. Atualizado o seletor no arquivo `.spec.ts` do frontend. |
 | Teste de layout falhando (`.mobile-nav` não encontrado) | O template usa `.mobile-nav-bar`. Atualizado o seletor no teste. |
 | `ng test` falhava no modo manual | Configurado `npx vitest run` ou `npm test -- --watch=false` para execução única no CI. |
+| Erro de sintaxe no `ci.yml` (`Unrecognized named-value: 'id'`) | A sintaxe correta para acessar outputs de steps é `steps.<id>.outputs.<nome>`. Corrigido de `id.meta.output` para `steps.meta.outputs`. |
 
 ---
 

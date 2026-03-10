@@ -64,8 +64,8 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: ${{ id.meta.output.tags }}
-          labels: ${{ id.meta.output.labels }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
   frontend:
     name: Frontend CI (Angular)
