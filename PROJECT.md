@@ -1,6 +1,6 @@
 # PROJECT.md — Documentação Viva do Somnitide
 
-> Atualizado após: **CI/CD ETAPA INTEGRADA — Swagger, CORS e Prod Connection**
+> Atualizado após: **CI/CD ETAPA FINAL — Visualização de Testes no GitHub**
 
 ---
 
@@ -457,6 +457,17 @@ Para máxima segurança, configure as seguintes regras na branch `main`:
 - [x] CORS configurado para origens dinâmicas
 - [x] Frontend preparado para injeção de URL
 - [x] Instruções de Deploy atualizadas no `PROJECT.md`
+
+---
+
+## CI/CD Etapa Final — Visualização de Testes no GitHub
+
+### O que foi feito
+- **Relatórios JUnit**: Configurada a exportação de resultados de testes em formato XML para Maven (Surefire) e Angular (Vitest).
+- **GitHub Test Reporter**: Integrada a Action `dorny/test-reporter` no `ci.yml`. Agora, ao final de cada execução da esteira, uma aba **"Tests"** aparecerá no GitHub Summary, mostrando detalhadamente quais testes passaram e quais falharam (incluindo stack traces de erro).
+- **Anotações de Código**: Falhas em testes agora geram anotações automáticas nas linhas de código correspondentes durante o Pull Request.
+
+---
 
 ---
 

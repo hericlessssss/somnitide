@@ -9,6 +9,8 @@ on:
 permissions:
   contents: read
   packages: write
+  checks: write
+  pull-requests: write
 
 jobs:
   backend:
@@ -28,6 +30,14 @@ jobs:
         run: mvn -pl backend clean test package -DskipTests=false
         env:
           SUPABASE_JWKS_URI: https://mock.supabase.co/auth/v1/get_jwks
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Backend Tests
+          path: backend/target/surefire-reports/*.xml
+          reporter: java-junit
 
       - name: Upload Backend Artifact
         uses: actions/upload-artifact@v4
@@ -85,8 +95,16 @@ jobs:
         working-directory: frontend
 
       - name: Run Tests
-        run: npm test -- --watch=false
+        run: npm test -- --watch=false --reporter=default --reporter=junit --outputFile=test-results.xml
         working-directory: frontend
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Frontend Tests
+          path: frontend/test-results.xml
+          reporter: jest-junit
 
       - name: Build Frontend
         run: npm run build
