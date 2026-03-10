@@ -3,8 +3,8 @@
 # É utilizado durante o build no Cloudflare Pages.
 
 if [ -z "$API_URL" ]; then
-  echo "ERRO: A variável de ambiente API_URL não está definida."
-  exit 1
+  echo "AVISO: A variável de ambiente API_URL não está definida. Usando '/proxy' como padrão."
+  API_URL="/proxy"
 fi
 
 echo "Injetando API_URL: $API_URL"
