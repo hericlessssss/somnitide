@@ -26,4 +26,7 @@ public interface SleepSessionJpaRepository
      */
     List<SleepSessionEntity> findByUserIdAndEndedAtUtcIsNotNullOrderByStartedAtUtcDesc(
             String userId, Pageable pageable);
+
+    List<SleepSessionEntity> findByUserIdAndEndedAtUtcAfterOrderByStartedAtUtcDesc(
+            String userId, java.time.Instant after);
 }

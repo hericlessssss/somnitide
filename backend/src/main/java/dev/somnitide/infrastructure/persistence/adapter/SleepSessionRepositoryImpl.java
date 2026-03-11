@@ -45,4 +45,13 @@ public class SleepSessionRepositoryImpl implements SleepSessionRepository {
                 .map(SleepSessionEntity::toDomain)
                 .toList();
     }
+
+    @Override
+    public List<SleepSession> findByUserIdAndEndedAtAfter(String userId, java.time.Instant after) {
+        return jpaRepository
+                .findByUserIdAndEndedAtUtcAfterOrderByStartedAtUtcDesc(userId, after)
+                .stream()
+                .map(SleepSessionEntity::toDomain)
+                .toList();
+    }
 }

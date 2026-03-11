@@ -41,6 +41,10 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/insights/insights.component').then(m => m.InsightsComponent)
             },
             {
+                path: 'progress',
+                loadComponent: () => import('./pages/progress/progress.component').then(m => m.ProgressComponent)
+            },
+            {
                 path: '',
                 redirectTo: 'home',
                 pathMatch: 'full'

@@ -25,4 +25,7 @@ public interface SleepSessionRepository {
      * ordered by startedAtUtc descending.
      */
     List<SleepSession> findClosedByUserId(String userId, int limit);
+
+    /** Returns closed sessions for the user ended after the specific instant. */
+    List<SleepSession> findByUserIdAndEndedAtAfter(String userId, java.time.Instant after);
 }

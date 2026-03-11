@@ -31,6 +31,7 @@ import { Router } from '@angular/router';
             <a routerLink="/home" routerLinkActive="active-link" class="nav-item">Home</a>
             <a routerLink="/history" routerLinkActive="active-link" class="nav-item">Histórico</a>
             <a routerLink="/insights" routerLinkActive="active-link" class="nav-item">Insights</a>
+            <a routerLink="/progress" routerLinkActive="active-link" class="nav-item">Progresso</a>
           </nav>
 
           <span class="spacer"></span>
@@ -64,6 +65,10 @@ import { Router } from '@angular/router';
         <a routerLink="/insights" routerLinkActive="active" class="mobile-nav-item" aria-label="Ir para Insights">
           <mat-icon aria-hidden="true">insights</mat-icon>
           <span>Insights</span>
+        </a>
+        <a routerLink="/progress" routerLinkActive="active" class="mobile-nav-item" aria-label="Ir para Progresso">
+          <mat-icon aria-hidden="true">emoji_events</mat-icon>
+          <span>Progresso</span>
         </a>
       </div>
     </nav>

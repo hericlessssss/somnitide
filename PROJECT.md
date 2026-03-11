@@ -423,11 +423,208 @@ Para máxima segurança, configure as seguintes regras na branch `main`:
 ---
 
 ## Checklist Final de CI/CD
+### Design Decisions (Premium Refactor)
+
+*   **Theme**: "Midnight Premium" - A refined dark mode using `#0B0F14` for deep backgrounds and `rgba(255,255,255,0.08)` for subtle borders.
+*   **Typography**: **Plus Jakarta Sans** (chosen for its geometric precision and premium readability in tech-focused dark themes).
+*   **Color Palette**:
+    *   **Primary**: `#42D6C6` (Premium Teal).
+    *   **Surface**: `#111826` (Clean elevated surfaces).
+    *   **Status**: Ruby Red (`#FF5C7A`) for errors, Gold (`#FFC857`) for warnings.
+*   **Inputs**: Modern outlined style with background `#0F1622`, focus glows, and secondary opacities for icons.
+*   **Micro-interactions**: 150-250ms transitions, `scale(0.98)` on active state for buttons, and fade-in entry for cards.
+
+### Current Status
+
+- [x] Stage 1: Premium Login (Tokens, Typography, Component, Tests)
+    - *Refinement*: Increased form gap (16-20px), refined focus glow (3px), fixed label clipping, and added safety margins to prevent field overlap.
+- [x] Stage 2: Premium Register (Toggles, Error Banner, Signals)
+- [x] Stage 3: Private Layout & App Shell (Glassmorphism, Fixed Nav Bar)
+    - *Refinement*: Replaced floating mobile nav with a fixed glassmorphism bar for better UI integration.
+- [x] Stage 4: Internal Screens & Clock (Refined Weight, No Glow, Harmonized Cards)
+    - *Refinement*: Removed neon text-shadow from home clock and increased weight to 800 per user request. Harmonized Home, History, and Insights with the "Midnight Premium" palette.
+- [x] Stage 5: Correct Bottom Nav & Safe Area (Layout fixes, Content Leakage, TDD)
+    - *Refinement*: Implemented fixed bottom bar with safe-area support and increased glassmorphism opacity.
+
+### Commands
+
+*   `npm start`: Start the frontend development server.
+*   `npm test -- --include src/app/pages/login/login.component.spec.ts`: Run login tests.
+
+---
+
+## CI/CD Etapa 1 — O que foi feito
+
+### Resumo
+- Criado workflow de CI do GitHub Actions (`.github/workflows/ci.yml`).
+- Configurado Build & Test automatizado para Backend (Maven) e Frontend (Angular).
+- Implementado sistema de **cache** para dependências (Maven e npm) para builds mais rápidos.
+- Configurada publicação de **artefatos** (JAR do backend e dist do frontend) para cada execução do workflow.
+- Corrigidos testes unitários e de layout que impediam o CI de passar.
+
+### Decisões Técnicas
+- **Java 21 (Temurin)** no CI: Garante compatibilidade com as metas do projeto, mesmo com ambiente local em Java 17.
+- **Node 22 (LTS)** no CI: Versão estável recomendada para Angular 21.
+- **Mocks nos Testes**: Adicionada env `SUPABASE_JWKS_URI` mockada no CI para evitar falhas de inicialização do contexto Spring nos testes de Controller.
+
+---
+
+## Hurdles & Fixes (CI/CD)
+
+| Problema | Solução |
+|---|---|
+| `SleepCycleCalculatorTest` falhava com 5 sugestões em vez de 3 | O default de `minCycles` em `UserPreferences.java` era 2, mas os testes esperavam 4 (conforme regra LOCKED). Corrigido default para 4. |
+| Teste de layout falhando (`.app-title` não encontrado) | O template usa `.brand-name`. Atualizado o seletor no arquivo `.spec.ts` do frontend. |
+| Teste de layout falhando (`.mobile-nav` não encontrado) | O template usa `.mobile-nav-bar`. Atualizado o seletor no teste. |
+| `ng test` falhava no modo manual | Configurado `npx vitest run` ou `npm test -- --watch=false` para execução única no CI. |
+| Erro de sintaxe no `ci.yml` (`Unrecognized named-value: 'id'`) | A sintaxe correta para acessar outputs de steps é `steps.<id>.outputs.<nome>`. Corrigido de `id.meta.output` para `steps.meta.outputs`. |
+
+---
+
+## Checklist Pós-ETAPA 1 (CI/CD)
+
+- [x] Diagnóstico do monorepo concluído
+- [x] Testes de backend e frontend passando localmente
+- [x] `.github/workflows/ci.yml` criado e funcional
+- [x] Caches de dependências configurados
+- [x] Upload de artefatos configurado (JAR + dist)
+- [x] `PROJECT.md` atualizado com a Etapa 1
+
+---
+
+## Próximas Etapas (Roadmap CI/CD)
+- **ETAPA 2**: Dockerizar backend (Dockerfile multi-stage) + healthcheck + ajustes env
+- **ETAPA 3**: Publicar imagem no GHCR via GitHub Actions (tags: sha, latest) + doc de secrets
+- **ETAPA 4**: Integração com Coolify (instruções e checklist: apontar para repo ou GHCR, setar env vars, ports, domain, SSL)
+- **ETAPA 5**: Cloudflare Pages (preferir integração nativa; se Actions, configurar token e deploy)
+- **ETAPA 6**: Hardening: branch protection, required checks, smoke tests pós-deploy (curl /actuator/health), rollback básico
+
+---
+
+## CI/CD Etapa 2 — O que foi feito
+
+### Resumo
+- Criado **Dockerfile multi-stage** para o backend (Build com Maven + Runtime com JRE 21).
+- Adicionada dependência `spring-boot-starter-actuator` para viabilizar healthchecks.
+- Configurado endpoint `/actuator/health` no `application.properties`.
+- Implementado **Healthcheck no Dockerfile** usando `wget` para monitorar a integridade da aplicação containerizada.
+
+### Decisões Técnicas
+- **Dockerfile Multi-stage**: Reduz o tamanho da imagem final ao separar o ambiente de compilação (JDK + Maven) do ambiente de execução (JRE).
+- **JRE 21 Jammy**: Base leve e segura para a execução do backend.
+- **Spring Actuator**: Escolhido por ser o padrão de mercado para monitoramento em Spring Boot, integrando-se nativamente com orquestradores como Coolify/GHCR.
+
+---
+
+## Checklist Pós-ETAPA 2 (CI/CD)
+
+- [x] Dockerfile multi-stage criado em `backend/`
+- [x] Spring Actuator adicionado ao `pom.xml`
+- [x] Endpoint de health configurado e exposto
+- [x] Healthcheck nativo do Docker configurado
+- [x] Build local do JAR verificado com novas dependências
+- [x] `PROJECT.md` atualizado com a Etapa 2
+
+---
+
+## CI/CD Etapa 3 — O que foi feito
+
+### Resumo
+- Automatizada a publicação da imagem Docker do backend no **GitHub Container Registry (GHCR)**.
+- Atualizado o workflow `.github/workflows/ci.yml` com um novo job `publish-docker`.
+- Implementado sistema de **tagging automático**: cada imagem é tagueada com o SHA do commit e a tag `latest` (para pushes na `main`).
+- Configuradas permissões granulares de pacotes (`packages: write`) no GitHub Actions.
+
+### Decisões Técnicas
+- **Job Separado**: O build do Docker roda apenas após o sucesso dos testes do backend (`needs: backend`), garantindo que apenas código estável seja transformado em imagem.
+- **Docker Metadata Action**: Utilizada a action oficial para gerar tags semânticas e labels padronizadas automaticamente.
+
+---
+
+## Checklist Pós-ETAPA 3 (CI/CD)
+
+- [x] Workflow de build/push Docker configurado no GitHub Actions
+- [x] Login no GHCR via `GITHUB_TOKEN` validado
+- [x] Tags `latest` e `${{ github.sha }}` implementadas
+- [x] `PROJECT.md` atualizado com a Etapa 3
+
+---
+
+## CI/CD Etapa 4 — O que foi feito
+
+### Resumo
+- Elaborado o guia definitivo para deploy do backend no **Coolify v4 (v4.0.0-beta.463)**.
+- Mapeadas todas as variáveis de ambiente baseadas no Supabase e infraestrutura atual.
+- Configurada a integração com o **GHCR** para pull de imagens privadas (via Personal Access Token).
+- Definida a estratégia de **Healthcheck** via Spring Actuator `/actuator/health`.
+
+### Guia de Deploy (Snapshot)
+1. **Recurso**: Docker Image -> `ghcr.io/hericlessssss/somnitide-backend:latest`.
+2. **Porta**: Interna `8080` / Exposta via Traefik (HTTPS).
+3. **Environment**: `DATABASE_URL`, `DATABASE_USERNAME`, `DATABASE_PASSWORD`, `SUPABASE_JWKS_URI`.
+4. **Healthcheck**: Automático via `/actuator/health` (porta 8080).
+
+---
+
+## Checklist Pós-ETAPA 4 (CI/CD)
+
+- [x] Guia de deploy Coolify v4 documentado
+- [x] Variáveis de ambiente mapeadas
+- [x] Estratégia de healthcheck validada no plano
+- [x] `PROJECT.md` atualizado com a Etapa 4
+
+---
+
+## CI/CD Etapa 5 — O que foi feito
+
+### Resumo
+- Preparação do frontend para deploy no **Cloudflare Pages**.
+- Criado o arquivo `frontend/public/_redirects` com a regra `/* /index.html 200`. Isso permite que o roteamento SPA (Angular) funcione corretamente ao recarregar a página sem causar erros 404.
+- Elaborado o guia de configuração do Cloudflare Pages (Build configs, paths e env vars).
+
+### Guia de Deploy Cloudflare Pages
+1. **GitHub Connection**: Repositório público `hericlessssss/somnitide`.
+2. **Root Directory**: `frontend`.
+3. **Framework Preset**: `Angular`.
+4. **Build Command**: `npm run build`.
+5. **Build Directory**: `dist/frontend/browser`
+6. **Env Vars**: Adicionar `API_URL` apontando para o backend no Coolify.
+
+---
+
+## Checklist Pós-ETAPA 5 (CI/CD)
+
+- [x] Arquivo `_redirects` criado em `frontend/public/`
+- [x] Configurações de build do Cloudflare Pages documentadas
+- [x] Variáveis de ambiente de produção mapeadas
+- [x] `PROJECT.md` atualizado com a Etapa 5
+
+---
+
+## CI/CD Etapa 6 — O que foi feito
+
+### Resumo
+- Implementado o **Job de Sucesso Unificado** (`ci-success`) no GitHub Actions. Este job consolida o status de todas as etapas (Backend, Docker Push e Frontend), servindo como o único "Required Status Check" necessário para proteção de branch.
+- Documentadas as recomendações de **Branch Protection** no GitHub para garantir que a `main` nunca receba código quebrado.
+
+### Recomendações de Hardening (GitHub Settings)
+Para máxima segurança, configure as seguintes regras na branch `main`:
+1. **Require a pull request before merging**: Ativar "Require approvals".
+2. **Require status checks to pass before merging**: Pesquisar por `CI overall success` (o job que criamos).
+3. **Require branches to be up to date before merging`.
+4. **Do not allow bypassing the above settings**.
+
+---
+
+## Checklist Final de CI/CD
 
 - [x] CI (GitHub Actions) validado e funcional
 - [x] Dockerfile multi-stage configurado
 - [x] Publicação automatizada no GHCR
 - [x] Guia de deploy Coolify (v4) documentado
+- [x] Refatoração de fontes (-1)
+- [x] Feature: Progresso (Sleep Score V1)
+- [x] Refinamento UI/UX: Progresso (Padronização Midnight Premium)
 - [x] Deploy Frontend (Cloudflare Pages) configurado com `_redirects`
 - [x] Job de verificação unificada (`ci-success`) implementado
 - [x] `PROJECT.md` atualizado com todas as etapas
@@ -481,6 +678,15 @@ Para máxima segurança, configure as seguintes regras na branch `main`:
 - [x] **ETAPA 5: Ajustar Sugestões** (Duração, Mais Opções, Pinned) - Concluído em 2026-03-11
 - [x] **ETAPA 6: Performance pass** (Lighthouse + bundle stats) - Concluído em 2026-03-11
 - [x] **REFINO: Centralização Login/Register** (Mobile & Desktop) - Concluído em 2026-03-11
+4.  **Tamanho de Fontes**: Redução global de -1 nível (ex: 15px -> 14px) para melhor densidade em mobile. [2026-03-11]
+5.  **Score de Sono (Progresso)**: Implementado Score V1 baseado em Duração (60pts), Qualidade (40pts) e Streak (10pts). Agrupamento por dia (UTC) com prioridade para a sessão mais longa do dia. [2026-03-11]
+6.  **Refinamento UI/UX Progresso**: Harmonizada a página de Progresso com o tema "Midnight Premium". Centralização do layout (800px), uso de cards glassmorphism, avatar de sessão com cores semânticas e timeline de histórico idêntica à página de Histórico. [2026-03-11]
+
+## Decisões Técnicas
+
+- **Cálculo de minutos de sono**: Decidido usar `EndedAtUtc - SleepStartEstimatedAtUtc`. Mesmo que a latência seja estimada, ela reflete melhor o tempo real dormido do que o tempo total na cama.
+- **Streak de Sono**: Calculado com base na continuidade de dias (UTC) com pelo menos uma sessão encerrada. Se o usuário não dormiu hoje ou ontem (UTC), o streak é zero.
+- **Backend Architecture**: Mantido Domínio Puro para o `SleepProgressCalculator` para garantir testes instantâneos e isolados.
 
 ### Detalhes das Etapas (Continuação)
 
