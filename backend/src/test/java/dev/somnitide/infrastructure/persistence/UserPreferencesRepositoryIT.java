@@ -67,7 +67,7 @@ class UserPreferencesRepositoryIT {
         assertThat(found.get().sleepLatencyMinutes()).isEqualTo(14);
         assertThat(found.get().cycleLengthMinutes()).isEqualTo(90);
         assertThat(found.get().minCycles()).isEqualTo(1);
-        assertThat(found.get().maxCycles()).isEqualTo(6);
+        assertThat(found.get().maxCycles()).isEqualTo(8);
         assertThat(found.get().bufferMinutes()).isEqualTo(5);
     }
 
