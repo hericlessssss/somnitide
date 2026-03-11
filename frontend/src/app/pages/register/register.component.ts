@@ -130,7 +130,7 @@ import { Router, RouterLink } from '@angular/router';
       width: 100%;
     }
     .brand-icon {
-      font-size: 28px;
+      font-size: 27px;
       width: 28px;
       height: 28px;
       color: var(--color-primary);
@@ -139,14 +139,14 @@ import { Router, RouterLink } from '@angular/router';
       justify-content: center;
     }
     .brand-name {
-      font-size: 24px;
+      font-size: 23px;
       font-weight: 700;
       color: var(--color-text);
       letter-spacing: -0.5px;
       margin: 0;
     }
     .brand-caption {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
       color: var(--color-text-muted);
       margin: 0;
@@ -170,7 +170,7 @@ import { Router, RouterLink } from '@angular/router';
       padding: var(--space-md);
       border-radius: var(--radius-md);
       margin-bottom: var(--space-md);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
     }
     .privacy-callout {
@@ -184,13 +184,13 @@ import { Router, RouterLink } from '@angular/router';
       margin: 4px 0;
     }
     .privacy-callout mat-icon {
-      font-size: 20px;
+      font-size: 19px;
       width: 20px;
       height: 20px;
       color: var(--color-text-muted);
     }
     .privacy-callout p {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--color-text-muted);
       line-height: 1.4;
       margin: 0;
@@ -199,7 +199,7 @@ import { Router, RouterLink } from '@angular/router';
       width: 100%;
       height: 52px;
       border-radius: var(--radius-md);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       margin-top: 8px;
       transition: all var(--transition-fast);
@@ -215,7 +215,7 @@ import { Router, RouterLink } from '@angular/router';
     }
     .spin {
       animation: rotate 1s linear infinite;
-      font-size: 20px;
+      font-size: 19px;
       width: 20px;
       height: 20px;
     }
@@ -229,7 +229,7 @@ import { Router, RouterLink } from '@angular/router';
       text-align: center;
     }
     .footer-text {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--color-text-muted);
     }
     .footer-link {

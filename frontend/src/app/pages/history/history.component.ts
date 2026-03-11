@@ -122,14 +122,14 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
     .section-header h1 { 
       font-family: var(--font-title);
       font-weight: 800; 
-      font-size: 2.2rem; 
+      font-size: 2.1rem; 
       color: var(--color-text); 
       margin-bottom: var(--space-xs);
       letter-spacing: -1px;
     }
     .section-header p { 
       color: var(--color-text-muted); 
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: 500;
     }
 
@@ -207,7 +207,7 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
     .card-title-premium { 
       font-family: var(--font-title); 
       font-weight: 700;
-      font-size: 1.25rem; 
+      font-size: 1.15rem; 
       color: var(--color-text); 
       margin: 0;
       line-height: 1.2;
@@ -219,14 +219,14 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
     }
     .card-subtitle-premium { 
       color: var(--color-primary); 
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 700; 
       display: flex;
       align-items: center;
       gap: 6px;
     }
     .duration-badge {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       color: var(--color-text-muted);
       font-weight: 600;
       display: flex;
@@ -235,7 +235,7 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
       opacity: 0.8;
     }
     .tiny-icon {
-      font-size: 14px !important;
+      font-size: 13px !important;
       width: 14px !important;
       height: 14px !important;
     }
@@ -243,7 +243,7 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
     .card-body { padding: var(--space-md) 0 0; }
     
     .stars { display: flex; color: rgba(255,255,255,0.05); gap: 2px; }
-    .stars mat-icon { font-size: 18px; width: 18px; height: 18px; }
+    .stars mat-icon { font-size: 17px; width: 18px; height: 18px; }
     .stars mat-icon.filled { color: var(--color-warning); filter: drop-shadow(0 0 4px rgba(255, 200, 87, 0.3)); }
 
     .note-box {
@@ -256,20 +256,20 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
     }
     .note-box.no-note {
       opacity: 0.5;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
     }
     .note-box p {
       margin: 0;
       color: var(--color-text-muted);
       font-style: italic;
       line-height: 1.5;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       display: flex;
       align-items: flex-start;
       gap: 8px;
     }
     .quote-icon {
-      font-size: 18px;
+      font-size: 17px;
       width: 18px;
       height: 18px;
       color: var(--color-primary);
@@ -292,7 +292,7 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
       border-radius: var(--radius-md) !important;
       font-weight: 700 !important;
       letter-spacing: 1px !important;
-      font-size: 0.85rem !important;
+      font-size: 0.75rem !important;
       display: flex !important;
       align-items: center;
       gap: 8px;
@@ -324,7 +324,7 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
       margin-bottom: var(--space-xl);
       border: 1px solid var(--color-border);
     }
-    .empty-icon-wrapper mat-icon { font-size: 40px; width: 40px; height: 40px; opacity: 0.5; }
+    .empty-icon-wrapper mat-icon { font-size: 39px; width: 40px; height: 40px; opacity: 0.5; }
     .status-state h3 { color: var(--color-text); font-weight: 700; margin-bottom: var(--space-sm); }
     .status-state p { max-width: 320px; line-height: 1.6; }
   `]

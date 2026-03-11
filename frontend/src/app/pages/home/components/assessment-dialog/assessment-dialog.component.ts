@@ -34,7 +34,7 @@ export interface AssessmentResult {
       <header class="dialog-header glass">
         <div class="header-content">
           <h2 mat-dialog-title>Avaliação do Sono</h2>
-          <p class="subtitle">Como foi seu descanso hoje?</p>
+          <p class="subtitle">Como foi seu sono hoje?</p>
         </div>
         <button mat-icon-button class="close-btn" (click)="onDismiss()" aria-label="Fechar avaliação">
           <mat-icon>close</mat-icon>
@@ -174,7 +174,7 @@ export interface AssessmentResult {
     }
 
     .close-btn mat-icon {
-      font-size: 16px !important;
+      font-size: 15px !important;
       width: 16px !important;
       height: 16px !important;
     }
@@ -190,14 +190,14 @@ export interface AssessmentResult {
       color: var(--color-text) !important;
       font-family: var(--font-title);
       font-weight: 700;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       letter-spacing: -0.5px;
     }
 
     .subtitle {
       margin: var(--space-xs) 0 0;
       color: var(--color-text-muted);
-      font-size: 0.9rem;
+      font-size: 0.8rem;
     }
 
     .assessment-content {
@@ -227,7 +227,7 @@ export interface AssessmentResult {
       font-weight: 600;
       color: var(--color-text);
       margin-bottom: var(--space-md);
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-family: var(--font-title);
     }
 
@@ -412,9 +412,12 @@ export class AssessmentDialogComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     // Force scroll to top when dialog opens
-    if (this.scrollContent) {
-      this.scrollContent.nativeElement.scrollTop = 0;
-    }
+    // Using setTimeout to ensure it happens after any internal Material focus logic
+    setTimeout(() => {
+      if (this.scrollContent) {
+        this.scrollContent.nativeElement.scrollTop = 0;
+      }
+    }, 0);
   }
 
   onDismiss() {

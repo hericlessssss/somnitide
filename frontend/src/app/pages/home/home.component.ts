@@ -193,7 +193,7 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
     }
 
     .hero-header mat-card-title {
-      font-size: 1.1rem;
+      font-size: 1.0rem;
       font-weight: 700;
       color: var(--color-text-muted);
       letter-spacing: 0.5px;
@@ -215,7 +215,7 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
     }
 
     .clock-display .label {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       color: var(--color-text-muted);
       font-weight: 600;
       letter-spacing: 1.5px;
@@ -233,7 +233,7 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
     }
 
     .timezone-label {
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       color: var(--color-text-muted);
       font-weight: 500;
       background: rgba(255, 255, 255, 0.05);
@@ -254,26 +254,26 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
       gap: 8px;
       color: var(--color-primary);
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       margin-bottom: var(--space-xs);
     }
 
     .status-badge mat-icon {
-      font-size: 20px;
+      font-size: 19px;
       width: 20px;
       height: 20px;
     }
 
     .session-detail {
       margin: 0;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       color: var(--color-text-muted);
     }
 
     .empty-status p {
       max-width: 280px;
       margin: 0;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       color: var(--color-text-muted);
       line-height: 1.5;
     }
@@ -289,7 +289,7 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
       height: 56px !important;
       border-radius: var(--radius-md) !important;
       font-weight: 700 !important;
-      font-size: 1rem !important;
+      font-size: 0.9rem !important;
       letter-spacing: 0.5px !important;
       display: flex !important;
       align-items: center;
@@ -302,7 +302,7 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
     }
 
     .section-title {
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       font-weight: 700;
       color: var(--color-text);
       margin-bottom: var(--space-lg);
@@ -319,7 +319,7 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
     }
 
     .sub-section-title {
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       font-weight: 700;
       color: var(--color-text-muted);
       text-transform: uppercase;
@@ -381,20 +381,20 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
     }
 
     .cycles-badge {
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: 700;
       color: var(--color-text);
     }
 
     .duration-value {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       color: var(--color-text-muted);
       font-weight: 500;
       white-space: nowrap;
     }
 
     .wake-time {
-      font-size: 2.75rem;
+      font-size: 2.65rem;
       font-weight: 800;
       color: var(--color-text);
       font-family: var(--font-title);
@@ -403,7 +403,7 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
     }
 
     .duration-label {
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       color: var(--color-primary);
       font-weight: 700;
       margin-top: 6px;
@@ -417,13 +417,13 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
 
     .star-icon {
       color: var(--color-primary);
-      font-size: 28px;
+      font-size: 27px;
       width: 28px;
       height: 28px;
     }
 
     .recommended-badge {
-      font-size: 0.65rem;
+      font-size: 0.55rem;
       font-weight: 800;
       color: var(--color-primary);
       letter-spacing: 0.5px;
@@ -445,7 +445,7 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
       padding: var(--space-md);
       background: rgba(255, 255, 255, 0.03);
       border-radius: var(--radius-sm);
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       font-weight: 500;
     }
 
@@ -467,7 +467,7 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
     }
 
     .health-tag {
-      font-size: 0.65rem;
+      font-size: 0.55rem;
       font-weight: 700;
       text-transform: uppercase;
       margin-top: 4px;
@@ -481,7 +481,7 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
     }
 
     .small-card .wake-time {
-      font-size: 2rem;
+      font-size: 1.9rem;
     }
 
     .small-card.critical { border-color: rgba(255, 92, 122, 0.2) !important; }
@@ -489,12 +489,12 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
 
     .warning-icon {
       color: var(--color-warning);
-      font-size: 24px;
+      font-size: 23px;
     }
 
     .critical-icon {
       color: var(--color-danger);
-      font-size: 24px;
+      font-size: 23px;
     }
 
     .small-card.critical { border-color: rgba(255, 92, 122, 0.2) !important; }
@@ -508,7 +508,7 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
     }
 
     .wake-time {
-      font-size: 1.75rem;
+      font-size: 1.65rem;
       font-weight: 800;
       color: var(--color-text);
       font-family: var(--font-title);
@@ -517,13 +517,13 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
     .suggestion-info {
       color: var(--color-text-muted) !important;
       font-weight: 500 !important;
-      font-size: 0.85rem !important;
+      font-size: 0.75rem !important;
       margin-top: 2px !important;
     }
 
     .recommended-badge {
       display: inline-block;
-      font-size: 0.65rem;
+      font-size: 0.55rem;
       font-weight: 800;
       color: var(--color-primary);
       letter-spacing: 1px;
@@ -544,14 +544,14 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
 
     .warning-note {
       color: var(--color-danger);
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       font-weight: 600;
       margin: 8px 0 0;
     }
 
     .warning-icon {
       color: var(--color-danger);
-      font-size: 20px;
+      font-size: 19px;
     }
 
     @media (max-width: 600px) {
@@ -688,6 +688,7 @@ export class HomeComponent {
     const dialogRef = this.dialog.open(AssessmentDialogComponent, {
       width: '550px',
       disableClose: true,
+      autoFocus: false,
       backdropClass: 'assessment-dialog-backdrop'
     });
 

@@ -107,14 +107,14 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
     .section-header h1 { 
       font-family: var(--font-title);
       font-weight: 800; 
-      font-size: 2.2rem; 
+      font-size: 2.1rem; 
       color: var(--color-text); 
       margin-bottom: var(--space-xs);
       letter-spacing: -1px;
     }
     .section-header p { 
       color: var(--color-text-muted); 
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: 500;
     }
 
@@ -153,16 +153,16 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
       align-items: center;
       justify-content: center;
       margin-bottom: var(--space-md);
-      font-size: 28px;
+      font-size: 27px;
     }
-    .stat-icon-bg mat-icon { font-size: 28px; width: 28px; height: 28px; }
+    .stat-icon-bg mat-icon { font-size: 27px; width: 28px; height: 28px; }
     .stat-icon-bg.primary { background: rgba(66, 214, 198, 0.1); color: var(--color-primary); }
     .stat-icon-bg.accent { background: rgba(255, 200, 87, 0.1); color: var(--color-warning); }
     .stat-icon-bg.warn { background: rgba(255, 92, 122, 0.1); color: var(--color-danger); }
 
     .stat-label {
       font-family: var(--font-title);
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       color: var(--color-text-muted);
       text-transform: uppercase;
       letter-spacing: 1.5px;
@@ -171,7 +171,7 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
     }
     .stat-value-group { display: flex; align-items: baseline; justify-content: center; gap: 4px; }
     .stat-value {
-      font-size: 3rem;
+      font-size: 2.9rem;
       font-weight: 800;
       color: var(--color-text);
       font-family: var(--font-title);
@@ -179,7 +179,7 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
     }
     .stat-unit {
       color: var(--color-text-muted);
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 600;
     }
 
@@ -199,13 +199,13 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
     }
     .chart-header h3 {
       font-family: var(--font-title);
-      font-size: 1.1rem;
+      font-size: 1.0rem;
       font-weight: 700;
       margin: 0;
       color: var(--color-text);
     }
     .chart-header span {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       color: var(--color-text-muted);
       font-weight: 500;
     }
@@ -216,7 +216,7 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
 
     @media (max-width: 768px) {
       .charts-grid { grid-template-columns: 1fr; }
-      .stat-value { font-size: 2.5rem; }
+      .stat-value { font-size: 2.4rem; }
       .chart-card { padding: var(--space-md); }
     }
   `]
