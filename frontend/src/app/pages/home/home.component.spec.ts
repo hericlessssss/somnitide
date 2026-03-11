@@ -59,4 +59,36 @@ describe('HomeComponent', () => {
         expect(styles.flexDirection).toBe('column');
         expect(styles.alignItems).toBe('center');
     });
+
+    describe('getHealthStatus', () => {
+        it('should return critical for 2 cycles', () => {
+            const status = component.getHealthStatus(2);
+            expect(status.level).toBe('critical');
+            expect(status.label).toBe('Crítico');
+        });
+
+        it('should return critical/insuficiente for 3 cycles', () => {
+            const status = component.getHealthStatus(3);
+            expect(status.level).toBe('critical');
+            expect(status.label).toBe('Insuficiente');
+        });
+
+        it('should return warning/mínimo for 4 cycles', () => {
+            const status = component.getHealthStatus(4);
+            expect(status.level).toBe('warning');
+            expect(status.label).toBe('Mínimo');
+        });
+
+        it('should return info/ideal for 5 cycles', () => {
+            const status = component.getHealthStatus(5);
+            expect(status.level).toBe('info');
+            expect(status.label).toBe('Ideal');
+        });
+
+        it('should return warning/longo for 7 cycles', () => {
+            const status = component.getHealthStatus(7);
+            expect(status.level).toBe('warning');
+            expect(status.label).toBe('Longo');
+        });
+    });
 });

@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, inject, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -28,11 +28,17 @@ export interface AssessmentResult {
     MatIconModule,
     MatRippleModule
   ],
+  encapsulation: ViewEncapsulation.None,
   template: `
     <div class="dialog-container dark-theme">
       <header class="dialog-header glass">
-        <h2 mat-dialog-title>Avaliação do Sono</h2>
-        <p class="subtitle">Como foi seu descanso hoje?</p>
+        <div class="header-content">
+          <h2 mat-dialog-title>Avaliação do Sono</h2>
+          <p class="subtitle">Como foi seu descanso hoje?</p>
+        </div>
+        <button mat-icon-button class="close-btn" (click)="onDismiss()" aria-label="Fechar avaliação">
+          <mat-icon>close</mat-icon>
+        </button>
       </header>
       
       <mat-dialog-content #scrollContent class="assessment-content">
@@ -46,8 +52,8 @@ export interface AssessmentResult {
                    [class.selected]="answers.q1 === opt.value"
                    (click)="setAnswer('q1', opt.value)"
                    matRipple>
-                <mat-radio-button [value]="opt.value" (click)="$event.stopPropagation()">
-                  {{ opt.label }}
+                <mat-radio-button [value]="opt.value" style="color: white !important;">
+                  <span class="option-label-text" style="color: white !important;">{{ opt.label }}</span>
                 </mat-radio-button>
               </div>
             </mat-radio-group>
@@ -62,8 +68,8 @@ export interface AssessmentResult {
                    [class.selected]="answers.q2 === opt.value"
                    (click)="setAnswer('q2', opt.value)"
                    matRipple>
-                <mat-radio-button [value]="opt.value" (click)="$event.stopPropagation()">
-                  {{ opt.label }}
+                <mat-radio-button [value]="opt.value" style="color: white !important;">
+                  <span class="option-label-text" style="color: white !important;">{{ opt.label }}</span>
                 </mat-radio-button>
               </div>
             </mat-radio-group>
@@ -78,8 +84,8 @@ export interface AssessmentResult {
                    [class.selected]="answers.q3 === opt.value"
                    (click)="setAnswer('q3', opt.value)"
                    matRipple>
-                <mat-radio-button [value]="opt.value" (click)="$event.stopPropagation()">
-                  {{ opt.label }}
+                <mat-radio-button [value]="opt.value" style="color: white !important;">
+                  <span class="option-label-text" style="color: white !important;">{{ opt.label }}</span>
                 </mat-radio-button>
               </div>
             </mat-radio-group>
@@ -94,15 +100,15 @@ export interface AssessmentResult {
                    [class.selected]="answers.q4 === opt.value"
                    (click)="setAnswer('q4', opt.value)"
                    matRipple>
-                <mat-radio-button [value]="opt.value" (click)="$event.stopPropagation()">
-                  {{ opt.label }}
+                <mat-radio-button [value]="opt.value" style="color: white !important;">
+                  <span class="option-label-text" style="color: white !important;">{{ opt.label }}</span>
                 </mat-radio-button>
               </div>
             </mat-radio-group>
           </fieldset>
 
           <div class="question-group">
-            <mat-form-field appearance="outline" class="full-width no-margin premium-field">
+            <mat-form-field appearance="outline" [floatLabel]="'always'" class="full-width no-margin premium-field">
               <mat-label>Alguma observação?</mat-label>
               <textarea matInput [(ngModel)]="note" name="note" placeholder="Ex: Tomei café tarde, barulho na rua..."></textarea>
             </mat-form-field>
@@ -123,16 +129,16 @@ export interface AssessmentResult {
       flex-direction: column;
       height: 100%;
       max-height: 90vh;
-      background: var(--color-bg);
+      background: #0B0F14; /* Deepest black for contrast */
       color: var(--color-text);
       overflow: hidden;
       position: relative;
     }
 
     .glass {
-      background: rgba(17, 24, 38, 0.8) !important;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(17, 24, 38, 0.96) !important; /* Almost solid for clear separation */
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       z-index: 10;
     }
 
@@ -141,6 +147,41 @@ export interface AssessmentResult {
       text-align: center;
       border-bottom: 1px solid var(--color-border);
       flex-shrink: 0;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .header-content {
+      flex: 1;
+    }
+
+    .close-btn {
+      position: absolute;
+      right: 4px;
+      top: 4px;
+      color: rgba(255, 255, 255, 0.6) !important;
+      width: 28px !important;
+      height: 28px !important;
+      line-height: 28px !important;
+      padding: 0 !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      min-width: 0 !important;
+    }
+
+    .close-btn mat-icon {
+      font-size: 16px !important;
+      width: 16px !important;
+      height: 16px !important;
+    }
+
+    .close-btn:hover {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.05);
     }
 
     h2[mat-dialog-title] {
@@ -197,8 +238,8 @@ export interface AssessmentResult {
     }
 
     .option-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
+      background: #1A2234; /* Lighter than dialog background for depth */
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: var(--radius-md);
       padding: var(--space-sm) var(--space-md);
       transition: all var(--transition-fast);
@@ -208,36 +249,75 @@ export interface AssessmentResult {
     }
 
     .option-card:hover {
-      background: rgba(255, 255, 255, 0.04);
-      border-color: rgba(255, 255, 255, 0.15);
+      background: #252D3F;
+      border-color: rgba(66, 214, 198, 0.4);
     }
 
     .option-card.selected {
-      background: rgba(66, 214, 198, 0.08);
-      border-color: var(--color-primary);
+      background: rgba(66, 214, 198, 0.25) !important; /* Slightly more visible */
+      border-color: var(--color-primary) !important;
+      border-width: 2px;
+      box-shadow: 0 0 20px var(--color-primary-glow);
     }
 
     .option-card mat-radio-button {
       width: 100%;
     }
 
-    /* Customizing Material Radio to match theme */
-    :host ::ng-deep {
-      .mat-mdc-radio-button.mat-primary {
-        --mdc-radio-selected-focus-icon-color: var(--color-primary);
-        --mdc-radio-selected-hover-icon-color: var(--color-primary);
-        --mdc-radio-selected-icon-color: var(--color-primary);
-        --mdc-radio-selected-pressed-icon-color: var(--color-primary);
+    .assessment-dialog-backdrop {
+      backdrop-filter: blur(8px) !important;
+      -webkit-backdrop-filter: blur(8px) !important;
+      background-color: rgba(0, 0, 0, 0.4) !important;
+    }
+
+    /* Customizing Material Radio to match theme - ULTIMATE SPECIFICITY */
+    app-assessment-dialog {
+      .mat-mdc-radio-button,
+      .mat-mdc-radio-button *,
+      .mdc-radio,
+      .mdc-radio *,
+      .mdc-label,
+      .option-label-text {
+        color: #FFFFFF !important;
       }
+
+      .mat-mdc-radio-button {
+        --mdc-radio-selected-focus-icon-color: #FFFFFF !important;
+        --mdc-radio-selected-hover-icon-color: #FFFFFF !important;
+        --mdc-radio-selected-icon-color: #FFFFFF !important;
+        --mdc-radio-selected-pressed-icon-color: #FFFFFF !important;
+        --mdc-radio-unselected-focus-icon-color: rgba(255, 255, 255, 0.7) !important;
+        --mdc-radio-unselected-hover-icon-color: rgba(255, 255, 255, 0.7) !important;
+        --mdc-radio-unselected-icon-color: rgba(255, 255, 255, 0.7) !important;
+        --mdc-radio-unselected-pressed-icon-color: rgba(255, 255, 255, 0.7) !important;
+      }
+      
+      .mat-mdc-radio-button .mdc-radio__outer-circle {
+        border-color: rgba(255, 255, 255, 0.7) !important;
+      }
+      
+      .mat-mdc-radio-button.mat-mdc-radio-checked .mdc-radio__outer-circle {
+        border-color: #FFFFFF !important;
+      }
+
+      .mat-mdc-radio-button.mat-mdc-radio-checked .mdc-radio__inner-circle {
+        border-color: #FFFFFF !important;
+        background-color: #FFFFFF !important;
+      }
+
       .mat-mdc-radio-button .mdc-label {
-        color: var(--color-text) !important;
-        font-weight: 500;
-        cursor: pointer;
+        color: #FFFFFF !important;
+        opacity: 1 !important;
       }
     }
 
     .premium-field {
-      margin-top: var(--space-md);
+      margin-top: var(--space-xl);
+      --mdc-filled-textfield-container-color: var(--color-surface-2);
+    }
+
+    :host ::ng-deep .mat-mdc-form-field-flex {
+      padding-top: 8px !important;
     }
 
     .dialog-actions {
@@ -278,7 +358,7 @@ export interface AssessmentResult {
 })
 export class AssessmentDialogComponent implements AfterViewInit {
   private dialogRef = inject(MatDialogRef<AssessmentDialogComponent>);
-  
+
   @ViewChild('scrollContent', { read: ElementRef }) scrollContent!: ElementRef;
 
   answers: {
@@ -287,11 +367,11 @@ export class AssessmentDialogComponent implements AfterViewInit {
     q3: number | null,
     q4: number | null
   } = {
-    q1: null,
-    q2: null,
-    q3: null,
-    q4: null
-  };
+      q1: null,
+      q2: null,
+      q3: null,
+      q4: null
+    };
   note: string = '';
 
   qualityOptions = [
@@ -337,6 +417,12 @@ export class AssessmentDialogComponent implements AfterViewInit {
     }
   }
 
+  onDismiss() {
+    if (window.confirm('Deseja mesmo cancelar? Suas respostas não serão salvas.')) {
+      this.dialogRef.close();
+    }
+  }
+
   onConfirm() {
     const totalPoints = (this.answers.q1 ?? 0) +
       (this.answers.q2 ?? 0) +
@@ -352,7 +438,7 @@ export class AssessmentDialogComponent implements AfterViewInit {
 
     this.dialogRef.close({
       qualityRating: rating,
-      note: this.note || 'Avaliação concluída'
+      note: this.note || 'Sem observações'
     });
   }
 }

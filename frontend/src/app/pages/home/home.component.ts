@@ -79,26 +79,77 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
         </mat-card>
 
         <section *ngIf="activeSession()?.suggestions" class="suggestions-section fade-in">
-          <h3 class="section-title">Sugestões de Despertar</h3>
-          <div class="suggestions-grid">
-            <mat-card *ngFor="let s of sortedSuggestions()" 
-                      class="suggestion-card clickable" 
-                      [class.recommended]="s.isRecommended" 
-                      [class.warning]="s.cycles < 4">
-              <mat-card-header>
-                <div class="suggestion-header-content">
-                  <span class="wake-time">{{ s.wakeTimeUtc | date:'HH:mm' }}</span>
-                  <mat-icon *ngIf="s.cycles < 4" class="warning-icon" title="Duração abaixo do recomendado">report_problem</mat-icon>
+          <div class="section-header">
+            <h3 class="section-title">Sugestões de Despertar</h3>
+          </div>
+
+          <!-- Pinned Recommended Suggestion -->
+          <div *ngIf="recommendedSuggestion() as s" class="pinned-suggestion">
+            <mat-card class="suggestion-card recommended hero-suggestion clickable">
+              <div class="card-accent"></div>
+              <div class="suggestion-content">
+                <div class="suggestion-header-row">
+                  <div class="cycles-group">
+                    <span class="cycles-badge">{{ s.cycles }} ciclos</span>
+                    <span class="separator">·</span>
+                    <span class="duration-value">{{ formatDuration(s.cycles * 1.5) }}</span>
+                  </div>
                 </div>
-                <mat-card-subtitle class="suggestion-info">
-                  {{ s.cycles }} ciclos · {{ (s.cycles * 1.5).toFixed(1) }}h
-                </mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-content class="suggestion-body">
-                <span *ngIf="s.isRecommended" class="recommended-badge">RECOMENDADO</span>
-                <p *ngIf="s.cycles < 4" class="warning-note">Risco de fadiga</p>
+
+                <div class="suggestion-body-row">
+                  <div class="time-container">
+                    <span class="wake-time">{{ s.wakeTimeUtc | date:'HH:mm' }}</span>
+                    <span class="duration-label">Ideal para você</span>
+                  </div>
+                  
+                  <div class="badge-group">
+                    <mat-icon class="star-icon">stars</mat-icon>
+                    <span class="recommended-badge">RECOMENDADO</span>
+                  </div>
+                </div>
+              </div>
+              
+              <mat-card-content class="health-alert-container" *ngIf="getHealthStatus(s.cycles) as status">
+                <div class="health-alert" [class]="status.level">
+                  <mat-icon>{{ status.icon }}</mat-icon>
+                  <span>{{ status.message }}</span>
+                </div>
               </mat-card-content>
             </mat-card>
+          </div>
+
+          <div class="other-suggestions-outer">
+            <h4 class="sub-section-title">Outras opções</h4>
+            <div class="suggestions-grid">
+              <mat-card *ngFor="let s of nonRecommendedSuggestions()" 
+                        class="suggestion-card clickable small-card" 
+                        [class]="getHealthStatus(s.cycles).level">
+                <div class="suggestion-content">
+                  <div class="suggestion-header-row">
+                    <div class="cycles-group">
+                      <span class="cycles-badge">{{ s.cycles }} ciclos</span>
+                      <span class="separator">·</span>
+                      <span class="duration-value">{{ formatDuration(s.cycles * 1.5) }}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="suggestion-body-row">
+                    <div class="time-container">
+                      <span class="wake-time">{{ s.wakeTimeUtc | date:'HH:mm' }}</span>
+                      <span class="health-tag" *ngIf="s.cycles < 4 || s.cycles > 6">
+                        {{ getHealthStatus(s.cycles).label }}
+                      </span>
+                    </div>
+                    
+                    <div class="status-group" *ngIf="s.cycles < 4 || s.cycles > 6">
+                      <mat-icon [class]="getHealthStatus(s.cycles).level + '-icon'">
+                        {{ getHealthStatus(s.cycles).icon }}
+                      </mat-icon>
+                    </div>
+                  </div>
+                </div>
+              </mat-card>
+            </div>
           </div>
         </section>
       </main>
@@ -259,20 +310,195 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
 
     .suggestions-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: var(--space-lg);
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: var(--space-md);
     }
 
-    .suggestion-card {
-      background: var(--color-surface) !important;
-      border: 1px solid var(--color-border) !important;
-      border-radius: var(--radius-md) !important;
-      padding: var(--space-md) !important;
-      transition: all var(--transition-normal);
+    .pinned-suggestion {
+      margin-bottom: var(--space-xl);
+    }
+
+    .sub-section-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: var(--space-lg);
+      padding-left: var(--space-xs);
+    }
+
+    .hero-suggestion {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--color-primary) !important;
+      background: linear-gradient(135deg, rgba(66, 214, 198, 0.12) 0%, rgba(66, 214, 198, 0.04) 100%) !important;
+      padding: var(--space-lg) !important;
+    }
+
+    .suggestion-content {
       display: flex;
       flex-direction: column;
+      gap: var(--space-lg);
+      width: 100%;
+    }
+
+    .suggestion-header-row {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: var(--space-sm);
+    }
+
+    .cycles-group {
+      display: flex;
+      align-items: center;
       gap: var(--space-sm);
     }
+
+    .separator {
+      color: var(--color-text-muted);
+      opacity: 0.5;
+    }
+
+    .suggestion-body-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .time-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .badge-group {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .cycles-badge {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+
+    .duration-value {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .wake-time {
+      font-size: 2.75rem;
+      font-weight: 800;
+      color: var(--color-text);
+      font-family: var(--font-title);
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+
+    .duration-label {
+      font-size: 0.75rem;
+      color: var(--color-primary);
+      font-weight: 700;
+      margin-top: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .status-group {
+      display: flex;
+      align-items: center;
+    }
+
+    .star-icon {
+      color: var(--color-primary);
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+
+    .recommended-badge {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--color-primary);
+      letter-spacing: 0.5px;
+      border: 1.5px solid var(--color-primary);
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .health-alert-container {
+      margin-top: var(--space-lg) !important;
+      padding: 0 !important;
+    }
+
+    .health-alert {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-md);
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .health-alert.critical {
+      border-left: 3px solid var(--color-danger);
+      background: rgba(255, 92, 122, 0.05);
+      color: var(--color-danger);
+    }
+
+    .health-alert.warning {
+      border-left: 3px solid var(--color-warning);
+      background: rgba(255, 200, 87, 0.05);
+      color: var(--color-warning);
+    }
+
+    .health-alert.info {
+      border-left: 3px solid var(--color-primary);
+      color: var(--color-text-muted);
+    }
+
+    .health-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .health-tag.critical { color: var(--color-danger); }
+    .health-tag.warning { color: var(--color-warning); }
+
+    .small-card {
+      padding: var(--space-lg) !important;
+    }
+
+    .small-card .wake-time {
+      font-size: 2rem;
+    }
+
+    .small-card.critical { border-color: rgba(255, 92, 122, 0.2) !important; }
+    .small-card.warning { border-color: rgba(255, 200, 87, 0.2) !important; }
+
+    .warning-icon {
+      color: var(--color-warning);
+      font-size: 24px;
+    }
+
+    .critical-icon {
+      color: var(--color-danger);
+      font-size: 24px;
+    }
+
+    .small-card.critical { border-color: rgba(255, 92, 122, 0.2) !important; }
+    .small-card.warning { border-color: rgba(255, 200, 87, 0.2) !important; }
 
     .suggestion-header-content {
       display: flex;
@@ -366,16 +592,62 @@ export class HomeComponent {
     }
   });
 
-  sortedSuggestions = computed(() => {
-    const session = this.activeSession();
-    if (!session?.suggestions) return [];
-
-    return [...session.suggestions].sort((a, b) => {
-      if (a.isRecommended && !b.isRecommended) return -1;
-      if (!a.isRecommended && b.isRecommended) return 1;
-      return 0; // Maintain relative order if neither or both are recommended
-    });
+  recommendedSuggestion = computed(() => {
+    return this.activeSession()?.suggestions?.find(s => s.isRecommended) || null;
   });
+
+  nonRecommendedSuggestions = computed(() => {
+    return this.activeSession()?.suggestions
+      ?.filter(s => !s.isRecommended)
+      ?.sort((a, b) => a.cycles - b.cycles) || [];
+  });
+
+  formatDuration(hours: number): string {
+    const h = Math.floor(hours);
+    const m = Math.round((hours - h) * 60);
+    return `${h}h ${m.toString().padStart(2, '0')}min`;
+  }
+
+  getHealthStatus(cycles: number): { level: string, icon: string, message: string, label: string } {
+    if (cycles <= 2) {
+      return { 
+        level: 'critical', 
+        icon: 'dangerous', 
+        message: 'Duração crítica. Alto risco de comprometimento cognitivo e fadiga severa.',
+        label: 'Crítico'
+      };
+    }
+    if (cycles === 3) {
+      return { 
+        level: 'critical', 
+        icon: 'error_outline', 
+        message: 'Sono insuficiente. Risco de irritabilidade e baixa concentração.',
+        label: 'Insuficiente'
+      };
+    }
+    if (cycles === 4) {
+      return { 
+        level: 'warning', 
+        icon: 'report_problem', 
+        message: 'Abaixo do recomendado. Pode causar sonolência diurna.',
+        label: 'Mínimo'
+      };
+    }
+    if (cycles >= 5 && cycles <= 6) {
+      return { 
+        level: 'info', 
+        icon: 'check_circle_outline', 
+        message: '7h 30min é a duração padrão ouro para recuperação total.',
+        label: 'Ideal'
+      };
+    }
+    return { 
+      level: 'warning', 
+      icon: 'info_outline', 
+      message: 'Sono prolongado. Pode resultar em inércia do sono ao despertar.',
+      label: 'Longo'
+    };
+  }
 
   constructor() {
     setInterval(() => this.currentTime.set(new Date()), 1000);
@@ -415,7 +687,8 @@ export class HomeComponent {
   endSession() {
     const dialogRef = this.dialog.open(AssessmentDialogComponent, {
       width: '550px',
-      disableClose: true
+      disableClose: true,
+      backdropClass: 'assessment-dialog-backdrop'
     });
 
     dialogRef.afterClosed().subscribe((result: AssessmentResult | undefined) => {

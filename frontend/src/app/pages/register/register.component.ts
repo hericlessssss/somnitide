@@ -247,7 +247,6 @@ import { Router, RouterLink } from '@angular/router';
     @media (max-width: 480px) {
       .auth-card {
         max-width: 100%;
-        margin: 0 var(--space-lg);
         padding: var(--space-lg);
       }
     }

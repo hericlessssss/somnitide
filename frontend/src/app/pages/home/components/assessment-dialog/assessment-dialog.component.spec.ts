@@ -93,4 +93,22 @@ describe('AssessmentDialogComponent', () => {
             note: 'Tudo ótimo'
         });
     });
+
+    it('should show close button in header', () => {
+        const compiled = fixture.nativeElement as HTMLElement;
+        const closeBtn = compiled.querySelector('.close-btn');
+        expect(closeBtn).toBeTruthy();
+    });
+
+    it('should close dialog when onDismiss is confirmed', () => {
+        vi.spyOn(window, 'confirm').mockReturnValue(true);
+        component.onDismiss();
+        expect(mockDialogRef.close).toHaveBeenCalled();
+    });
+
+    it('should NOT close dialog when onDismiss is cancelled', () => {
+        vi.spyOn(window, 'confirm').mockReturnValue(false);
+        component.onDismiss();
+        expect(mockDialogRef.close).not.toHaveBeenCalled();
+    });
 });

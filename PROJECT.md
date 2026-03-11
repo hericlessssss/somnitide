@@ -478,10 +478,11 @@ Para máxima segurança, configure as seguintes regras na branch `main`:
 
 ## UI/UX Refactor 2026-03-10
 
-- [x] **ETAPA 5: Inputs & Refinement** (Caret colors, Harmonization)
-- [ ] **ETAPA 6: Performance pass** (Lighthouse + bundle stats)
+- [x] **ETAPA 5: Ajustar Sugestões** (Duração, Mais Opções, Pinned) - Concluído em 2026-03-11
+- [x] **ETAPA 6: Performance pass** (Lighthouse + bundle stats) - Concluído em 2026-03-11
+- [x] **REFINO: Centralização Login/Register** (Mobile & Desktop) - Concluído em 2026-03-11
 
-### Detalhes das Etapas
+### Detalhes das Etapas (Continuação)
 
 #### ETAPA 1: Refatoração UI/UX e Layout Base
 - **Resumo:** Implementação de Bottom Navigation fixo com glassmorphism e tratamento de safe areas.
@@ -495,17 +496,38 @@ Para máxima segurança, configure as seguintes regras na branch `main`:
 - **Resumo:** Adicionado fuso horário automático no relógio e grid responsivo de sugestões.
 - **Técnica:** `Intl.DateTimeFormat().resolvedOptions().timeZone` para detecção local.
 
-#### ETAPA 4: Public Layout & Keyboard
-- **Resumo:** Transição para `min-height: 100dvh` e `overflow-y: auto` no `PublicLayout`.
-- **Fix:** Remoção de centralização forçada nas páginas de Login/Register para garantir scroll no mobile.
+#### ETAPA 5: Ajustar Sugestões & Backend Defaults
+- **Resumo:** Expansão das sugestões de sono e melhoria da legibilidade dos dados.
+- **Destaque:** Backend atualizado para suportar 1-8 ciclos (antes 4-6). Frontend exibe duração como "7h 30min" em vez de decimal.
 
-#### ETAPA 5: Inputs & Refinement
-- **Resumo:** Harmonização de `::selection` e `caret-color` em todo o aplicativo.
-- **Destaque:** Globalização das regras de foco do Material (mdc-text-field) em `styles.css`.
+#### ETAPA 6: Performance Pass & Budgets
+- **Resumo:** Análise de build production e recomendações de otimização.
+- **Métricas:** 
+  - Initial Bundle: 887.23 kB (Warning: > 500 kB).
+  - Transfer Size: ~214 kB (Gzip/Brotli estimado).
+- **Hurdles:** Orçamento de estilos do `HomeComponent` excedido em 546 bytes devido à complexidade do glassmorphism.
 
-### Hurdles & Fixes (2026-03-10)
+#### ETAPA 9: Refino Histórico & Lógica de Avaliação
+- **Resumo:** Melhoria nas métricas de sono, paginação e clareza nas observações.
+- **Novas Funcionalidades:**
+  - Exibição de **Duração Total** (Tempo dormido) calculada em cada card do histórico.
+  - Paginação inteligente: limite inicial de 10 itens com botão "Ver mais".
+- **UX/UI:**
+  - Ajuste na lógica de observações: default alterado para "Sem observações" (removido o genérico "Avaliação concluída").
+  - Caixa de notas refinada com ícone de aspas e tipografia mais harmônica.
+- **TDD:** Adicionado `history.component.spec.ts` com 6 testes validando cálculos e paginação.
+
+### Performance Notes & Sugestões
+1. **Bundle Size**: O bundle inicial está acima do desejado. Recomendado mover bibliotecas secundárias de UI para lazy chunks onde possível.
+2. **CSS Optimization**: Extrair padrões repetidos de glassmorphism para utilitários globais (preparado hoje).
+3. **Imagens**: Garantir que o ícone da marca (waves) seja um SVG otimizado.
+
+### Hurdles & Fixes (2026-03-10/11)
 | Problema | Solução |
 |---|---|
 | Teclado mobile cobria inputs | `PublicLayout` alterado para `min-height` + `overflow-y: auto`. |
-| Duplicação de arquivos/classes | Limpeza profunda e re-escrita via `multi_replace_file_content`. |
-| `NG0100` em testes de Form | Adicionado `fixture.whenStable()` e clicks simulados nos cards. |
+| Erro TS2322 em rádios | Implementado `setAnswer()` para tipagem rigorosa. |
+| Layout quebrando em resoluções < 360px | Refatoração dos cards de sugestão para usar flex-col em blocos de informação. |
+| Timezone errada no herói | Injetado label dinâmico via `resolvedOptions().timeZone`. |
+| Sugestões insuficientes | Backend defaults expandidos de 3 para 8 opções. |
+| Desalinhamento Login/Cadastro | Removidas margens negativas residuais em `LoginComponent`. |

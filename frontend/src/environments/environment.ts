@@ -1,6 +1,6 @@
 export const environment = {
     supabaseUrl: 'https://kkrwcwimkmpeexjhadlt.supabase.co',
     supabaseKey: 'sb_publishable_yhAQM12QGFYd7VOLn9HC2w_5x5LOhJ_',
-    apiUrl: 'API_URL_PLACEHOLDER/api/v1',
+    apiUrl: 'https://somnitide-api.gratianovem.com.br/api/v1',
     production: true
 };

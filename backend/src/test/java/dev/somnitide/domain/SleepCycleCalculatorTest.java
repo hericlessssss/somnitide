@@ -27,40 +27,42 @@ class SleepCycleCalculatorTest {
                 calculator = new SleepCycleCalculator();
         }
 
-        // -----------------------------------------------------------------------
-        // Happy path — default preferences
+        // Happy path — default preferences (NOW: 1 to 8 cycles)
         // nowUtc = 2026-03-03T10:00:00Z
-        // latency=14min, cycle=90min, min=4, max=6, buffer=5min
+        // latency=14min, cycle=90min, min=1, max=8, buffer=5min
         //
         // Formula: nowUtc + latency + (n * cycle) + buffer
-        // n=4 → 10:00 + 14 + 360 + 5 = 16:19:00Z
-        // n=5 → 10:00 + 14 + 450 + 5 = 17:49:00Z ← Recommended (5 cycles)
-        // n=6 → 10:00 + 14 + 540 + 5 = 19:19:00Z
+        // n=1 → 10:00 + 14 + 90 + 5 = 11:49:00Z
+        // ...
+        // n=5 → 10:00 + 14 + 450 + 5 = 17:49:00Z ← Recommended
+        // ...
+        // n=8 → 10:00 + 14 + 720 + 5 = 22:19:00Z
         // -----------------------------------------------------------------------
         @Test
-        @DisplayName("Happy path: default preferences produce 3 suggestions with correct times")
+        @DisplayName("Happy path: default preferences produce 8 suggestions with correct times")
         void happyPath_defaultPreferences_returnsSuggestionsWithCorrectTimes() {
                 Instant nowUtc = Instant.parse("2026-03-03T10:00:00Z");
                 UserPreferences prefs = UserPreferences.defaults("user-1");
 
                 List<WakeSuggestion> suggestions = calculator.calculateWakeSuggestions(nowUtc, prefs);
 
-                assertThat(suggestions).hasSize(3);
+                assertThat(suggestions).hasSize(8);
 
-                WakeSuggestion fourCycles = suggestions.get(0);
-                assertThat(fourCycles.cycles()).isEqualTo(4);
-                assertThat(fourCycles.wakeTimeUtc()).isEqualTo(Instant.parse("2026-03-03T16:19:00Z"));
-                assertThat(fourCycles.isRecommended()).isFalse();
+                // Check first (1 cycle)
+                WakeSuggestion oneCycle = suggestions.get(0);
+                assertThat(oneCycle.cycles()).isEqualTo(1);
+                assertThat(oneCycle.wakeTimeUtc()).isEqualTo(Instant.parse("2026-03-03T11:49:00Z"));
 
-                WakeSuggestion fiveCycles = suggestions.get(1);
+                // Check recommended (5 cycles)
+                WakeSuggestion fiveCycles = suggestions.get(4);
                 assertThat(fiveCycles.cycles()).isEqualTo(5);
                 assertThat(fiveCycles.wakeTimeUtc()).isEqualTo(Instant.parse("2026-03-03T17:49:00Z"));
-                assertThat(fiveCycles.isRecommended()).isTrue(); // 5 cycles is the recommended
+                assertThat(fiveCycles.isRecommended()).isTrue();
 
-                WakeSuggestion sixCycles = suggestions.get(2);
-                assertThat(sixCycles.cycles()).isEqualTo(6);
-                assertThat(sixCycles.wakeTimeUtc()).isEqualTo(Instant.parse("2026-03-03T19:19:00Z"));
-                assertThat(sixCycles.isRecommended()).isFalse();
+                // Check last (8 cycles)
+                WakeSuggestion eightCycles = suggestions.get(7);
+                assertThat(eightCycles.cycles()).isEqualTo(8);
+                assertThat(eightCycles.wakeTimeUtc()).isEqualTo(Instant.parse("2026-03-03T22:19:00Z"));
         }
 
         @Test

@@ -5,6 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SleepService, SessionResponse } from '../../services/sleep.service';
 
 @Component({
@@ -16,7 +18,9 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
     MatIconModule,
     MatDividerModule,
     MatListModule,
-    MatChipsModule
+    MatChipsModule,
+    MatButtonModule,
+    MatProgressSpinnerModule
   ],
   template: `
     <div class="history-container">
@@ -55,17 +59,25 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
                 <mat-icon>{{ getQualityIcon(session.qualityRating) }}</mat-icon>
               </div>
               <div class="header-text">
-                <div class="card-title-premium" [attr.aria-label]="(session.startedAtUtc | date:'dd') + ' de ' + (session.startedAtUtc | date:'MMMM')">
+                <div class="card-title-premium">
                   {{ session.startedAtUtc | date:'dd' }} de {{ session.startedAtUtc | date:'MMMM' }}
                 </div>
-                <div class="card-subtitle-premium" [attr.aria-label]="'Horário: ' + (session.startedAtUtc | date:'HH:mm') + ' até ' + (session.endedAtUtc | date:'HH:mm')">
-                  {{ session.startedAtUtc | date:'HH:mm' }} — {{ session.endedAtUtc | date:'HH:mm' }}
+                <!-- Time and Duration Info -->
+                <div class="time-meta-group">
+                  <div class="card-subtitle-premium">
+                    <mat-icon class="tiny-icon">access_time</mat-icon>
+                    {{ session.startedAtUtc | date:'HH:mm' }} — {{ session.endedAtUtc | date:'HH:mm' }}
+                  </div>
+                  <div class="duration-badge" *ngIf="session.endedAtUtc">
+                    <mat-icon class="tiny-icon">bedtime</mat-icon>
+                    Tempo dormido: {{ calculateDuration(session.startedAtUtc, session.endedAtUtc) }}
+                  </div>
                 </div>
               </div>
             </div>
 
             <mat-card-content class="card-body">
-              <div class="metrics-row" *ngIf="session.qualityRating" [attr.aria-label]="'Qualidade: ' + session.qualityRating + ' de 5 estrelas'">
+              <div class="metrics-row" *ngIf="session.qualityRating">
                 <div class="rating-badge">
                   <div class="stars" aria-hidden="true">
                     <mat-icon *ngFor="let star of [1,2,3,4,5]" [class.filled]="session.qualityRating >= star">
@@ -75,11 +87,23 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
                 </div>
               </div>
 
-              <div *ngIf="session.note" class="note-box">
-                <p>"{{ session.note }}"</p>
+              <div class="note-box" [class.no-note]="!session.note || session.note === 'Avaliação concluída'">
+                <p>
+                  <mat-icon class="quote-icon">format_quote</mat-icon>
+                  {{ (session.note && session.note !== 'Avaliação concluída') ? session.note : 'Sem observações' }}
+                </p>
               </div>
             </mat-card-content>
           </mat-card>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-footer" *ngIf="hasMore()">
+          <button mat-flat-button class="load-more-btn" (click)="loadMore()" [disabled]="loading()">
+            <mat-icon *ngIf="!loading()">add</mat-icon>
+            <mat-spinner *ngIf="loading()" diameter="20"></mat-spinner>
+            <span>{{ loading() ? 'CARREGANDO...' : 'VER MAIS HISTÓRICO' }}</span>
+          </button>
         </div>
       </div>
     </div>
@@ -179,19 +203,41 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
       margin-bottom: var(--space-md);
     }
 
-    .header-text { display: flex; flex-direction: column; gap: 4px; }
+    .header-text { display: flex; flex-direction: column; gap: 8px; }
     .card-title-premium { 
       font-family: var(--font-title); 
       font-weight: 700;
-      font-size: 1.2rem; 
+      font-size: 1.25rem; 
       color: var(--color-text); 
       margin: 0;
       line-height: 1.2;
     }
+    .time-meta-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
     .card-subtitle-premium { 
-      color: var(--color-text-muted); 
-      font-size: 0.85rem;
-      font-weight: 600; 
+      color: var(--color-primary); 
+      font-size: 0.9rem;
+      font-weight: 700; 
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .duration-badge {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.8;
+    }
+    .tiny-icon {
+      font-size: 14px !important;
+      width: 14px !important;
+      height: 14px !important;
     }
 
     .card-body { padding: var(--space-md) 0 0; }
@@ -201,17 +247,60 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
     .stars mat-icon.filled { color: var(--color-warning); filter: drop-shadow(0 0 4px rgba(255, 200, 87, 0.3)); }
 
     .note-box {
-      margin-top: var(--space-md);
+      margin-top: var(--space-lg);
       background: rgba(255, 255, 255, 0.03);
-      padding: var(--space-md);
+      padding: var(--space-lg);
       border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+    }
+    .note-box.no-note {
+      opacity: 0.5;
+      font-size: 0.85rem;
     }
     .note-box p {
       margin: 0;
       color: var(--color-text-muted);
       font-style: italic;
-      line-height: 1.4;
-      font-size: 0.9rem;
+      line-height: 1.5;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .quote-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: var(--color-primary);
+      opacity: 0.5;
+      margin-top: 2px;
+    }
+
+    .pagination-footer {
+      display: flex;
+      justify-content: center;
+      margin-top: var(--space-2xl);
+      padding-top: var(--space-xl);
+    }
+    .load-more-btn {
+      background: var(--color-surface-2) !important;
+      color: var(--color-text) !important;
+      border: 1px solid var(--color-border) !important;
+      height: 48px !important;
+      padding: 0 var(--space-xl) !important;
+      border-radius: var(--radius-md) !important;
+      font-weight: 700 !important;
+      letter-spacing: 1px !important;
+      font-size: 0.85rem !important;
+      display: flex !important;
+      align-items: center;
+      gap: 8px;
+      transition: all var(--transition-fast) !important;
+    }
+    .load-more-btn:hover:not(:disabled) {
+      background: var(--color-border) !important;
+      transform: translateY(-2px);
     }
 
     /* Empty State Refinement */
@@ -246,6 +335,8 @@ export class HistoryComponent implements OnInit {
 
   history = signal<SessionResponse[]>([]);
   loading = signal(false);
+  limit = signal(10);
+  hasMore = signal(true);
 
   ngOnInit() {
     this.loadHistory();
@@ -253,9 +344,10 @@ export class HistoryComponent implements OnInit {
 
   loadHistory() {
     this.loading.set(true);
-    this.sleepService.getHistory(20).subscribe({
+    this.sleepService.getHistory(this.limit()).subscribe({
       next: (res) => {
         this.history.set(res.history);
+        this.hasMore.set(res.history.length === this.limit());
         this.loading.set(false);
       },
       error: (err) => {
@@ -263,6 +355,24 @@ export class HistoryComponent implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  loadMore() {
+    this.limit.update(l => l + 10);
+    this.loadHistory();
+  }
+
+  calculateDuration(start: string, end: string): string {
+    const startTime = new Date(start).getTime();
+    const endTime = new Date(end).getTime();
+    const diffMs = endTime - startTime;
+    
+    if (diffMs <= 0) return '0h 0min';
+    
+    const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    
+    return `${diffHrs}h ${diffMins}min`;
   }
 
   getQualityIcon(rating: number | null): string {
