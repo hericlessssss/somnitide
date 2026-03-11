@@ -21,6 +21,7 @@ export interface ProgressResponse {
     rangeDays: number;
     streakDays: number;
     avgScore: number;
+    totalScore: number;
     avgSleepMinutes: number;
     bestDay: BestDayResponse | null;
     days: DayResultResponse[];

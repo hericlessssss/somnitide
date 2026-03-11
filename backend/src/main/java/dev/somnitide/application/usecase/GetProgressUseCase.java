@@ -3,6 +3,7 @@ package dev.somnitide.application.usecase;
 import dev.somnitide.application.port.SleepSessionRepository;
 import dev.somnitide.domain.model.SleepSession;
 import dev.somnitide.domain.service.SleepProgressCalculator;
+import dev.somnitide.domain.service.StreakCalculator;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -17,10 +18,14 @@ public class GetProgressUseCase implements GetProgress {
 
     private final SleepSessionRepository repository;
     private final SleepProgressCalculator calculator;
+    private final StreakCalculator streakCalculator;
 
-    public GetProgressUseCase(SleepSessionRepository repository, SleepProgressCalculator calculator) {
+    public GetProgressUseCase(SleepSessionRepository repository, 
+                             SleepProgressCalculator calculator,
+                             StreakCalculator streakCalculator) {
         this.repository = repository;
         this.calculator = calculator;
+        this.streakCalculator = streakCalculator;
     }
 
     @Override
@@ -28,9 +33,9 @@ public class GetProgressUseCase implements GetProgress {
         Instant after = Instant.now().minus(Duration.ofDays(days));
         List<SleepSession> sessions = repository.findByUserIdAndEndedAtAfter(userId, after);
 
-        // 1. Group by UTC date and pick longest session
+        // 1. Group by UTC date and pick longest session (filtering out invalid ones)
         Map<LocalDate, SleepSession> longestSessionsByDay = sessions.stream()
-                .filter(s -> s.getEndedAtUtc() != null)
+                .filter(s -> s.getEndedAtUtc() != null && s.isValidDuration())
                 .collect(Collectors.toMap(
                         s -> LocalDate.ofInstant(s.getEndedAtUtc(), ZoneOffset.UTC),
                         s -> s,
@@ -43,7 +48,7 @@ public class GetProgressUseCase implements GetProgress {
                 .toList();
 
         // 3. Calculate streak
-        int streak = calculateStreak(sortedDates);
+        int streak = streakCalculator.calculateStreak(sortedDates);
 
         // 4. Calculate daily results
         List<DayResult> dayResults = new ArrayList<>();
@@ -95,6 +100,7 @@ public class GetProgressUseCase implements GetProgress {
                 days,
                 streak,
                 avgScore,
+                totalScoreSum,
                 avgSleepMinutes,
                 bestDay,
                 dayResults
@@ -105,27 +111,5 @@ public class GetProgressUseCase implements GetProgress {
         if (session.getEndedAtUtc() == null) return 0;
         long minutes = Duration.between(session.getSleepStartEstimatedAtUtc(), session.getEndedAtUtc()).toMinutes();
         return (int) Math.max(0, minutes);
-    }
-
-    private int calculateStreak(List<LocalDate> sortedDates) {
-        if (sortedDates.isEmpty()) return 0;
-        
-        // Check if the most recent session is from "today" or "yesterday" (UTC)
-        LocalDate today = LocalDate.now(ZoneOffset.UTC);
-        LocalDate lastDate = sortedDates.get(0);
-        
-        if (!lastDate.equals(today) && !lastDate.equals(today.minusDays(1))) {
-            return 0; // Streak broken
-        }
-
-        int streak = 1;
-        for (int i = 0; i < sortedDates.size() - 1; i++) {
-            if (sortedDates.get(i).minusDays(1).equals(sortedDates.get(i + 1))) {
-                streak++;
-            } else {
-                break;
-            }
-        }
-        return streak;
     }
 }

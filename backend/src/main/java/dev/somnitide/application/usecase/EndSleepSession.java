@@ -1,8 +1,11 @@
 package dev.somnitide.application.usecase;
 
 import dev.somnitide.application.port.SleepSessionRepository;
+import dev.somnitide.application.port.UserProfileRepository;
 import dev.somnitide.domain.exception.DomainException;
 import dev.somnitide.domain.model.SleepSession;
+import dev.somnitide.domain.service.SleepProgressCalculator;
+import dev.somnitide.domain.service.StreakCalculator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,9 +15,18 @@ import java.time.Instant;
 public class EndSleepSession {
 
     private final SleepSessionRepository repository;
+    private final UserProfileRepository profileRepository;
+    private final SleepProgressCalculator progressCalculator;
+    private final StreakCalculator streakCalculator;
 
-    public EndSleepSession(SleepSessionRepository repository) {
+    public EndSleepSession(SleepSessionRepository repository,
+                           UserProfileRepository profileRepository,
+                           SleepProgressCalculator progressCalculator,
+                           StreakCalculator streakCalculator) {
         this.repository = repository;
+        this.profileRepository = profileRepository;
+        this.progressCalculator = progressCalculator;
+        this.streakCalculator = streakCalculator;
     }
 
     public record Request(Integer qualityRating, String note) {
@@ -30,8 +42,41 @@ public class EndSleepSession {
                 .orElseThrow(() -> new DomainException("NO_OPEN_SESSION",
                         "User has no open sleep session to end"));
 
-        session.end(Instant.now(), request.qualityRating(), request.note());
+        Instant now = Instant.now();
+        session.end(now, request.qualityRating(), request.note());
+
+        // Calculate points
+        if (session.isValidDuration()) {
+            int sleepMinutes = getSleepMinutes(session);
+            
+            // Get streak for bonus
+            java.time.Instant thirtyDaysAgo = now.minus(java.time.Duration.ofDays(30));
+            java.util.List<SleepSession> sessions = repository.findByUserIdAndEndedAtAfter(userId, thirtyDaysAgo);
+            java.util.List<java.time.LocalDate> sortedDates = sessions.stream()
+                    .filter(s -> s.getEndedAtUtc() != null && s.isValidDuration())
+                    .map(s -> java.time.LocalDate.ofInstant(s.getEndedAtUtc(), java.time.ZoneOffset.UTC))
+                    .distinct()
+                    .sorted(java.util.Comparator.reverseOrder())
+                    .toList();
+            
+            int streak = streakCalculator.calculateStreak(sortedDates);
+            int points = progressCalculator.computeTotal(sleepMinutes, session.getQualityRating(), streak);
+            
+            session.setEarnedPoints(points);
+
+            // Update profile
+            profileRepository.findByUserId(userId).ifPresent(profile -> {
+                profile.addScore(points);
+                profileRepository.save(profile);
+            });
+        }
 
         return repository.save(session);
+    }
+
+    private int getSleepMinutes(SleepSession session) {
+        if (session.getEndedAtUtc() == null) return 0;
+        long minutes = java.time.Duration.between(session.getSleepStartEstimatedAtUtc(), session.getEndedAtUtc()).toMinutes();
+        return (int) Math.max(0, minutes);
     }
 }

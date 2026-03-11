@@ -54,4 +54,18 @@ public class SleepSessionRepositoryImpl implements SleepSessionRepository {
                 .map(SleepSessionEntity::toDomain)
                 .toList();
     }
+
+    @Override
+    public long calculateTotalPoints(String userId) {
+        Long sum = jpaRepository.sumTotalPointsByUserId(userId);
+        return sum != null ? sum : 0L;
+    }
+
+    @Override
+    public List<SleepSession> findByUserId(String userId) {
+        return jpaRepository.findByUserIdOrderByStartedAtUtcDesc(userId)
+                .stream()
+                .map(SleepSessionEntity::toDomain)
+                .toList();
+    }
 }

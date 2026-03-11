@@ -23,15 +23,21 @@ export class ApiService {
         });
     }
 
+    private buildUrl(path: string): string {
+        const baseUrl = environment.apiUrl.endsWith('/') ? environment.apiUrl : `${environment.apiUrl}/`;
+        const cleanPath = path.startsWith('/') ? path.substring(1) : path;
+        return `${baseUrl}${cleanPath}`;
+    }
+
     get<T>(path: string): Observable<T> {
-        return this.http.get<T>(`${environment.apiUrl}${path}`, { headers: this.headers });
+        return this.http.get<T>(this.buildUrl(path), { headers: this.headers });
     }
 
     post<T>(path: string, body?: any): Observable<T> {
-        return this.http.post<T>(`${environment.apiUrl}${path}`, body, { headers: this.headers });
+        return this.http.post<T>(this.buildUrl(path), body, { headers: this.headers });
     }
 
     put<T>(path: string, body?: any): Observable<T> {
-        return this.http.put<T>(`${environment.apiUrl}${path}`, body, { headers: this.headers });
+        return this.http.put<T>(this.buildUrl(path), body, { headers: this.headers });
     }
 }

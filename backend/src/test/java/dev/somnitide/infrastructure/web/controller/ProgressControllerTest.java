@@ -35,9 +35,15 @@ class ProgressControllerTest {
     void getProgress_success() throws Exception {
         String userId = "sub-123";
         GetProgress.Response mockResponse = new GetProgress.Response(
-                7, 5, 85.0, 450,
-                new GetProgress.BestDay(LocalDate.now(), 100),
-                List.of(new GetProgress.DayResult(LocalDate.now(), 450, 5, 60, 40, 5, 105))
+                7,
+                3,
+                85.0,
+                255.0,
+                480,
+                new GetProgress.BestDay(LocalDate.now(), 90),
+                List.of(
+                        new GetProgress.DayResult(LocalDate.now(), 480, 5, 60, 20, 10, 90)
+                )
         );
 
         when(getProgress.execute(eq(userId), anyInt())).thenReturn(mockResponse);

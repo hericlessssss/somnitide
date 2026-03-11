@@ -9,6 +9,7 @@ import java.util.UUID;
  * JPA mapping lives in the infrastructure layer.
  */
 public class SleepSession {
+    public static final int MAX_SLEEP_HOURS = 14;
 
     private final String id;
     private final String userId;
@@ -18,6 +19,7 @@ public class SleepSession {
     private Instant endedAtUtc;
     private Integer qualityRating; // 1..5, nullable
     private String note; // nullable
+    private int earnedPoints;
 
     public SleepSession(
             String userId,
@@ -37,7 +39,8 @@ public class SleepSession {
             Instant sleepStartEstimatedAtUtc,
             Instant endedAtUtc,
             Integer qualityRating,
-            String note) {
+            String note,
+            int earnedPoints) {
         this.id = id;
         this.userId = userId;
         this.startedAtUtc = startedAtUtc;
@@ -45,6 +48,7 @@ public class SleepSession {
         this.endedAtUtc = endedAtUtc;
         this.qualityRating = qualityRating;
         this.note = note;
+        this.earnedPoints = earnedPoints;
     }
 
     public boolean isOpen() {
@@ -58,6 +62,19 @@ public class SleepSession {
         this.endedAtUtc = endedAtUtc;
         this.qualityRating = qualityRating;
         this.note = note;
+    }
+
+    public boolean isStale(Instant now) {
+        if (!isOpen())
+            return false;
+        return java.time.Duration.between(startedAtUtc, now).toHours() >= MAX_SLEEP_HOURS;
+    }
+
+    public boolean isValidDuration() {
+        if (isOpen())
+            return true;
+        long hours = java.time.Duration.between(sleepStartEstimatedAtUtc, endedAtUtc).toHours();
+        return hours < MAX_SLEEP_HOURS;
     }
 
     // ---- Getters ----
@@ -88,5 +105,13 @@ public class SleepSession {
 
     public String getNote() {
         return note;
+    }
+
+    public int getEarnedPoints() {
+        return earnedPoints;
+    }
+
+    public void setEarnedPoints(int earnedPoints) {
+        this.earnedPoints = earnedPoints;
     }
 }

@@ -1,8 +1,11 @@
 package dev.somnitide.application.usecase;
 
 import dev.somnitide.application.port.SleepSessionRepository;
+import dev.somnitide.application.port.UserProfileRepository;
 import dev.somnitide.domain.exception.DomainException;
 import dev.somnitide.domain.model.SleepSession;
+import dev.somnitide.domain.service.SleepProgressCalculator;
+import dev.somnitide.domain.service.StreakCalculator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,12 +19,18 @@ import static org.mockito.Mockito.*;
 class EndSleepSessionTest {
 
     private SleepSessionRepository repository;
+    private UserProfileRepository profileRepository;
+    private SleepProgressCalculator progressCalculator;
+    private StreakCalculator streakCalculator;
     private EndSleepSession useCase;
 
     @BeforeEach
     void setUp() {
         repository = mock(SleepSessionRepository.class);
-        useCase = new EndSleepSession(repository);
+        profileRepository = mock(UserProfileRepository.class);
+        progressCalculator = mock(SleepProgressCalculator.class);
+        streakCalculator = mock(StreakCalculator.class);
+        useCase = new EndSleepSession(repository, profileRepository, progressCalculator, streakCalculator);
     }
 
     @Test

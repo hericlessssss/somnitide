@@ -45,6 +45,18 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/progress/progress.component').then(m => m.ProgressComponent)
             },
             {
+                path: 'ranking',
+                loadComponent: () => import('./pages/ranking/ranking.component').then(m => m.RankingComponent)
+            },
+            {
+                path: 'profile',
+                loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent)
+            },
+            {
+                path: 'profile/:handle',
+                loadComponent: () => import('./pages/profile/public-profile/public-profile.component').then(m => m.PublicProfileComponent)
+            },
+            {
                 path: '',
                 redirectTo: 'home',
                 pathMatch: 'full'

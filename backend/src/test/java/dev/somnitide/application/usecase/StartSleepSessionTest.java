@@ -71,4 +71,26 @@ class StartSleepSessionTest {
         verify(sessionRepository, never()).save(any());
         verify(getPreferences, never()).execute(any());
     }
+
+    @Test
+    void execute_staleSession_closesOldAndStartsNew() {
+        String userId = "user-3";
+        Instant wayBack = Instant.now().minus(java.time.Duration.ofHours(15));
+        SleepSession staleSession = new SleepSession(userId, wayBack, 15);
+        when(sessionRepository.findOpenByUserId(userId)).thenReturn(Optional.of(staleSession));
+
+        UserPreferences prefs = UserPreferences.defaults(userId);
+        when(getPreferences.execute(userId)).thenReturn(prefs);
+        when(sessionRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        StartSleepSession.Response response = useCase.execute(userId);
+
+        assertThat(staleSession.isOpen()).isFalse();
+        assertThat(staleSession.getNote()).contains("tempo excessivo");
+        assertThat(response.session().getUserId()).isEqualTo(userId);
+        assertThat(response.session().isOpen()).isTrue();
+        assertThat(response.session().getId()).isNotEqualTo(staleSession.getId());
+
+        verify(sessionRepository, times(2)).save(any());
+    }
 }

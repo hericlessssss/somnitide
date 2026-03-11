@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,7 +23,7 @@ import { ProgressService, ProgressResponse } from '../../services/progress.servi
     <div class="progress-container">
       <header class="section-header fade-in">
         <h1>Seu Progresso</h1>
-        <p>A jornada para o seu melhor despertar.</p>
+        <p>Acompanhe os números da sua jornada</p>
       </header>
 
       <div *ngIf="loading() && !data()" class="status-state fade-in">
@@ -48,43 +49,62 @@ import { ProgressService, ProgressResponse } from '../../services/progress.servi
           <div class="stats-grid">
             <mat-card class="premium-card glass score-main">
               <div class="card-accent"></div>
-              <mat-card-header>
-                <div class="session-avatar avatar-good">
-                  <mat-icon>stars</mat-icon>
+              <div class="card-inner">
+                <header class="premium-header">
+                  <mat-icon class="status-icon avatar-good">stars</mat-icon>
+                  <div class="header-text">
+                    <div class="card-title-premium">Score Médio</div>
+                    <div class="card-subtitle-premium">Últimos {{ data()?.rangeDays }} dias</div>
+                  </div>
+                </header>
+                <div class="card-body">
+                  <div class="score-display">
+                    <span class="score-value">{{ data()?.avgScore | number:'1.0-0' }}</span>
+                    <span class="score-total">/110</span>
+                  </div>
+                  <div class="rank-badge">
+                    {{ getRankLabel(data()?.avgScore || 0) }}
+                  </div>
                 </div>
-                <div class="header-text">
-                  <div class="card-title-premium">Score Médio</div>
-                  <div class="card-subtitle-premium">Últimos {{ data()?.rangeDays }} dias</div>
-                </div>
-              </mat-card-header>
-              <mat-card-content class="card-body">
-                <div class="score-display">
-                  <span class="score-value">{{ data()?.avgScore | number:'1.0-0' }}</span>
-                  <span class="score-total">/110</span>
-                </div>
-                <div class="rank-badge">
-                  {{ getRankLabel(data()?.avgScore || 0) }}
-                </div>
-              </mat-card-content>
+              </div>
             </mat-card>
 
             <mat-card class="premium-card glass streak-main">
-              <mat-card-header>
-                <div class="session-avatar avatar-regular">
-                  <mat-icon>local_fire_department</mat-icon>
+              <div class="card-inner">
+                <header class="premium-header">
+                  <mat-icon class="status-icon avatar-regular">local_fire_department</mat-icon>
+                  <div class="header-text">
+                    <div class="card-title-premium">Sequência</div>
+                    <div class="card-subtitle-premium">Dias consecutivos</div>
+                  </div>
+                </header>
+                <div class="card-body">
+                  <div class="streak-display">
+                    <span class="streak-value">{{ data()?.streakDays }}</span>
+                    <span class="streak-unit">dias</span>
+                  </div>
+                  <div class="streak-note">Mantendo o ritmo! 🔥</div>
                 </div>
-                <div class="header-text">
-                  <div class="card-title-premium">Sequência</div>
-                  <div class="card-subtitle-premium">Dias consecutivos</div>
+              </div>
+            </mat-card>
+
+            <mat-card class="premium-card glass total-score">
+              <div class="card-inner">
+                <header class="premium-header">
+                  <mat-icon class="status-icon avatar-accent">emoji_events</mat-icon>
+                  <div class="header-text">
+                    <div class="card-title-premium">Pontos no Período</div>
+                    <div class="card-subtitle-premium">Últimos {{ data()?.rangeDays }} dias</div>
+                  </div>
+                </header>
+                <div class="card-body">
+                  <div class="total-display">
+                    <span class="total-value">{{ data()?.totalScore | number:'1.0-0' }}</span>
+                    <span class="total-unit">pts</span>
+                  </div>
+                  <div class="total-note">Rumo ao topo! 🚀</div>
                 </div>
-              </mat-card-header>
-              <mat-card-content class="card-body">
-                <div class="streak-display">
-                  <span class="streak-value">{{ data()?.streakDays }}</span>
-                  <span class="streak-unit">dias</span>
-                </div>
-                <div class="streak-note">Mantendo o ritmo! 🔥</div>
-              </mat-card-content>
+              </div>
             </mat-card>
           </div>
 
@@ -144,6 +164,10 @@ import { ProgressService, ProgressResponse } from '../../services/progress.servi
               </div>
             </div>
           </section>
+
+          <footer class="score-footer fade-in">
+            <p>O Score SomniTide V1 é calculado com base na Duração (máx 60pts), Qualidade (máx 40pts) e Sequência (bônus 10pts). O seu rank reflete a sua consistência semanal.</p>
+          </footer>
         </div>
       </ng-container>
     </div>
@@ -226,13 +250,19 @@ import { ProgressService, ProgressResponse } from '../../services/progress.servi
     }
 
     .premium-card {
-      padding: var(--space-lg);
       border-radius: var(--radius-lg);
       position: relative;
       overflow: hidden;
       transition: transform var(--transition-normal);
     }
     .premium-card:hover { transform: translateY(-4px); }
+
+    .card-inner {
+      padding: var(--space-xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+    }
 
     .card-accent {
       position: absolute;
@@ -241,20 +271,36 @@ import { ProgressService, ProgressResponse } from '../../services/progress.servi
       opacity: 0.8;
     }
 
-    .session-avatar {
-      display: flex; align-items: center; justify-content: center;
-      width: 44px; height: 44px; border-radius: 12px;
+    .premium-header {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-lg);
     }
-    .avatar-good { color: var(--color-primary); background: rgba(66, 214, 198, 0.1); }
-    .avatar-regular { color: var(--color-warning); background: rgba(255, 200, 87, 0.1); }
 
-    .header-text { display: flex; flex-direction: column; gap: 2px; }
-    .card-title-premium { font-weight: 700; font-size: 1.05rem; color: var(--color-text); }
+    .status-icon {
+      font-size: 28px !important;
+      width: 28px !important;
+      height: 28px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .avatar-good { color: var(--color-primary); }
+    .avatar-regular { color: var(--color-warning); }
+    .avatar-accent { color: #A272FF; }
+
+    .header-text { display: flex; flex-direction: column; gap: 4px; }
+    .card-title-premium { font-weight: 700; font-size: 1.1rem; color: var(--color-text); line-height: 1.2; }
     .card-subtitle-premium { font-size: 0.75rem; color: var(--color-text-muted); font-weight: 600; }
 
-    .card-body { padding: var(--space-md) 0 0; }
+    .card-body { 
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
 
-    .score-display { display: flex; align-items: baseline; gap: 4px; margin-bottom: var(--space-md); }
+    .score-display { display: flex; align-items: baseline; gap: 4px; }
     .score-value { font-size: 3rem; font-weight: 800; color: var(--color-text); line-height: 1; font-family: var(--font-title); }
     .score-total { font-size: 1.1rem; color: var(--color-text-muted); font-weight: 600; }
 
@@ -274,6 +320,11 @@ import { ProgressService, ProgressResponse } from '../../services/progress.servi
     .streak-value { font-size: 3rem; font-weight: 800; color: var(--color-warning); line-height: 1; font-family: var(--font-title); }
     .streak-unit { font-size: 1.1rem; color: var(--color-text-muted); font-weight: 600; }
     .streak-note { font-size: 0.8rem; color: var(--color-text-muted); font-weight: 500; }
+
+    .total-display { display: flex; align-items: baseline; gap: 6px; }
+    .total-value { font-size: 3rem; font-weight: 800; color: #A272FF; line-height: 1; font-family: var(--font-title); }
+    .total-unit { font-size: 1.1rem; color: var(--color-text-muted); font-weight: 600; }
+    .total-note { font-size: 0.8rem; color: var(--color-text-muted); font-weight: 500; }
 
     /* Secondary Metrics */
     .secondary-metrics {
@@ -355,6 +406,22 @@ import { ProgressService, ProgressResponse } from '../../services/progress.servi
       .score-value, .streak-value { font-size: 2.5rem; }
       .day-header { gap: var(--space-md); }
     }
+
+    .score-footer {
+      margin-top: var(--space-2xl);
+      padding-top: var(--space-lg);
+      border-top: 1px solid rgba(255, 255, 255, 0.03);
+      text-align: center;
+    }
+    .score-footer p {
+      font-size: 0.65rem;
+      color: var(--color-text-muted);
+      opacity: 0.5;
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.5;
+      font-weight: 500;
+    }
   `]
 })
 export class ProgressComponent implements OnInit {
@@ -365,6 +432,8 @@ export class ProgressComponent implements OnInit {
   loading = signal(true);
 
   ngOnInit() {
+    console.log('DEBUG ProgressComponent Init - Production:', environment.production);
+    console.log('DEBUG ProgressComponent Init - API URL:', environment.apiUrl);
     this.loadData();
   }
 
@@ -372,6 +441,7 @@ export class ProgressComponent implements OnInit {
     this.loading.set(true);
     this.progressService.getProgress(7).subscribe({
       next: (res) => {
+        console.log('DEBUG Progress Data:', res);
         this.data.set(res);
         this.loading.set(false);
       },

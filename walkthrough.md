@@ -18,7 +18,7 @@ Implementação completa do sistema de score pessoal de sono e visualização no
 - **Design Midnight Premium**: 
     - Layout centralizado (800px) e cabeçalho alinhado com o Histórico.
     - Cards com efeito **Glassmorphism** e bordas semânticas (Verde/Amarelo/Vermelho).
-    - Visualização de Score Médio e Rank (Mestre do Sono, Alta Performance, etc).
+    - Visualização de Score Médio, **Total Somado no período** e Rank.
     - Contador de Streak de fogo (🔥).
     - Timeline detalhada das últimas noites com decomposição do score (D/Q/B), seguindo o padrão visual da página de Histórico.
 - **Navegação**: Ícone de troféu (`emoji_events`) na barra inferior e menu lateral.

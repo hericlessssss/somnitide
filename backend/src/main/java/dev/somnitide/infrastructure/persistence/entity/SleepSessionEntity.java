@@ -39,6 +39,9 @@ public class SleepSessionEntity {
     @Column(name = "note")
     private String note;
 
+    @Column(name = "earned_points", nullable = false)
+    private int earnedPoints;
+
     // ---- JPA requires no-arg constructor ----
     protected SleepSessionEntity() {
     }
@@ -54,6 +57,7 @@ public class SleepSessionEntity {
         entity.endedAtUtc = domain.getEndedAtUtc();
         entity.qualityRating = domain.getQualityRating();
         entity.note = domain.getNote();
+        entity.earnedPoints = domain.getEarnedPoints();
         return entity;
     }
 
@@ -67,7 +71,8 @@ public class SleepSessionEntity {
                 sleepStartEstimatedAtUtc,
                 endedAtUtc,
                 qualityRating,
-                note);
+                note,
+                earnedPoints);
     }
 
     // ---- Getters ----

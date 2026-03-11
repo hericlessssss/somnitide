@@ -224,6 +224,7 @@ O sistema agora é **"Opinionated"**. Para garantir a integridade do estudo do s
 - **Latência**: 14 minutos (média para início do sono).
 - **Duração Ideal**: 4 a 6 ciclos (6 a 9 horas de sono).
 - **Sugestões**: Sempre centradas no ciclo 5 (7.5 horas).
+- **Caducidade de Sessão**: Sessões superiores a 14 horas são consideradas inválidas (score 0) e não contam para o streak. Se houver uma sessão aberta há mais de 14h, o sistema permite iniciar uma nova, encerrando a anterior automaticamente.
 
 ---
 
@@ -681,6 +682,7 @@ Para máxima segurança, configure as seguintes regras na branch `main`:
 4.  **Tamanho de Fontes**: Redução global de -1 nível (ex: 15px -> 14px) para melhor densidade em mobile. [2026-03-11]
 5.  **Score de Sono (Progresso)**: Implementado Score V1 baseado em Duração (60pts), Qualidade (40pts) e Streak (10pts). Agrupamento por dia (UTC) com prioridade para a sessão mais longa do dia. [2026-03-11]
 6.  **Refinamento UI/UX Progresso**: Harmonizada a página de Progresso com o tema "Midnight Premium". Centralização do layout (800px), uso de cards glassmorphism, avatar de sessão com cores semânticas e timeline de histórico idêntica à página de Histórico. [2026-03-11]
+7.  **Métricas de Progresso**: Adicionado o "Total Somado" do período e validado o reset de streak para dias sem sessão (UTC). Cobertura de testes expandida para garantir integridade da lógica de consistência. [2026-03-11]
 
 ## Decisões Técnicas
 
@@ -732,3 +734,5 @@ Para máxima segurança, configure as seguintes regras na branch `main`:
 | Timezone errada no herói | Injetado label dinâmico via `resolvedOptions().timeZone`. |
 | Sugestões insuficientes | Backend defaults expandidos de 3 para 8 opções. |
 | Desalinhamento Login/Cadastro | Removidas margens negativas residuais em `LoginComponent`. |
+| Sessões "esquecidas" quebravam streak | Implementada lógica de invalidacao automática para sessões > 14h. |
+| Inexistência de comunidade | Implementado Ranking Global, Perfis Públicos e handles únicos (@). |

@@ -29,4 +29,9 @@ public interface SleepSessionJpaRepository
 
     List<SleepSessionEntity> findByUserIdAndEndedAtUtcAfterOrderByStartedAtUtcDesc(
             String userId, java.time.Instant after);
+
+    @org.springframework.data.jpa.repository.Query("SELECT SUM(COALESCE(s.earnedPoints, 0)) FROM SleepSessionEntity s WHERE s.userId = :userId")
+    Long sumTotalPointsByUserId(@org.springframework.data.repository.query.Param("userId") String userId);
+
+    List<SleepSessionEntity> findByUserIdOrderByStartedAtUtcDesc(String userId);
 }

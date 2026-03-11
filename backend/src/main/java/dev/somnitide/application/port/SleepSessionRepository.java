@@ -28,4 +28,10 @@ public interface SleepSessionRepository {
 
     /** Returns closed sessions for the user ended after the specific instant. */
     List<SleepSession> findByUserIdAndEndedAtAfter(String userId, java.time.Instant after);
+
+    /** Calculates the sum of all earned points for the user. */
+    long calculateTotalPoints(String userId);
+
+    /** Returns all sessions for a user. */
+    List<SleepSession> findByUserId(String userId);
 }

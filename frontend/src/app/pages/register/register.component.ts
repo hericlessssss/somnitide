@@ -9,6 +9,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
+import { ProfileService } from '../../services/profile.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -31,7 +33,7 @@ import { Router, RouterLink } from '@angular/router';
           <mat-icon class="brand-icon" aria-hidden="true">waves</mat-icon>
           <h1 class="brand-name">SomniTide</h1>
         </div>
-        <p class="brand-caption">Acorde no fim do ciclo.</p>
+        <p class="brand-caption">Métricas do seu sono</p>
       </mat-card-header>
       
       <mat-card-content>
@@ -41,6 +43,15 @@ import { Router, RouterLink } from '@angular/router';
         </div>
 
         <form (ngSubmit)="onRegister()" #registerForm="ngForm" class="auth-form" [attr.aria-describedby]="registerError() ? 'register-error' : null">
+          <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Nome de exibição (@)</mat-label>
+            <input matInput type="text" name="handle" [(ngModel)]="handle" 
+                   placeholder="seu username" required minlength="3"
+                   [attr.aria-label]="'Escolha seu @'">
+            <mat-icon matPrefix class="secondary-icon" aria-hidden="true">alternate_email</mat-icon>
+            <mat-hint>Seu nome único no ranking. Ex: @joao_sono</mat-hint>
+          </mat-form-field>
+
           <mat-form-field appearance="outline" floatLabel="always">
             <mat-label>E-mail</mat-label>
             <input matInput type="email" name="email" [(ngModel)]="email" 
@@ -81,7 +92,7 @@ import { Router, RouterLink } from '@angular/router';
   
           <div class="privacy-callout">
             <mat-icon>info_outline</mat-icon>
-            <p>Sua privacidade é nossa prioridade. Não enviamos e-mails desnecessários.</p>
+            <p>Este cadastro serve para armazenar seu progresso, listar suas sessões e coletar métricas do seu sono apenas para seu uso pessoal. Você não precisa confirmar conta e nem receberá spam.</p>
           </div>
   
           <button mat-flat-button color="primary" class="cta-button" 
@@ -259,12 +270,14 @@ export class RegisterComponent {
   email = '';
   password = '';
   confirmPassword = '';
+  handle = '';
   hidePassword = signal(true);
   hideConfirmPassword = signal(true);
   loading = signal(false);
   registerError = signal<string | null>(null);
 
   private auth = inject(AuthService);
+  private profileService = inject(ProfileService);
   private router = inject(Router);
 
   async onRegister() {
@@ -288,9 +301,15 @@ export class RegisterComponent {
       if (error) {
         this.registerError.set(this.getErrorMessage(error));
       } else if (data.session) {
-        this.router.navigate(['/home']);
+        // Create profile in backend
+        try {
+          await firstValueFrom(this.profileService.updateProfile(this.handle));
+          this.router.navigate(['/home']);
+        } catch (profileErr: any) {
+          this.registerError.set(profileErr.error?.message || 'Erro ao criar perfil. Tente fazer login.');
+        }
       } else {
-        // Explicit success feedback for email confirmation flow
+        // Profile creation will happen on first login if email confirmation is required
         this.router.navigate(['/login'], { queryParams: { registered: 'true' } });
       }
     } catch (err) {

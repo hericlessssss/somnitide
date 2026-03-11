@@ -21,6 +21,7 @@ public interface GetProgress {
             int rangeDays,
             int streakDays,
             double avgScore,
+            double totalScore,
             int avgSleepMinutes,
             BestDay bestDay,
             List<DayResult> days

@@ -9,6 +9,7 @@ public record ProgressResponse(
         int rangeDays,
         int streakDays,
         double avgScore,
+        double totalScore,
         int avgSleepMinutes,
         BestDayResponse bestDay,
         List<DayResultResponse> days
@@ -47,6 +48,7 @@ public record ProgressResponse(
                 domain.rangeDays(),
                 domain.streakDays(),
                 domain.avgScore(),
+                domain.totalScore(),
                 domain.avgSleepMinutes(),
                 BestDayResponse.from(domain.bestDay()),
                 domain.days().stream().map(DayResultResponse::from).toList()

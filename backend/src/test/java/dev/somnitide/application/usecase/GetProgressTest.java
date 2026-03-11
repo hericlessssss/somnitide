@@ -3,6 +3,7 @@ package dev.somnitide.application.usecase;
 import dev.somnitide.application.port.SleepSessionRepository;
 import dev.somnitide.domain.model.SleepSession;
 import dev.somnitide.domain.service.SleepProgressCalculator;
+import dev.somnitide.domain.service.StreakCalculator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,13 +24,15 @@ class GetProgressTest {
 
     private SleepSessionRepository repository;
     private SleepProgressCalculator calculator;
+    private StreakCalculator streakCalculator;
     private GetProgress useCase;
 
     @BeforeEach
     void setUp() {
         repository = mock(SleepSessionRepository.class);
         calculator = new SleepProgressCalculator();
-        useCase = new GetProgressUseCase(repository, calculator);
+        streakCalculator = new StreakCalculator();
+        useCase = new GetProgressUseCase(repository, calculator, streakCalculator);
     }
 
     @Test
@@ -95,5 +98,50 @@ class GetProgressTest {
         assertThat(result.days()).hasSize(1);
         assertThat(result.days().get(0).sleepMinutes()).isEqualTo(240);
         assertThat(result.days().get(0).rating()).isEqualTo(3);
+    }
+
+    @Test
+    @DisplayName("Execute: Streak resets to 0 if today and yesterday are missed (UTC)")
+    void execute_streakResetsIfDaysMissed() {
+        String userId = "user-1";
+        // Mock session from 2 days ago (Gap of today/yesterday)
+        Instant twoDaysAgo = Instant.now().minus(Duration.ofDays(2));
+        SleepSession sOld = mock(SleepSession.class);
+        when(sOld.getEndedAtUtc()).thenReturn(twoDaysAgo);
+        when(sOld.getSleepStartEstimatedAtUtc()).thenReturn(twoDaysAgo.minus(Duration.ofHours(8)));
+        when(sOld.getQualityRating()).thenReturn(4);
+        when(sOld.isValidDuration()).thenReturn(true);
+
+        when(repository.findByUserIdAndEndedAtAfter(eq(userId), any())).thenReturn(List.of(sOld));
+
+        GetProgress.Response result = useCase.execute(userId, 30);
+
+        assertThat(result.streakDays()).isEqualTo(0);
+        assertThat(result.days()).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("Execute: Filters out sessions >= 14 hours")
+    void execute_filtersLongSessions() {
+        String userId = "user-1";
+        LocalDate today = LocalDate.now(ZoneOffset.UTC);
+        Instant now = today.atStartOfDay(ZoneOffset.UTC).toInstant();
+
+        // Valid session (8h)
+        SleepSession sValid = new SleepSession(userId, now.minus(Duration.ofDays(1)), 0);
+        sValid.end(now.minus(Duration.ofDays(1)).plus(Duration.ofHours(8)), 4, null);
+
+        // Invalid session (15h)
+        SleepSession sLong = new SleepSession(userId, now.minus(Duration.ofHours(20)), 0);
+        sLong.end(now.minus(Duration.ofHours(5)), 3, "Too long");
+
+        when(repository.findByUserIdAndEndedAtAfter(eq(userId), any()))
+                .thenReturn(List.of(sValid, sLong));
+
+        GetProgress.Response result = useCase.execute(userId, 7);
+
+        // Only the valid session should remain
+        assertThat(result.days()).hasSize(1);
+        assertThat(result.days().get(0).sleepMinutes()).isEqualTo(8 * 60);
     }
 }

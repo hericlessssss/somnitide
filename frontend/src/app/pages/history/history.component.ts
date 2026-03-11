@@ -26,7 +26,7 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
     <div class="history-container">
       <header class="section-header fade-in">
         <h1>Seu Histórico</h1>
-        <p>A jornada para o seu melhor despertar.</p>
+        <p>Acompanhe os números da sua jornada</p> 
       </header>
 
       <div *ngIf="loading() && history().length === 0" class="status-state fade-in">
@@ -366,12 +366,12 @@ export class HistoryComponent implements OnInit {
     const startTime = new Date(start).getTime();
     const endTime = new Date(end).getTime();
     const diffMs = endTime - startTime;
-    
+
     if (diffMs <= 0) return '0h 0min';
-    
+
     const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
     const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-    
+
     return `${diffHrs}h ${diffMins}min`;
   }
 

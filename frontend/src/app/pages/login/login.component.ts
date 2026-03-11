@@ -31,7 +31,7 @@ import { Router, RouterLink } from '@angular/router';
           <mat-icon class="brand-icon" aria-hidden="true">waves</mat-icon>
           <h1 class="brand-name">SomniTide</h1>
         </div>
-        <p class="brand-caption">Acorde no fim do ciclo.</p>
+        <p class="brand-caption">Métricas do seu sono</p>
       </mat-card-header>
       
       <mat-card-content>
@@ -66,7 +66,7 @@ import { Router, RouterLink } from '@angular/router';
   
           <div class="privacy-callout">
             <mat-icon>info_outline</mat-icon>
-            <p>Usamos suas sessões para personalizar recomendações. Sem spam.</p>
+            <p>Faça login para acompanhar suas métricas e progresso. Não enviamos spam.</p>
           </div>
   
           <button mat-flat-button color="primary" class="cta-button" 

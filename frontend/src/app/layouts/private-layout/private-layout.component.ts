@@ -32,11 +32,15 @@ import { Router } from '@angular/router';
             <a routerLink="/history" routerLinkActive="active-link" class="nav-item">Histórico</a>
             <a routerLink="/insights" routerLinkActive="active-link" class="nav-item">Insights</a>
             <a routerLink="/progress" routerLinkActive="active-link" class="nav-item">Progresso</a>
+            <a routerLink="/ranking" routerLinkActive="active-link" class="nav-item">Ranking</a>
           </nav>
 
           <span class="spacer"></span>
 
           <div class="user-section">
+            <button mat-icon-button routerLink="/profile" aria-label="Meu Perfil" title="Perfil" class="profile-btn">
+              <mat-icon aria-hidden="true">account_circle</mat-icon>
+            </button>
             <span class="user-email desktop-only">{{ auth.user?.email }}</span>
             <button mat-icon-button (click)="onLogout()" aria-label="Sair da conta" title="Sair" class="logout-btn">
               <mat-icon aria-hidden="true">logout</mat-icon>
@@ -67,8 +71,12 @@ import { Router } from '@angular/router';
           <span>Insights</span>
         </a>
         <a routerLink="/progress" routerLinkActive="active" class="mobile-nav-item" aria-label="Ir para Progresso">
-          <mat-icon aria-hidden="true">emoji_events</mat-icon>
+          <mat-icon aria-hidden="true">trending_up</mat-icon>
           <span>Progresso</span>
+        </a>
+        <a routerLink="/ranking" routerLinkActive="active" class="mobile-nav-item" aria-label="Ir para Ranking">
+          <mat-icon aria-hidden="true">emoji_events</mat-icon>
+          <span>Ranking</span>
         </a>
       </div>
     </nav>
@@ -191,6 +199,15 @@ import { Router } from '@angular/router';
     .logout-btn:hover {
       color: var(--color-danger) !important;
       background: rgba(255, 92, 122, 0.1) !important;
+    }
+
+    .profile-btn {
+      color: var(--color-text-muted) !important;
+      transition: all var(--transition-fast);
+    }
+    .profile-btn:hover {
+      color: var(--color-primary) !important;
+      background: rgba(66, 214, 198, 0.1) !important;
     }
 
     .desktop-only { display: none; }

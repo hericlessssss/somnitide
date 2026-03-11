@@ -41,10 +41,16 @@ public class StartSleepSession {
     @Transactional
     public Response execute(String userId) {
         // Enforce max 1 open session
-        if (sessionRepository.findOpenByUserId(userId).isPresent()) {
-            throw new DomainException("SESSION_ALREADY_OPEN",
-                    "User already has an open sleep session");
-        }
+        sessionRepository.findOpenByUserId(userId).ifPresent(openSession -> {
+            if (openSession.isStale(Instant.now())) {
+                log.info("Closing stale session {} for user {}", openSession.getId(), userId);
+                openSession.end(openSession.getStartedAtUtc().plusSeconds(SleepSession.MAX_SLEEP_HOURS * 3600L), 1, "Encerrada automaticamente por tempo excessivo (>14h)");
+                sessionRepository.save(openSession);
+            } else {
+                throw new DomainException("SESSION_ALREADY_OPEN",
+                        "User already has an open sleep session");
+            }
+        });
 
         // Get preferences (for latency to start session, and for calculating cycles)
         UserPreferences prefs = getPreferences.execute(userId);
