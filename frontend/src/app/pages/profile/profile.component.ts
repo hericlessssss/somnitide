@@ -91,9 +91,6 @@ import { AuthService } from '../../services/auth.service';
       margin-bottom: var(--space-md);
     }
     .gradient-text {
-      background: linear-gradient(135deg, var(--color-primary), #a78bfa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
       font-size: 32px;
       font-weight: 800;
       letter-spacing: -1px;

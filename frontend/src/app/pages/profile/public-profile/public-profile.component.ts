@@ -26,7 +26,7 @@ import { ProfileService, UserProfile } from '../../../services/profile.service';
           <div class="user-header">
             <img [src]="getAvatar(profile()?.avatarSeed || '')" class="avatar">
             <div class="user-meta">
-              <h1 class="handle">{{ profile()?.handle }}</h1>
+              <h1 class="handle gradient-text">{{ profile()?.handle }}</h1>
               <p class="join-date">Membro SomniTide</p>
             </div>
           </div>

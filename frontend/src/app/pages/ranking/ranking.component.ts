@@ -87,9 +87,6 @@ import { RouterLink } from '@angular/router';
       margin-bottom: var(--space-2xl);
     }
     .gradient-text {
-      background: linear-gradient(135deg, var(--color-primary), #a78bfa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
       font-size: 36px;
       font-weight: 800;
       letter-spacing: -1px;
@@ -127,9 +124,9 @@ import { RouterLink } from '@angular/router';
       border-color: var(--color-primary);
       box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
     }
-    .rank-1 { order: 2; width: 220px; border-color: rgba(255, 215, 0, 0.3); }
-    .rank-2 { order: 1; width: 180px; }
-    .rank-3 { order: 3; width: 180px; }
+    .rank-1 { order: 2; width: 100%; max-width: 220px; border-color: rgba(255, 215, 0, 0.3); }
+    .rank-2 { order: 1; width: 100%; max-width: 180px; }
+    .rank-3 { order: 3; width: 100%; max-width: 180px; }
 
     .avatar-container {
       position: relative;

@@ -13,7 +13,7 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
   template: `
     <div class="insights-container">
       <header class="section-header fade-in">
-        <h1>Seu Desempenho</h1>
+        <h1 class="gradient-text">Seu Desempenho</h1>
         <p>A ciência por trás do seu descanso.</p>
       </header>
 
@@ -185,7 +185,7 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
 
     .charts-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: var(--space-lg);
     }
     .chart-card {

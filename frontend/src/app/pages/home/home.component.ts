@@ -223,7 +223,7 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
     }
 
     .clock-display .time {
-      font-size: 5rem;
+      font-size: clamp(3.5rem, 15vw, 5rem);
       font-weight: 800;
       color: var(--color-primary);
       margin: 0;
@@ -394,7 +394,7 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
     }
 
     .wake-time {
-      font-size: 2.65rem;
+      font-size: clamp(2rem, 10vw, 2.65rem);
       font-weight: 800;
       color: var(--color-text);
       font-family: var(--font-title);

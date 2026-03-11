@@ -25,7 +25,7 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
   template: `
     <div class="history-container">
       <header class="section-header fade-in">
-        <h1>Seu Histórico</h1>
+        <h1 class="gradient-text">Seu Histórico</h1>
         <p>Acompanhe os números da sua jornada</p> 
       </header>
 

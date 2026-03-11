@@ -80,6 +80,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   /* Safe Area Support - Header/Nav will handle top/bottom */
   padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
 }
 
 ::selection {
@@ -105,6 +107,11 @@ h4,
   color: var(--text-header);
   font-weight: 600;
   margin: 0;
+}
+
+/* Prevent iOS Safari auto-zoom on focus */
+input, textarea, select {
+  font-size: 16px !important;
 }
 
 /* Material Overrides for Dark Theme */
@@ -260,6 +267,14 @@ a:hover {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-primary), #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
 }
 
 /* Base Component Classes */
