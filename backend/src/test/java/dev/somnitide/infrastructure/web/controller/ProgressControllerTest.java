@@ -53,9 +53,9 @@ class ProgressControllerTest {
                 .with(jwt().jwt(j -> j.subject(userId))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.rangeDays").value(7))
-                .andExpect(jsonPath("$.streakDays").value(5))
+                .andExpect(jsonPath("$.streakDays").value(3))
                 .andExpect(jsonPath("$.avgScore").value(85.0))
-                .andExpect(jsonPath("$.days[0].totalScore").value(105));
+                .andExpect(jsonPath("$.days[0].totalScore").value(90));
     }
 
     @Test

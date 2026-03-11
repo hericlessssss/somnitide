@@ -1,10 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { RegisterComponent } from './register.component';
-import { AuthService } from '../../services/auth.service';
-import { provideRouter, Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { AuthService } from '../../services/auth.service';
+import { provideRouter, Router } from '@angular/router';
+import { ProfileService } from '../../services/profile.service';
+import { of } from 'rxjs';
 
 describe('RegisterComponent', () => {
     let mockAuthService: any;
@@ -13,11 +15,15 @@ describe('RegisterComponent', () => {
         mockAuthService = {
             signUp: vi.fn()
         };
+        const mockProfileService = {
+            updateProfile: vi.fn().mockReturnValue(of({}))
+        };
 
         await TestBed.configureTestingModule({
-            imports: [RegisterComponent, NoopAnimationsModule],
+            imports: [RegisterComponent, NoopAnimationsModule, MatSnackBarModule],
             providers: [
                 { provide: AuthService, useValue: mockAuthService },
+                { provide: ProfileService, useValue: mockProfileService },
                 provideRouter([])
             ]
         }).compileComponents();
@@ -33,8 +39,10 @@ describe('RegisterComponent', () => {
         const fixture = TestBed.createComponent(RegisterComponent);
         const component = fixture.componentInstance;
         const router = TestBed.inject(Router);
+        const profileService = TestBed.inject(ProfileService);
         const navigateSpy = vi.spyOn(router, 'navigate');
 
+        component.handle = 'testuser';
         component.email = 'new@example.com';
         component.password = 'password123';
         component.confirmPassword = 'password123';
@@ -43,6 +51,7 @@ describe('RegisterComponent', () => {
         await component.onRegister();
 
         expect(mockAuthService.signUp).toHaveBeenCalledWith('new@example.com', 'password123');
+        expect(profileService.updateProfile).toHaveBeenCalledWith('testuser');
         expect(navigateSpy).toHaveBeenCalledWith(['/home']);
         expect(component.registerError()).toBeNull();
     });
