@@ -23,6 +23,6 @@ class GetPreferencesTest {
         assertThat(result.userId()).isEqualTo("any-user");
         assertThat(result.sleepLatencyMinutes()).isEqualTo(14); // Scientific default
         assertThat(result.cycleLengthMinutes()).isEqualTo(90); // Scientific default
-        assertThat(result.minCycles()).isEqualTo(4); // Scientific default expanded
+        assertThat(result.minCycles()).isEqualTo(1); // Scientific default expanded
     }
 }

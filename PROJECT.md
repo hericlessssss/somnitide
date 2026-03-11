@@ -507,15 +507,10 @@ Para máxima segurança, configure as seguintes regras na branch `main`:
   - Transfer Size: ~214 kB (Gzip/Brotli estimado).
 - **Hurdles:** Orçamento de estilos do `HomeComponent` excedido em 546 bytes devido à complexidade do glassmorphism.
 
-#### ETAPA 9: Refino Histórico & Lógica de Avaliação
-- **Resumo:** Melhoria nas métricas de sono, paginação e clareza nas observações.
-- **Novas Funcionalidades:**
-  - Exibição de **Duração Total** (Tempo dormido) calculada em cada card do histórico.
-  - Paginação inteligente: limite inicial de 10 itens com botão "Ver mais".
-- **UX/UI:**
-  - Ajuste na lógica de observações: default alterado para "Sem observações" (removido o genérico "Avaliação concluída").
-  - Caixa de notas refinada com ícone de aspas e tipografia mais harmônica.
-- **TDD:** Adicionado `history.component.spec.ts` com 6 testes validando cálculos e paginação.
+#### ETAPA 10: Correção de Pipeline (Backend)
+- **Resumo:** Sincronização dos testes do backend com os novos padrões de domínio de ciclos de sono.
+- **Fix:** Atualizado `minCycles` de 4 para 1 nos testes `GetPreferencesTest` e `UserPreferencesRepositoryIT`.
+- **Resultado:** A pipeline voltará a ficar "verde", refletindo a nova regra de negócio que permite sessões de sono curtas (descanso mínimo).
 
 ### Performance Notes & Sugestões
 1. **Bundle Size**: O bundle inicial está acima do desejado. Recomendado mover bibliotecas secundárias de UI para lazy chunks onde possível.
