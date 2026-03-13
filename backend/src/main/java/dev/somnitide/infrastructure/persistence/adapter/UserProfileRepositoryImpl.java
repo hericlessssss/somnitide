@@ -40,4 +40,9 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
                 .map(UserProfileEntity::toDomain)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public long countUsersWithScoreAbove(int score) {
+        return jpaRepository.countByTotalScoreGreaterThan(score);
+    }
 }

@@ -41,7 +41,7 @@ import { Router, RouterLink } from '@angular/router';
         </div>
 
         <form (ngSubmit)="onLogin()" #loginForm="ngForm" class="auth-form" [attr.aria-describedby]="loginError() ? 'login-error' : null">
-          <mat-form-field appearance="outline" floatLabel="always">
+          <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic">
             <mat-label>E-mail</mat-label>
             <input matInput type="email" name="email" [(ngModel)]="email" 
                    placeholder="seu@email.com" required email 
@@ -49,7 +49,7 @@ import { Router, RouterLink } from '@angular/router';
             <mat-icon matPrefix class="secondary-icon" aria-hidden="true">email</mat-icon>
           </mat-form-field>
   
-          <mat-form-field appearance="outline" floatLabel="always">
+          <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic">
             <mat-label>Senha</mat-label>
             <input matInput [type]="hidePassword() ? 'password' : 'text'" 
                    name="password" [(ngModel)]="password" 
@@ -139,7 +139,7 @@ import { Router, RouterLink } from '@angular/router';
     .auth-form {
       display: flex;
       flex-direction: column;
-      gap: 20px; /* Increased from 4px to accommodate focus glow */
+      gap: 12px; /* Balanced gap matching RegisterComponent */
     }
     .secondary-icon {
       color: var(--color-text-muted);
@@ -160,19 +160,24 @@ import { Router, RouterLink } from '@angular/router';
     }
     .privacy-callout {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: var(--space-md);
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--color-border);
       padding: 12px var(--space-md);
       border-radius: var(--radius-md);
-      margin: 8px 0; /* Tightened */
+      margin: 8px 0;
     }
     .privacy-callout mat-icon {
-      font-size: 19px;
-      width: 20px;
-      height: 20px;
+      font-size: 20px;
+      width: 24px;
+      height: 24px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: var(--color-text-muted);
+      flex-shrink: 0;
     }
     .privacy-callout p {
       font-size: 11px;
@@ -209,8 +214,8 @@ import { Router, RouterLink } from '@angular/router';
       to { transform: rotate(360deg); }
     }
     .auth-footer {
-      padding: var(--space-xl) 0 0;
-      margin-top: var(--space-xl);
+      padding: var(--space-lg) 0 0;
+      margin-top: var(--space-lg);
       text-align: center;
     }
     .footer-text {

@@ -29,7 +29,7 @@ export class SleepService {
         return this.api.post<SessionResponse>('/sessions/start');
     }
 
-    endSession(rating: number, note?: string): Observable<SessionResponse> {
+    endSession(rating: number | null, note?: string): Observable<SessionResponse> {
         return this.api.post<SessionResponse>('/sessions/end', { qualityRating: rating, note });
     }
 

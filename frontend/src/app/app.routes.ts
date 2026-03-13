@@ -57,6 +57,10 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/profile/public-profile/public-profile.component').then(m => m.PublicProfileComponent)
             },
             {
+                path: 'docs',
+                loadComponent: () => import('./pages/docs/docs.component').then(m => m.DocsComponent)
+            },
+            {
                 path: '',
                 redirectTo: 'home',
                 pathMatch: 'full'

@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface UserProfileJpaRepository extends JpaRepository<UserProfileEntity, String> {
     Optional<UserProfileEntity> findByHandle(String handle);
     List<UserProfileEntity> findTop100ByOrderByTotalScoreDesc();
+    long countByTotalScoreGreaterThan(int score);
 }

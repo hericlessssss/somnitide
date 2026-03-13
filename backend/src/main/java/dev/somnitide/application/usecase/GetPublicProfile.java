@@ -17,10 +17,22 @@ public class GetPublicProfile {
     }
 
     @Transactional(readOnly = true)
-    public Optional<UserProfile> execute(String handle) {
+    public record PublicProfileWithRank(UserProfile profile, Integer rankPosition) {}
+
+    @Transactional(readOnly = true)
+    public Optional<PublicProfileWithRank> execute(String handle) {
         if (!handle.startsWith("@")) {
             handle = "@" + handle;
         }
-        return repository.findByHandle(handle);
+        Optional<UserProfile> profileOpt = repository.findByHandle(handle);
+        if (profileOpt.isEmpty()) {
+            return Optional.empty();
+        }
+
+        UserProfile profile = profileOpt.get();
+        long usersAbove = repository.countUsersWithScoreAbove(profile.getTotalScore());
+        int rankPosition = (int) (usersAbove + 1);
+
+        return Optional.of(new PublicProfileWithRank(profile, rankPosition));
     }
 }

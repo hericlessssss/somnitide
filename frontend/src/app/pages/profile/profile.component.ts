@@ -9,32 +9,36 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ProfileService, UserProfile } from '../../services/profile.service';
 import { AuthService } from '../../services/auth.service';
+import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
+import { PageContainerComponent } from '../../shared/page-container/page-container.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule, 
-    MatCardModule, 
-    MatFormFieldModule, 
-    MatInputModule, 
-    MatButtonModule, 
-    MatIconModule, 
-    MatSnackBarModule
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSnackBarModule,
+    PageHeaderComponent,
+    PageContainerComponent
   ],
   template: `
-    <div class="profile-container fade-in">
-      <header class="profile-header">
-        <h1 class="gradient-text">Configurações de Perfil</h1>
-        <p class="subtitle">Gerencie sua identidade no SomniTide</p>
-      </header>
+    <app-page-container>
+      <app-page-header
+        title="Configurações de Perfil"
+        subtitle="Gerencie sua identidade no SomniTide" />
 
       <mat-card class="profile-card">
         <mat-card-content>
           <div class="avatar-section">
             <div class="avatar-wrapper">
-              <img [src]="getAvatar(profile()?.avatarSeed || auth.user?.id || '')" alt="Avatar">
+              <img [src]="getAvatar(profile()?.avatarSeed || auth.user?.id || '')" 
+                   alt="Avatar" [class]="getRankClass(profile()?.rankPosition)">
             </div>
             <p class="avatar-hint">Seu avatar é gerado automaticamente baseado no seu ID.</p>
           </div>
@@ -49,6 +53,17 @@ import { AuthService } from '../../services/auth.service';
             </mat-form-field>
 
             <div class="stats-container">
+              <div class="stat-card rank-status-card" [class]="getRankClass(profile()?.rankPosition)">
+                <span class="stat-label">Status SomniTide</span>
+                <div class="status-row">
+                  <mat-icon>{{ getRankIcon(profile()?.rankPosition) }}</mat-icon>
+                  <span class="stat-value">{{ getRankTitle(profile()?.rankPosition) }}</span>
+                </div>
+                <span class="stat-hint" *ngIf="profile()?.rankPosition">Posição #{{ profile()?.rankPosition }} no Ranking Global</span>
+                <span class="stat-hint" *ngIf="!profile()?.rankPosition">Dê o seu melhor para entrar no Top 100!</span>
+                <span class="member-since" *ngIf="profile()?.createdAtUtc">membro desde {{ profile()?.createdAtUtc | date:'MMMM yyyy' }}</span>
+              </div>
+
               <div class="stat-card score-card">
                 <span class="stat-label">Pontuação Global</span>
                 <span class="stat-value text-primary large">{{ profile()?.totalScore || 0 }} pts</span>
@@ -75,31 +90,17 @@ import { AuthService } from '../../services/auth.service';
           </form>
         </mat-card-content>
       </mat-card>
-    </div>
+    </app-page-container>
   `,
   styles: [`
+    /* Container + header handled by PageContainer / PageHeader */
     .profile-container {
-      padding: var(--space-xl);
-      max-width: 500px;
-      margin: 0 auto;
+      /* Card content centering within 860px container */
       display: flex;
       flex-direction: column;
       gap: var(--space-xl);
-    }
-    .profile-header {
-      text-align: center;
-      margin-bottom: var(--space-md);
-    }
-    .gradient-text {
-      font-size: 32px;
-      font-weight: 800;
-      letter-spacing: -1px;
-      margin: 0;
-    }
-    .subtitle {
-      color: var(--color-text-muted);
-      font-size: 15px;
-      margin-top: var(--space-xs);
+      max-width: 500px;
+      margin: 0 auto;
     }
     .profile-card {
       background: rgba(255, 255, 255, 0.03) !important;
@@ -122,9 +123,24 @@ import { AuthService } from '../../services/auth.service';
       height: 120px;
       border-radius: 50%;
       background: rgba(255,255,255,0.05);
-      border: 3px solid var(--color-primary);
+      border: 4px solid var(--color-border);
       padding: 4px;
-      box-shadow: 0 0 20px var(--color-primary-glow);
+      transition: all var(--transition-md);
+      object-fit: cover;
+    }
+    .avatar-wrapper img.rank-supreme { 
+      border-color: #ffd700; 
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+      animation: gold-glow-avatar 3s infinite alternate;
+    }
+    .avatar-wrapper img.rank-master { border-color: #c0c0c0; box-shadow: 0 0 15px rgba(192, 192, 192, 0.3); }
+    .avatar-wrapper img.rank-guardian { border-color: #cd7f32; box-shadow: 0 0 12px rgba(205, 127, 50, 0.3); }
+    .avatar-wrapper img.rank-legend { border-color: var(--color-primary); box-shadow: 0 0 10px rgba(99, 102, 241, 0.3); }
+    .avatar-wrapper img.rank-elite { border-color: #42d6c6; }
+
+    @keyframes gold-glow-avatar {
+      from { box-shadow: 0 0 10px rgba(255, 215, 0, 0.2), inset 0 0 5px rgba(255, 215, 0, 0.1); }
+      to { box-shadow: 0 0 30px rgba(255, 215, 0, 0.6), inset 0 0 15px rgba(255, 215, 0, 0.2); }
     }
     .avatar-hint {
       font-size: 12px;
@@ -200,6 +216,13 @@ import { AuthService } from '../../services/auth.service';
       margin-top: 4px;
       display: block;
     }
+    .member-since {
+      font-size: 10px;
+      color: var(--color-text-muted);
+      opacity: 0.5;
+      margin-top: 2px;
+      display: block;
+    }
     .truncate-id { 
       overflow: hidden; 
       text-overflow: ellipsis; 
@@ -234,6 +257,19 @@ import { AuthService } from '../../services/auth.service';
       margin-top: var(--space-md);
     }
     .text-primary { color: var(--color-primary) !important; }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin: 4px 0;
+    }
+    .rank-status-card { border-width: 2px !important; }
+    .rank-supreme { border-color: #ffd700 !important; background: rgba(255, 215, 0, 0.05); color: #ffd700 !important; }
+    .rank-master { border-color: #c0c0c0 !important; background: rgba(192, 192, 192, 0.05); color: #c0c0c0 !important; }
+    .rank-guardian { border-color: #cd7f32 !important; background: rgba(205, 127, 50, 0.05); color: #cd7f32 !important; }
+    .rank-legend { border-color: var(--color-primary) !important; color: var(--color-primary) !important; }
+    .rank-elite { border-color: #42d6c6 !important; color: #42d6c6 !important; }
   `]
 })
 export class ProfileComponent implements OnInit {
@@ -281,6 +317,36 @@ export class ProfileComponent implements OnInit {
 
   getAvatar(seed: string): string {
     return `https://api.dicebear.com/7.x/identicon/svg?seed=${seed}`;
+  }
+
+  getRankTitle(pos?: number): string {
+    if (!pos) return 'Membro SomniTide';
+    if (pos === 1) return 'Mestre Supremo do Sono';
+    if (pos === 2) return 'Mestre do Sono';
+    if (pos === 3) return 'Guardião do Descanso';
+    if (pos <= 10) return 'Lendário do Sono';
+    if (pos <= 100) return 'Elite do Sono';
+    return 'Membro SomniTide';
+  }
+
+  getRankClass(pos?: number): string {
+    if (!pos) return '';
+    if (pos === 1) return 'rank-supreme';
+    if (pos === 2) return 'rank-master';
+    if (pos === 3) return 'rank-guardian';
+    if (pos <= 10) return 'rank-legend';
+    if (pos <= 100) return 'rank-elite';
+    return '';
+  }
+
+  getRankIcon(pos?: number): string {
+    if (!pos) return 'person';
+    if (pos === 1) return 'workspace_premium';
+    if (pos === 2) return 'military_tech';
+    if (pos === 3) return 'verified';
+    if (pos <= 10) return 'stars';
+    if (pos <= 100) return 'emoji_events';
+    return 'person';
   }
 
   copyId() {

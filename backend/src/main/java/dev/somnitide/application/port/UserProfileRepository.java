@@ -9,4 +9,5 @@ public interface UserProfileRepository {
     Optional<UserProfile> findByUserId(String userId);
     Optional<UserProfile> findByHandle(String handle);
     List<UserProfile> findTop100ByScore();
+    long countUsersWithScoreAbove(int score);
 }

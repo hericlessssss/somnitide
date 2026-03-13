@@ -8,6 +8,8 @@ export interface UserProfile {
   avatarSeed: string;
   totalScore: number;
   updatedAtUtc: string;
+  createdAtUtc: string;
+  rankPosition?: number;
 }
 
 @Injectable({

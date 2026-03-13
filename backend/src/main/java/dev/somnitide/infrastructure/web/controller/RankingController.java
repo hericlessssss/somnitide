@@ -26,15 +26,16 @@ public class RankingController {
 
     @GetMapping
     public List<ProfileResponse> getTop100() {
-        return getRanking.execute().stream()
-                .map(ProfileResponse::fromDomain)
+        List<dev.somnitide.domain.model.UserProfile> top100 = getRanking.execute();
+        return java.util.stream.IntStream.range(0, top100.size())
+                .mapToObj(i -> ProfileResponse.fromDomain(top100.get(i), i + 1))
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/profile/{handle}")
     public ResponseEntity<ProfileResponse> getPublicProfile(@PathVariable String handle) {
         return getPublicProfile.execute(handle)
-                .map(p -> ResponseEntity.ok(ProfileResponse.fromDomain(p)))
+                .map(p -> ResponseEntity.ok(ProfileResponse.fromDomain(p.profile(), p.rankPosition())))
                 .orElse(ResponseEntity.notFound().build());
     }
 }

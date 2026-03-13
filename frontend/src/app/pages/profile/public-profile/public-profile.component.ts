@@ -24,10 +24,16 @@ import { ProfileService, UserProfile } from '../../../services/profile.service';
 
         <mat-card class="user-header-card">
           <div class="user-header">
-            <img [src]="getAvatar(profile()?.avatarSeed || '')" class="avatar">
+            <img [src]="getAvatar(profile()?.avatarSeed || '')" 
+                 class="avatar" [class]="getRankClass(profile()?.rankPosition)">
             <div class="user-meta">
               <h1 class="handle gradient-text">{{ profile()?.handle }}</h1>
-              <p class="join-date">Membro SomniTide</p>
+              <p class="join-date" [class]="getRankClass(profile()?.rankPosition)">
+                {{ getRankTitle(profile()?.rankPosition) }}
+              </p>
+              <p class="member-since" *ngIf="profile()?.createdAtUtc">
+                membro desde {{ profile()?.createdAtUtc | date:'MMMM yyyy' }}
+              </p>
             </div>
           </div>
 
@@ -40,10 +46,10 @@ import { ProfileService, UserProfile } from '../../../services/profile.service';
               </div>
             </div>
             
-            <div class="stat-card">
-              <mat-icon>military_tech</mat-icon>
+            <div class="stat-card" [class]="getRankClass(profile()?.rankPosition)">
+              <mat-icon>{{ getRankIcon(profile()?.rankPosition) }}</mat-icon>
               <div class="stat-info">
-                <span class="value">Elite</span>
+                <span class="value">{{ getRankShortTitle(profile()?.rankPosition) }}</span>
                 <span class="label">Status</span>
               </div>
             </div>
@@ -53,7 +59,7 @@ import { ProfileService, UserProfile } from '../../../services/profile.service';
         <mat-card class="summary-card">
           <h2 class="title">Resumo de Atividade</h2>
           <p class="description">
-            Este mestre do sono acumulou um total de <strong>{{ profile()?.totalScore }}</strong> pontos 
+            Este {{ getRankShortTitle(profile()?.rankPosition).toLowerCase() }} do sono acumulou um total de <strong>{{ profile()?.totalScore }}</strong> pontos 
             otimizando seus ciclos de descanso.
           </p>
           <div class="achievements">
@@ -95,7 +101,23 @@ import { ProfileService, UserProfile } from '../../../services/profile.service';
       height: 100px;
       border-radius: 50%;
       background: rgba(255,255,255,0.05);
-      border: 3px solid var(--color-primary);
+      border: 4px solid var(--color-border);
+      transition: all var(--transition-md);
+      object-fit: cover;
+    }
+    .avatar.rank-supreme { 
+      border-color: #ffd700; 
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+      animation: gold-glow-avatar 3s infinite alternate;
+    }
+    .avatar.rank-master { border-color: #c0c0c0; box-shadow: 0 0 15px rgba(192, 192, 192, 0.3); }
+    .avatar.rank-guardian { border-color: #cd7f32; box-shadow: 0 0 12px rgba(205, 127, 50, 0.3); }
+    .avatar.rank-legend { border-color: var(--color-primary); box-shadow: 0 0 10px rgba(99, 102, 241, 0.3); }
+    .avatar.rank-elite { border-color: #42d6c6; }
+
+    @keyframes gold-glow-avatar {
+      from { box-shadow: 0 0 10px rgba(255, 215, 0, 0.2), inset 0 0 5px rgba(255, 215, 0, 0.1); }
+      to { box-shadow: 0 0 25px rgba(255, 215, 0, 0.6), inset 0 0 15px rgba(255, 215, 0, 0.2); }
     }
     .handle {
       font-size: 32px;
@@ -108,6 +130,12 @@ import { ProfileService, UserProfile } from '../../../services/profile.service';
       color: var(--color-text-muted);
       font-size: 14px;
       margin: 4px 0 0;
+    }
+    .member-since {
+      color: var(--color-text-muted);
+      font-size: 11px;
+      opacity: 0.6;
+      margin: 2px 0 0;
     }
 
     .stats-grid {
@@ -141,6 +169,34 @@ import { ProfileService, UserProfile } from '../../../services/profile.service';
     }
     .summary-card .title { font-size: 18px; font-weight: 700; margin-bottom: var(--space-md); }
     .summary-card .description { color: var(--color-text-muted); line-height: 1.6; }
+
+    /* Rank Styles */
+    .rank-supreme { 
+      color: #ffd700 !important; 
+      font-weight: 800; 
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+      animation: gold-glow 3s infinite alternate;
+    }
+    .rank-master { color: #c0c0c0 !important; font-weight: 700; }
+    .rank-guardian { color: #cd7f32 !important; font-weight: 700; }
+    .rank-legend { color: var(--color-primary) !important; font-weight: 700; }
+    .rank-elite { color: #42d6c6 !important; font-weight: 600; }
+
+    .stat-card.rank-supreme { 
+      border-color: #ffd700; 
+      background: rgba(255, 215, 0, 0.05);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+    }
+    .stat-card.rank-supreme mat-icon { color: #ffd700; }
+    .stat-card.rank-master { border-color: #c0c0c0; background: rgba(192, 192, 192, 0.05); }
+    .stat-card.rank-master mat-icon { color: #c0c0c0; }
+    .stat-card.rank-guardian { border-color: #cd7f32; background: rgba(205, 127, 50, 0.05); }
+    .stat-card.rank-guardian mat-icon { color: #cd7f32; }
+
+    @keyframes gold-glow {
+      from { text-shadow: 0 0 5px rgba(255, 215, 0, 0.2); }
+      to { text-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+    }
 
     .loading-state, .error-state {
       display: flex;
@@ -192,5 +248,45 @@ export class PublicProfileComponent implements OnInit {
 
   getAvatar(seed: string): string {
     return `https://api.dicebear.com/7.x/identicon/svg?seed=${seed}`;
+  }
+
+  getRankTitle(pos?: number): string {
+    if (!pos) return 'Membro SomniTide';
+    if (pos === 1) return 'Mestre Supremo do Sono';
+    if (pos === 2) return 'Mestre do Sono';
+    if (pos === 3) return 'Guardião do Descanso';
+    if (pos <= 10) return 'Lendário do Sono';
+    if (pos <= 100) return 'Elite do Sono';
+    return 'Membro SomniTide';
+  }
+
+  getRankShortTitle(pos?: number): string {
+    if (!pos) return 'Membro';
+    if (pos === 1) return 'Supremo';
+    if (pos === 2) return 'Mestre';
+    if (pos === 3) return 'Guardião';
+    if (pos <= 10) return 'Lendário';
+    if (pos <= 100) return 'Elite';
+    return 'Membro';
+  }
+
+  getRankClass(pos?: number): string {
+    if (!pos) return '';
+    if (pos === 1) return 'rank-supreme';
+    if (pos === 2) return 'rank-master';
+    if (pos === 3) return 'rank-guardian';
+    if (pos <= 10) return 'rank-legend';
+    if (pos <= 100) return 'rank-elite';
+    return '';
+  }
+
+  getRankIcon(pos?: number): string {
+    if (!pos) return 'person';
+    if (pos === 1) return 'workspace_premium';
+    if (pos === 2) return 'military_tech';
+    if (pos === 3) return 'verified';
+    if (pos <= 10) return 'stars';
+    if (pos <= 100) return 'emoji_events';
+    return 'person';
   }
 }

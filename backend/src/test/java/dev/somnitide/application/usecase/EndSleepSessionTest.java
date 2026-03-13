@@ -2,8 +2,10 @@ package dev.somnitide.application.usecase;
 
 import dev.somnitide.application.port.SleepSessionRepository;
 import dev.somnitide.application.port.UserProfileRepository;
+import dev.somnitide.application.port.UserPreferencesRepository;
 import dev.somnitide.domain.exception.DomainException;
 import dev.somnitide.domain.model.SleepSession;
+import dev.somnitide.domain.model.UserPreferences;
 import dev.somnitide.domain.service.SleepProgressCalculator;
 import dev.somnitide.domain.service.StreakCalculator;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +21,7 @@ import static org.mockito.Mockito.*;
 class EndSleepSessionTest {
 
     private SleepSessionRepository repository;
+    private UserPreferencesRepository preferencesRepository;
     private UserProfileRepository profileRepository;
     private SleepProgressCalculator progressCalculator;
     private StreakCalculator streakCalculator;
@@ -27,10 +30,11 @@ class EndSleepSessionTest {
     @BeforeEach
     void setUp() {
         repository = mock(SleepSessionRepository.class);
+        preferencesRepository = mock(UserPreferencesRepository.class);
         profileRepository = mock(UserProfileRepository.class);
         progressCalculator = mock(SleepProgressCalculator.class);
         streakCalculator = mock(StreakCalculator.class);
-        useCase = new EndSleepSession(repository, profileRepository, progressCalculator, streakCalculator);
+        useCase = new EndSleepSession(repository, preferencesRepository, profileRepository, progressCalculator, streakCalculator);
     }
 
     @Test
@@ -63,5 +67,28 @@ class EndSleepSessionTest {
                 .hasMessageContaining("no open");
 
         verify(repository, never()).save(any());
+    }
+
+    @Test
+    void execute_shortSession_endsButNoPointsNoProfileUpdate() {
+        String userId = "user-short";
+        Instant startedAt = Instant.now().minusSeconds(30 * 60); // 30 minutes sleep
+        SleepSession openSession = new SleepSession(userId, startedAt, 14);
+
+        UserPreferences prefs = UserPreferences.defaults(userId); // 90 min cycle
+
+        when(repository.findOpenByUserId(userId)).thenReturn(Optional.of(openSession));
+        when(preferencesRepository.findByUserId(userId)).thenReturn(Optional.of(prefs));
+        when(repository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        EndSleepSession.Request request = new EndSleepSession.Request(null, "Just a nap");
+        SleepSession result = useCase.execute(userId, request);
+
+        assertThat(result.isOpen()).isFalse();
+        assertThat(result.getEarnedPoints()).isZero();
+        
+        verify(repository).save(openSession);
+        verify(profileRepository, never()).save(any());
+        verify(progressCalculator, never()).computeTotal(anyInt(), any(), anyInt());
     }
 }

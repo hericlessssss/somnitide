@@ -23,12 +23,15 @@ public class GetProfile {
         this.calculator = calculator;
     }
 
+    @Transactional(readOnly = true)
+    public record ProfileWithRank(UserProfile profile, Integer rankPosition) {}
+
     @Transactional
-    public Optional<UserProfile> execute(String userId) {
+    public Optional<ProfileWithRank> execute(String userId) {
         Optional<UserProfile> profileOpt = repository.findByUserId(userId);
         
         if (profileOpt.isEmpty()) {
-            return profileOpt;
+            return Optional.empty();
         }
 
         UserProfile profile = profileOpt.get();
@@ -53,10 +56,14 @@ public class GetProfile {
         // Recalculate total score and sync profile if different
         if (computedTotal != profile.getTotalScore()) {
             profile.syncScore(computedTotal);
-            return Optional.of(repository.save(profile));
+            profile = repository.save(profile);
         }
+
+        // Calculate rank
+        long usersAbove = repository.countUsersWithScoreAbove(profile.getTotalScore());
+        int rankPosition = (int) (usersAbove + 1);
         
-        return Optional.of(profile);
+        return Optional.of(new ProfileWithRank(profile, rankPosition));
     }
 
     private int getSleepMinutes(dev.somnitide.domain.model.SleepSession session) {

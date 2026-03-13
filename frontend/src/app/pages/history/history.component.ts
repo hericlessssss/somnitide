@@ -8,6 +8,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SleepService, SessionResponse } from '../../services/sleep.service';
+import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
+import { PageContainerComponent } from '../../shared/page-container/page-container.component';
 
 @Component({
   selector: 'app-history',
@@ -20,14 +22,16 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
     MatListModule,
     MatChipsModule,
     MatButtonModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    PageHeaderComponent,
+    PageContainerComponent
   ],
   template: `
-    <div class="history-container">
-      <header class="section-header fade-in">
-        <h1 class="gradient-text">Seu Histórico</h1>
-        <p>Acompanhe os números da sua jornada</p> 
-      </header>
+    <app-page-container>
+      <app-page-header
+        title="Seu Histórico"
+        subtitle="Acompanhe detalhes da jornada" />
+
 
       <div *ngIf="loading() && history().length === 0" class="status-state fade-in">
         <div class="loading-shimmer"></div>
@@ -106,32 +110,11 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
           </button>
         </div>
       </div>
-    </div>
+    </app-page-container>
   `,
   styles: [`
-    .history-container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: var(--space-2xl) var(--space-md);
-      padding-bottom: 120px;
-    }
-    .section-header {
-      margin-bottom: var(--space-2xl);
-      text-align: center;
-    }
-    .section-header h1 { 
-      font-family: var(--font-title);
-      font-weight: 800; 
-      font-size: 2.1rem; 
-      color: var(--color-text); 
-      margin-bottom: var(--space-xs);
-      letter-spacing: -1px;
-    }
-    .section-header p { 
-      color: var(--color-text-muted); 
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
+    /* Container handled by PageContainer. Header handled by PageHeader. */
+    .history-container { /* legacy class kept for smoke tests — remove in future */ }
 
     /* Timeline Structure */
     .history-timeline {

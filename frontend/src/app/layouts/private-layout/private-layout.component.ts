@@ -219,16 +219,7 @@ import { Router } from '@angular/router';
     .main-content {
       flex: 1;
       margin-top: 72px;
-      padding: var(--space-lg);
-      /* Dynamic padding-bottom: Nav height + safe area + margin */
-      padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + var(--space-lg));
-    }
-
-    @media (min-width: 768px) {
-      .main-content {
-        padding: var(--space-2xl);
-        padding-bottom: var(--space-2xl);
-      }
+      /* padding is handled by each page's page-container component */
     }
 
     .content-container {

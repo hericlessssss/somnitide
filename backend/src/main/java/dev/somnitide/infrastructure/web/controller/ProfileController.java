@@ -25,7 +25,7 @@ public class ProfileController {
     @GetMapping("/me")
     public ResponseEntity<ProfileResponse> getMyProfile(@AuthenticationPrincipal Jwt jwt) {
         return getProfile.execute(jwt.getSubject())
-                .map(p -> ResponseEntity.ok(ProfileResponse.fromDomain(p)))
+                .map(p -> ResponseEntity.ok(ProfileResponse.fromDomain(p.profile(), p.rankPosition())))
                 .orElse(ResponseEntity.ok().build());
     }
 

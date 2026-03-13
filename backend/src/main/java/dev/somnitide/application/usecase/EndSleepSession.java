@@ -1,6 +1,7 @@
 package dev.somnitide.application.usecase;
 
 import dev.somnitide.application.port.SleepSessionRepository;
+import dev.somnitide.application.port.UserPreferencesRepository;
 import dev.somnitide.application.port.UserProfileRepository;
 import dev.somnitide.domain.exception.DomainException;
 import dev.somnitide.domain.model.SleepSession;
@@ -15,15 +16,18 @@ import java.time.Instant;
 public class EndSleepSession {
 
     private final SleepSessionRepository repository;
+    private final UserPreferencesRepository preferencesRepository;
     private final UserProfileRepository profileRepository;
     private final SleepProgressCalculator progressCalculator;
     private final StreakCalculator streakCalculator;
 
     public EndSleepSession(SleepSessionRepository repository,
+                           UserPreferencesRepository preferencesRepository,
                            UserProfileRepository profileRepository,
                            SleepProgressCalculator progressCalculator,
                            StreakCalculator streakCalculator) {
         this.repository = repository;
+        this.preferencesRepository = preferencesRepository;
         this.profileRepository = profileRepository;
         this.progressCalculator = progressCalculator;
         this.streakCalculator = streakCalculator;
@@ -45,8 +49,12 @@ public class EndSleepSession {
         Instant now = Instant.now();
         session.end(now, request.qualityRating(), request.note());
 
-        // Calculate points
-        if (session.isValidDuration()) {
+        // Get user preferences for cycle length
+        dev.somnitide.domain.model.UserPreferences preferences = preferencesRepository.findByUserId(userId)
+                .orElse(dev.somnitide.domain.model.UserPreferences.defaults(userId));
+
+        // Calculate points only if duration is valid AND minimum duration (1 cycle) is met
+        if (session.isValidDuration() && session.isMinimumDurationMet(preferences.cycleLengthMinutes())) {
             int sleepMinutes = getSleepMinutes(session);
             
             // Get streak for bonus

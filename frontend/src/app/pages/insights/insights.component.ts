@@ -5,17 +5,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import { SleepService, SessionResponse } from '../../services/sleep.service';
+import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
+import { PageContainerComponent } from '../../shared/page-container/page-container.component';
 
 @Component({
   selector: 'app-insights',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule, BaseChartDirective],
+  imports: [CommonModule, MatCardModule, MatIconModule, BaseChartDirective, PageHeaderComponent, PageContainerComponent],
   template: `
-    <div class="insights-container">
-      <header class="section-header fade-in">
-        <h1 class="gradient-text">Seu Desempenho</h1>
-        <p>A ciência por trás do seu descanso.</p>
-      </header>
+    <app-page-container>
+      <app-page-header
+        title="Seu Desempenho"
+        subtitle="A matemática por trás do seu descanso." />
 
       <div class="stats-grid" role="group" aria-label="Estatísticas de sono">
         <mat-card class="stat-card fade-in" [attr.aria-label]="'Média de Sono: ' + (avgHours() | number:'1.1-1') + ' horas'">
@@ -91,32 +92,11 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
           </mat-card-content>
         </mat-card>
       </div>
-    </div>
+    </app-page-container>
   `,
   styles: [`
-    .insights-container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: var(--space-2xl) var(--space-md);
-      padding-bottom: 120px;
-    }
-    .section-header {
-      margin-bottom: var(--space-2xl);
-      text-align: center;
-    }
-    .section-header h1 { 
-      font-family: var(--font-title);
-      font-weight: 800; 
-      font-size: 2.1rem; 
-      color: var(--color-text); 
-      margin-bottom: var(--space-xs);
-      letter-spacing: -1px;
-    }
-    .section-header p { 
-      color: var(--color-text-muted); 
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
+    /* Container + header handled by PageContainer / PageHeader */
+    .insights-container { }
 
     .stats-grid {
       display: grid;
@@ -188,11 +168,18 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: var(--space-lg);
     }
+    .charts-grid > * {
+      min-width: 0; /* Allow grid items to shrink below content size for canvas responsiveness */
+    }
     .chart-card {
       border-radius: var(--radius-lg);
       padding: var(--space-xl);
       background: rgba(17, 24, 38, 0.3) !important;
       border: 1px solid var(--color-border) !important;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      min-width: 0;
     }
     .chart-header {
       margin-bottom: var(--space-lg);
@@ -212,9 +199,12 @@ import { SleepService, SessionResponse } from '../../services/sleep.service';
     .chart-wrapper {
       height: 300px;
       margin-top: var(--space-sm);
+      position: relative;
+      width: 100%;
     }
 
     @media (max-width: 768px) {
+      .insights-container { padding: var(--space-lg) var(--space-sm); }
       .charts-grid { grid-template-columns: 1fr; }
       .stat-value { font-size: 2.4rem; }
       .chart-card { padding: var(--space-md); }

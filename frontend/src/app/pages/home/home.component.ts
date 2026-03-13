@@ -9,7 +9,11 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { SleepService, SessionResponse } from '../../services/sleep.service';
 import { AuthService } from '../../services/auth.service';
+import { PreferencesService } from '../../services/preferences.service';
 import { AssessmentDialogComponent, AssessmentResult } from './components/assessment-dialog/assessment-dialog.component';
+import { RouterLink } from '@angular/router';
+import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
+import { PageContainerComponent } from '../../shared/page-container/page-container.component';
 
 @Component({
   selector: 'app-home',
@@ -21,16 +25,23 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
     MatIconModule,
     MatDividerModule,
     MatListModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    RouterLink,
+    MatIconModule,
+    PageHeaderComponent,
+    PageContainerComponent
   ],
   template: `
-    <div class="home-container fade-in">
+    <app-page-container>
+      <!-- Etapa 3: Título real da página —
+           Não está dentro do card. O card é só o relógio. -->
+      <app-page-header
+        title="Status do Sono"
+        subtitle="Pronto para descansar? Inicie sua sessão para monitorar seu ciclo." />
+
       <main class="content">
         <mat-card class="hero-card glass">
-          <mat-card-header class="hero-header">
-            <mat-card-title>Status do Sono</mat-card-title>
-          </mat-card-header>
-          
+          <!-- mat-card-title removido: título agora está no PageHeader acima -->
           <mat-card-content class="hero-content">
             <div class="clock-display">
               <span class="label">Hora Atual</span>
@@ -49,7 +60,7 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
             
             <ng-template #noSession>
               <div class="empty-status">
-                <p>Pronto para descansar? Inicie sua sessão de sono para monitorar seu ciclo.</p>
+                <p>Nenhuma sessão ativa.</p>
               </div>
             </ng-template>
           </mat-card-content>
@@ -152,22 +163,29 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
             </div>
           </div>
         </section>
+
+        <!-- Science Brief CTA -->
+        <section class="science-brief-section fade-in">
+          <mat-card class="science-card glass">
+            <mat-card-content>
+              <div class="science-content">
+                <div class="science-text">
+                  <p>O SomniTide utiliza algoritmos baseados na arquitetura cíclica do sono para estimar seus horários ideais.</p>
+                  <a routerLink="/docs" class="science-link">Clique aqui e saiba tudo sobre a ciência por trás do seu sono</a>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </section>
       </main>
-    </div>
+    </app-page-container>
   `,
   styles: `
-    .home-container {
-      min-height: calc(100vh - var(--bottom-nav-height) - 64px);
-      background-color: var(--color-bg);
-      display: flex;
-      flex-direction: column;
-    }
+    /* Page container handled by PageContainer component */
+    .home-container { }
 
     .content {
-      max-width: 800px;
       width: 100%;
-      margin: 0 auto;
-      padding: var(--space-xl) var(--space-lg);
       display: flex;
       flex-direction: column;
       gap: var(--space-2xl);
@@ -185,19 +203,6 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
       padding: var(--space-xl) 0;
       text-align: center;
       box-shadow: var(--shadow-2) !important;
-    }
-
-    .hero-header {
-      justify-content: center;
-      margin-bottom: var(--space-lg);
-    }
-
-    .hero-header mat-card-title {
-      font-size: 1.0rem;
-      font-weight: 700;
-      color: var(--color-text-muted);
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
     }
 
     .hero-content {
@@ -565,6 +570,52 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
         grid-template-columns: 1fr;
       }
     }
+
+    .science-brief-section {
+      margin-top: var(--space-xl);
+    }
+
+    .science-card {
+      border: 1px solid rgba(255, 255, 255, 0.05) !important;
+      background: rgba(255, 255, 255, 0.02) !important;
+    }
+
+    .science-content {
+      display: flex;
+      align-items: center;
+      gap: var(--space-lg);
+      padding: var(--space-md);
+    }
+
+    .science-icon {
+      color: var(--color-primary);
+      opacity: 0.6;
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+
+    .science-text p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+    }
+
+    .science-link {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .science-link:hover {
+      opacity: 0.8;
+    }
   `
 
 
@@ -572,11 +623,13 @@ import { AssessmentDialogComponent, AssessmentResult } from './components/assess
 export class HomeComponent {
   auth = inject(AuthService);
   private sleepService = inject(SleepService);
+  private preferencesService = inject(PreferencesService);
   private dialog = inject(MatDialog);
   private snack = inject(MatSnackBar);
 
   currentTime = signal(new Date());
   activeSession = signal<SessionResponse | null>(null);
+  cycleLength = signal<number>(90); // Default fallback
   loading = signal(false);
 
   timezoneLabel = computed(() => {
@@ -667,6 +720,13 @@ export class HomeComponent {
       },
       error: (err) => console.error('Failed to load status', err)
     });
+
+    this.preferencesService.getPreferences().subscribe({
+      next: (prefs) => {
+        this.cycleLength.set(prefs.cycleLengthMinutes);
+      },
+      error: (err) => console.error('Failed to load preferences', err)
+    });
   }
 
   startSession() {
@@ -685,6 +745,33 @@ export class HomeComponent {
   }
 
   endSession() {
+    const session = this.activeSession();
+    if (!session) return;
+
+    const sleepStart = new Date(session.sleepStartEstimatedAtUtc).getTime();
+    const now = Date.now();
+    const elapsedMinutes = (now - sleepStart) / (1000 * 60);
+
+    // Check if at least one cycle has passed
+    if (elapsedMinutes < this.cycleLength()) {
+      this.loading.set(true);
+      this.sleepService.endSession(null, 'Sessão muito curta').subscribe({
+        next: () => {
+          this.activeSession.set(null);
+          this.loading.set(false);
+          this.snack.open('Notamos que você ainda não completou um ciclo de sono. Que pena que não conseguiu dormir ainda! Esta sessão não será computada.', 'OK', { 
+            duration: 8000,
+            panelClass: ['info-snackbar']
+          });
+        },
+        error: (err) => {
+          this.loading.set(false);
+          this.snack.open('Erro ao finalizar sessão.', 'Fechar', { duration: 5000 });
+        }
+      });
+      return;
+    }
+
     const dialogRef = this.dialog.open(AssessmentDialogComponent, {
       width: '550px',
       disableClose: true,

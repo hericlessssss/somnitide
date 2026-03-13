@@ -27,6 +27,9 @@ public class UserProfileEntity {
     @Column(name = "updated_at_utc", nullable = false)
     private Instant updatedAtUtc;
 
+    @Column(name = "created_at_utc", nullable = false, updatable = false)
+    private Instant createdAtUtc;
+
     protected UserProfileEntity() {}
 
     public static UserProfileEntity fromDomain(UserProfile domain) {
@@ -36,6 +39,7 @@ public class UserProfileEntity {
         entity.avatarSeed = domain.getAvatarSeed();
         entity.totalScore = domain.getTotalScore();
         entity.updatedAtUtc = domain.getUpdatedAtUtc();
+        entity.createdAtUtc = domain.getCreatedAtUtc();
         return entity;
     }
 
@@ -45,7 +49,8 @@ public class UserProfileEntity {
             handle,
             avatarSeed,
             totalScore,
-            updatedAtUtc
+            updatedAtUtc,
+            createdAtUtc
         );
     }
 

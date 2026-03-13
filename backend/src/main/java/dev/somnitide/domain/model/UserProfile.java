@@ -11,22 +11,26 @@ public class UserProfile {
     private String avatarSeed;
     private int totalScore;
     private Instant updatedAtUtc;
+    private final Instant createdAtUtc;
 
-    public UserProfile(String userId, String handle, String avatarSeed, int totalScore, Instant updatedAtUtc) {
+    public UserProfile(String userId, String handle, String avatarSeed, int totalScore, Instant updatedAtUtc, Instant createdAtUtc) {
         this.userId = userId;
         this.handle = handle;
         this.avatarSeed = avatarSeed;
         this.totalScore = totalScore;
         this.updatedAtUtc = updatedAtUtc;
+        this.createdAtUtc = createdAtUtc;
     }
 
     public static UserProfile createNew(String userId, String handle) {
+        Instant now = Instant.now();
         return new UserProfile(
             userId,
             handle,
             userId, // Use userId as default avatar seed
             0,
-            Instant.now()
+            now,
+            now
         );
     }
 
@@ -69,5 +73,9 @@ public class UserProfile {
 
     public Instant getUpdatedAtUtc() {
         return updatedAtUtc;
+    }
+
+    public Instant getCreatedAtUtc() {
+        return createdAtUtc;
     }
 }

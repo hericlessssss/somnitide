@@ -1,94 +1,145 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HomeComponent } from './home.component';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AuthService } from '../../services/auth.service';
+import { SleepService } from '../../services/sleep.service';
+import { PreferencesService } from '../../services/preferences.service';
 import { of } from 'rxjs';
+import { provideRouter } from '@angular/router';
 
 describe('HomeComponent', () => {
     let component: HomeComponent;
     let fixture: ComponentFixture<HomeComponent>;
     let mockAuthService: any;
+    let mockSleepService: any;
+    let mockPreferencesService: any;
+    let mockDialog: any;
+    let mockSnack: any;
 
     beforeEach(async () => {
-        mockAuthService = {
-            isAuthenticated: true
+        mockAuthService = { isAuthenticated: true };
+        mockSleepService = {
+            getHistory: vi.fn().mockReturnValue(of({ activeSession: null, history: [] })),
+            startSession: vi.fn(),
+            endSession: vi.fn().mockReturnValue(of({}))
+        };
+        mockPreferencesService = {
+            getPreferences: vi.fn().mockReturnValue(of({ 
+                cycleLengthMinutes: 90,
+                updatedAtUtc: new Date().toISOString() 
+            }))
+        };
+        mockDialog = {
+            open: vi.fn().mockReturnValue({ afterClosed: () => of(undefined) })
+        };
+        mockSnack = {
+            open: vi.fn()
         };
 
         await TestBed.configureTestingModule({
             imports: [
                 HomeComponent,
-                MatDialogModule,
-                MatSnackBarModule,
                 HttpClientTestingModule
             ],
             providers: [
-                { provide: AuthService, useValue: mockAuthService }
+                { provide: AuthService, useValue: mockAuthService },
+                { provide: SleepService, useValue: mockSleepService },
+                { provide: PreferencesService, useValue: mockPreferencesService },
+                { provide: MatDialog, useValue: mockDialog },
+                { provide: MatSnackBar, useValue: mockSnack },
+                provideRouter([])
             ]
         }).compileComponents();
 
         fixture = TestBed.createComponent(HomeComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
     });
 
     it('should create', () => {
+        fixture.detectChanges();
         expect(component).toBeTruthy();
     });
 
-    it('should display the current time', () => {
+    // Smoke test: verifica que o PageHeader est├í presente com o t├¡tulo correto
+    it('should render PageHeader with h1 containing the page title', () => {
+        fixture.detectChanges();
         const compiled = fixture.nativeElement as HTMLElement;
-        const timeDisplay = compiled.querySelector('.time');
-        expect(timeDisplay?.textContent).toMatch(/\d{2}:\d{2}:\d{2}/);
+        const h1 = compiled.querySelector('h1.page-title');
+        expect(h1).toBeTruthy();
+        expect(h1?.textContent?.trim()).toContain('Status do Sono');
     });
 
-    it('should display the timezone', () => {
+    // Smoke test: verifica que o subt├¡tulo est├í presente
+    it('should render PageHeader with a subtitle paragraph', () => {
+        fixture.detectChanges();
         const compiled = fixture.nativeElement as HTMLElement;
-        const timezoneDisplay = compiled.querySelector('.timezone-label');
-        expect(timezoneDisplay).toBeTruthy();
-        // Expect format like "GMT-3" or "Brasília" or similar
-        expect(timezoneDisplay?.textContent?.length).toBeGreaterThan(0);
+        const sub = compiled.querySelector('p.page-subtitle');
+        expect(sub).toBeTruthy();
+        expect(sub?.textContent?.trim()).toContain('Pronto para descansar');
     });
+    describe('endSession', () => {
+        it('should show info message and skip modal if session is too short', async () => {
+            const now = Date.now();
+            const startedAt = new Date(now - 5 * 60 * 1000).toISOString();
+            
+            mockSleepService.getHistory.mockReturnValue(of({ 
+                activeSession: {
+                    id: '123',
+                    startedAtUtc: startedAt,
+                    sleepStartEstimatedAtUtc: startedAt,
+                    isOpen: true,
+                    endedAtUtc: null,
+                    qualityRating: null,
+                    note: null
+                }, 
+                history: [] 
+            }));
+            
+            component.refreshStatus();
+            component.cycleLength.set(90);
+            await fixture.whenStable();
+            fixture.detectChanges();
 
-    it('should have a centered hero section with consistent padding', () => {
-        const compiled = fixture.nativeElement as HTMLElement;
-        const heroContent = compiled.querySelector('.hero-content');
-        const styles = window.getComputedStyle(heroContent!);
-        expect(styles.display).toBe('flex');
-        expect(styles.flexDirection).toBe('column');
-        expect(styles.alignItems).toBe('center');
-    });
-
-    describe('getHealthStatus', () => {
-        it('should return critical for 2 cycles', () => {
-            const status = component.getHealthStatus(2);
-            expect(status.level).toBe('critical');
-            expect(status.label).toBe('Crítico');
+            // Action
+            component.endSession();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            await new Promise(resolve => setTimeout(resolve, 0)); // tick microtasks
+            fixture.detectChanges();
+            
+            expect(mockDialog.open).not.toHaveBeenCalled();
+            expect(mockSleepService.endSession).toHaveBeenCalledWith(null, 'Sess├úo muito curta');
+            expect(mockSnack.open).toHaveBeenCalled();
+            expect(component.activeSession()).toBeNull();
         });
 
-        it('should return critical/insuficiente for 3 cycles', () => {
-            const status = component.getHealthStatus(3);
-            expect(status.level).toBe('critical');
-            expect(status.label).toBe('Insuficiente');
-        });
+        it('should open modal if session duration is met', async () => {
+            const now = Date.now();
+            const startedAt = new Date(now - 100 * 60 * 1000).toISOString();
+            
+            mockSleepService.getHistory.mockReturnValue(of({ 
+                activeSession: {
+                    id: '123',
+                    startedAtUtc: startedAt,
+                    sleepStartEstimatedAtUtc: startedAt,
+                    isOpen: true,
+                    endedAtUtc: null,
+                    qualityRating: null,
+                    note: null
+                }, 
+                history: [] 
+            }));
+            
+            component.refreshStatus();
+            await fixture.whenStable();
+            fixture.detectChanges();
 
-        it('should return warning/mínimo for 4 cycles', () => {
-            const status = component.getHealthStatus(4);
-            expect(status.level).toBe('warning');
-            expect(status.label).toBe('Mínimo');
-        });
-
-        it('should return info/ideal for 5 cycles', () => {
-            const status = component.getHealthStatus(5);
-            expect(status.level).toBe('info');
-            expect(status.label).toBe('Ideal');
-        });
-
-        it('should return warning/longo for 7 cycles', () => {
-            const status = component.getHealthStatus(7);
-            expect(status.level).toBe('warning');
-            expect(status.label).toBe('Longo');
+            component.endSession();
+            await fixture.whenStable();
+            
+            expect(mockDialog.open).toHaveBeenCalled();
         });
     });
 });

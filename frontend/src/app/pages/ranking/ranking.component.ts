@@ -6,17 +6,18 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ProfileService, UserProfile } from '../../services/profile.service';
 import { RouterLink } from '@angular/router';
+import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
+import { PageContainerComponent } from '../../shared/page-container/page-container.component';
 
 @Component({
   selector: 'app-ranking',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, MatTooltipModule, RouterLink],
+  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, MatTooltipModule, RouterLink, PageHeaderComponent, PageContainerComponent],
   template: `
-    <div class="ranking-container">
-      <header class="ranking-header">
-        <h1 class="gradient-text">Ranking Global</h1>
-        <p class="subtitle">Os 100 mestres do sono SomniTide</p>
-      </header>
+    <app-page-container>
+      <app-page-header
+        title="Ranking Global"
+        subtitle="Os 100 mestres do sono SomniTide" />
 
       <div *ngIf="loading()" class="loading-state">
         <mat-icon class="spin">refresh</mat-icon>
@@ -34,7 +35,7 @@ import { RouterLink } from '@angular/router';
               <div class="rank-badge">{{ i + 1 }}</div>
             </div>
             <div class="player-info">
-              <span class="handle">{{ p.handle }}</span>
+              <span class="handle" [matTooltip]="p.handle">{{ p.handle }}</span>
               <span class="score">{{ p.totalScore }} pts</span>
             </div>
           </div>
@@ -50,7 +51,7 @@ import { RouterLink } from '@angular/router';
                    [routerLink]="['/profile', p.handle]">
                 <span class="rank-num">{{ i + 4 }}</span>
                 <img [src]="getAvatar(p.avatarSeed)" class="small-avatar">
-                <span class="handle">{{ p.handle }}</span>
+                <span class="handle" [matTooltip]="p.handle">{{ p.handle }}</span>
                 <span class="spacer"></span>
                 <span class="score">{{ p.totalScore }} pts</span>
               </div>
@@ -67,36 +68,17 @@ import { RouterLink } from '@angular/router';
                  [routerLink]="['/profile', p.handle]">
               <img [src]="getAvatar(p.avatarSeed)" class="micro-avatar">
               <div class="grid-info">
-                <span class="handle">{{ p.handle }}</span>
+                <span class="handle" [matTooltip]="p.handle">{{ p.handle }}</span>
                 <span class="score">{{ p.totalScore }} pts</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </app-page-container>
   `,
   styles: [`
-    .ranking-container {
-      padding: var(--space-xl);
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .ranking-header {
-      text-align: center;
-      margin-bottom: var(--space-2xl);
-    }
-    .gradient-text {
-      font-size: 36px;
-      font-weight: 800;
-      letter-spacing: -1px;
-      margin: 0;
-    }
-    .subtitle {
-      color: var(--color-text-muted);
-      font-size: 16px;
-      margin-top: var(--space-xs);
-    }
+    /* Container and header styles removed — now handled by PageContainer + PageHeader */
 
     /* Podium */
     .podium-section {
@@ -159,8 +141,21 @@ import { RouterLink } from '@angular/router';
     }
     .rank-1 .rank-badge { background: #ffd700; color: #000; }
 
-    .player-info { text-align: center; }
-    .player-info .handle { display: block; font-weight: 700; color: var(--color-text); margin-bottom: 4px; }
+    .player-info { 
+      text-align: center; 
+      width: 100%;
+      overflow: hidden;
+    }
+    .player-info .handle { 
+      display: block; 
+      font-weight: 700; 
+      color: var(--color-text); 
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
     .player-info .score { font-size: 13px; color: var(--color-text-muted); }
 
     /* Top List */
@@ -192,11 +187,24 @@ import { RouterLink } from '@angular/router';
       cursor: pointer;
     }
     .list-item:hover { background: rgba(255,255,255,0.06); }
-    .rank-num { width: 30px; font-weight: 600; color: var(--color-text-muted); font-size: 14px; }
-    .small-avatar { width: 32px; height: 32px; border-radius: 50%; margin-right: var(--space-md); }
-    .list-item .handle { font-weight: 600; font-size: 15px; }
-    .spacer { flex: 1; }
-    .list-item .score { font-weight: 500; font-size: 14px; color: var(--color-primary); }
+    .rank-num { min-width: 30px; font-weight: 600; color: var(--color-text-muted); font-size: 14px; }
+    .small-avatar { width: 32px; height: 32px; border-radius: 50%; margin-right: var(--space-md); flex-shrink: 0; }
+    .list-item .handle { 
+      font-weight: 600; 
+      font-size: 15px; 
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-right: var(--space-sm);
+    }
+    .spacer { flex: 1; min-width: var(--space-xs); }
+    .list-item .score { 
+      font-weight: 500; 
+      font-size: 14px; 
+      color: var(--color-primary); 
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
 
     /* Grid */
     .grid-section { margin-top: var(--space-2xl); }
@@ -217,8 +225,16 @@ import { RouterLink } from '@angular/router';
       cursor: pointer;
     }
     .grid-item:hover { border-color: var(--color-primary); background: rgba(99, 102, 241, 0.05); }
-    .micro-avatar { width: 24px; height: 24px; border-radius: 50%; }
-    .grid-info .handle { display: block; font-size: 13px; font-weight: 600; }
+    .micro-avatar { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; }
+    .grid-info { overflow: hidden; }
+    .grid-info .handle { 
+      display: block; 
+      font-size: 13px; 
+      font-weight: 600; 
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     .grid-info .score { font-size: 11px; color: var(--color-text-muted); }
 
     .loading-state {

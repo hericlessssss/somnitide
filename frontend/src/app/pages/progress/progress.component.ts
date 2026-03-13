@@ -7,6 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { ProgressService, ProgressResponse } from '../../services/progress.service';
+import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
+import { PageContainerComponent } from '../../shared/page-container/page-container.component';
 
 @Component({
   selector: 'app-progress',
@@ -17,14 +19,16 @@ import { ProgressService, ProgressResponse } from '../../services/progress.servi
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    PageHeaderComponent,
+    PageContainerComponent
   ],
   template: `
-    <div class="progress-container">
-      <header class="section-header fade-in">
-        <h1 class="gradient-text">Seu Progresso</h1>
-        <p>Acompanhe os números da sua jornada</p>
-      </header>
+    <app-page-container>
+      <app-page-header
+        title="Seu Progresso"
+        subtitle="Acompanhe os números da sua jornada" />
+
 
       <div *ngIf="loading() && !data()" class="status-state fade-in">
         <mat-progress-spinner mode="indeterminate" diameter="40"></mat-progress-spinner>
@@ -170,33 +174,11 @@ import { ProgressService, ProgressResponse } from '../../services/progress.servi
           </footer>
         </div>
       </ng-container>
-    </div>
+    </app-page-container>
   `,
   styles: [`
-    .progress-container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: var(--space-2xl) var(--space-md);
-      padding-bottom: 120px;
-    }
-
-    .section-header {
-      margin-bottom: var(--space-2xl);
-      text-align: center;
-    }
-    .section-header h1 { 
-      font-family: var(--font-title);
-      font-weight: 800; 
-      font-size: 2.1rem; 
-      color: var(--color-text); 
-      margin-bottom: var(--space-xs);
-      letter-spacing: -1px;
-    }
-    .section-header p { 
-      color: var(--color-text-muted); 
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
+    /* Container + header now handled by PageContainer / PageHeader */
+    .progress-container { }
 
     /* Glass Effect from Home/History */
     .glass {

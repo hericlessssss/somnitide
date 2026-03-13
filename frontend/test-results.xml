@@ -1,51 +1,264 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites name="vitest tests" tests="19" failures="0" errors="0" time="1.1339646">
-    <testsuite name="src/app/app.spec.ts" timestamp="2026-03-10T01:55:24.490Z" hostname="us" tests="2" failures="0" errors="0" skipped="0" time="0.0743798">
-        <testcase classname="src/app/app.spec.ts" name="App &gt; should create the app" time="0.0631086">
+<testsuites name="vitest tests" tests="72" failures="1" errors="0" time="8.203523">
+    <testsuite name="src/app/app.spec.ts" timestamp="2026-03-13T17:06:57.548Z" hostname="us" tests="2" failures="0" errors="0" skipped="0" time="0.0138608">
+        <testcase classname="src/app/app.spec.ts" name="App &gt; should create the app" time="0.0087653">
         </testcase>
-        <testcase classname="src/app/app.spec.ts" name="App &gt; should have a router-outlet" time="0.0091738">
-        </testcase>
-    </testsuite>
-    <testsuite name="src/app/services/auth.service.spec.ts" timestamp="2026-03-10T01:55:24.491Z" hostname="us" tests="5" failures="0" errors="0" skipped="0" time="0.0319047">
-        <testcase classname="src/app/services/auth.service.spec.ts" name="AuthService &gt; should be created" time="0.0193518">
-        </testcase>
-        <testcase classname="src/app/services/auth.service.spec.ts" name="AuthService &gt; should call signInWithPassword on login" time="0.005203">
-        </testcase>
-        <testcase classname="src/app/services/auth.service.spec.ts" name="AuthService &gt; should call signUp on register" time="0.0021633">
-        </testcase>
-        <testcase classname="src/app/services/auth.service.spec.ts" name="AuthService &gt; should call signOut and update session" time="0.001772">
-        </testcase>
-        <testcase classname="src/app/services/auth.service.spec.ts" name="AuthService &gt; should return error on failed login" time="0.0017799">
+        <testcase classname="src/app/app.spec.ts" name="App &gt; should have a router-outlet" time="0.0048002">
         </testcase>
     </testsuite>
-    <testsuite name="src/app/layouts/private-layout/private-layout.component.spec.ts" timestamp="2026-03-10T01:55:24.492Z" hostname="us" tests="3" failures="0" errors="0" skipped="0" time="0.230848">
-        <testcase classname="src/app/layouts/private-layout/private-layout.component.spec.ts" name="PrivateLayoutComponent &gt; should create" time="0.1525286">
+    <testsuite name="src/app/services/auth.service.spec.ts" timestamp="2026-03-13T17:06:57.550Z" hostname="us" tests="5" failures="0" errors="0" skipped="0" time="0.0210457">
+        <testcase classname="src/app/services/auth.service.spec.ts" name="AuthService &gt; should be created" time="0.0075421">
         </testcase>
-        <testcase classname="src/app/layouts/private-layout/private-layout.component.spec.ts" name="PrivateLayoutComponent &gt; should render title and navigation links" time="0.0481386">
+        <testcase classname="src/app/services/auth.service.spec.ts" name="AuthService &gt; should call signInWithPassword on login" time="0.0043997">
         </testcase>
-        <testcase classname="src/app/layouts/private-layout/private-layout.component.spec.ts" name="PrivateLayoutComponent &gt; should call signOut and navigate on logout click" time="0.0289136">
+        <testcase classname="src/app/services/auth.service.spec.ts" name="AuthService &gt; should call signUp on register" time="0.0027328">
         </testcase>
-    </testsuite>
-    <testsuite name="src/app/pages/login/login.component.spec.ts" timestamp="2026-03-10T01:55:24.493Z" hostname="us" tests="4" failures="0" errors="0" skipped="0" time="0.3690255">
-        <testcase classname="src/app/pages/login/login.component.spec.ts" name="LoginComponent &gt; should create" time="0.2362905">
+        <testcase classname="src/app/services/auth.service.spec.ts" name="AuthService &gt; should call signOut and update session" time="0.0024397">
         </testcase>
-        <testcase classname="src/app/pages/login/login.component.spec.ts" name="LoginComponent &gt; should call signInWithPassword on submit" time="0.0556944">
-        </testcase>
-        <testcase classname="src/app/pages/login/login.component.spec.ts" name="LoginComponent &gt; should set loginError signal on auth failure" time="0.0470841">
-        </testcase>
-        <testcase classname="src/app/pages/login/login.component.spec.ts" name="LoginComponent &gt; should toggle password visibility when requested" time="0.0282419">
+        <testcase classname="src/app/services/auth.service.spec.ts" name="AuthService &gt; should return error on failed login" time="0.0034506">
         </testcase>
     </testsuite>
-    <testsuite name="src/app/pages/register/register.component.spec.ts" timestamp="2026-03-10T01:55:24.494Z" hostname="us" tests="5" failures="0" errors="0" skipped="0" time="0.4278066">
-        <testcase classname="src/app/pages/register/register.component.spec.ts" name="RegisterComponent &gt; should create" time="0.2164039">
+    <testsuite name="src/app/layouts/private-layout/private-layout.component.spec.ts" timestamp="2026-03-13T17:06:57.551Z" hostname="us" tests="4" failures="0" errors="0" skipped="0" time="0.6904732">
+        <testcase classname="src/app/layouts/private-layout/private-layout.component.spec.ts" name="PrivateLayoutComponent &gt; should create" time="0.3556827">
         </testcase>
-        <testcase classname="src/app/pages/register/register.component.spec.ts" name="RegisterComponent &gt; should call signUp on submit if passwords match and are valid" time="0.0691058">
+        <testcase classname="src/app/layouts/private-layout/private-layout.component.spec.ts" name="PrivateLayoutComponent &gt; should render title and navigation links" time="0.108687">
         </testcase>
-        <testcase classname="src/app/pages/register/register.component.spec.ts" name="RegisterComponent &gt; should set registerError if passwords do not match" time="0.0619742">
+        <testcase classname="src/app/layouts/private-layout/private-layout.component.spec.ts" name="PrivateLayoutComponent &gt; should have correct structural classes for main content and bottom nav" time="0.1186425">
         </testcase>
-        <testcase classname="src/app/pages/register/register.component.spec.ts" name="RegisterComponent &gt; should set registerError if password is too short" time="0.0413659">
+        <testcase classname="src/app/layouts/private-layout/private-layout.component.spec.ts" name="PrivateLayoutComponent &gt; should call signOut and navigate on logout click" time="0.1054368">
         </testcase>
-        <testcase classname="src/app/pages/register/register.component.spec.ts" name="RegisterComponent &gt; should toggle visibility signals when requested" time="0.0375382">
+    </testsuite>
+    <testsuite name="src/app/layouts/public-layout/public-layout.component.spec.ts" timestamp="2026-03-13T17:06:57.552Z" hostname="us" tests="3" failures="0" errors="0" skipped="0" time="0.44305">
+        <testcase classname="src/app/layouts/public-layout/public-layout.component.spec.ts" name="PublicLayoutComponent &gt; should create" time="0.2217741">
+        </testcase>
+        <testcase classname="src/app/layouts/public-layout/public-layout.component.spec.ts" name="PublicLayoutComponent &gt; should have a container with min-height 100dvh and scrolling enabled" time="0.2078113">
+        </testcase>
+        <testcase classname="src/app/layouts/public-layout/public-layout.component.spec.ts" name="PublicLayoutComponent &gt; should contain a router-outlet" time="0.0115437">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/pages/history/history.component.spec.ts" timestamp="2026-03-13T17:06:57.553Z" hostname="us" tests="8" failures="0" errors="0" skipped="0" time="0.4624589">
+        <testcase classname="src/app/pages/history/history.component.spec.ts" name="HistoryComponent &gt; should create" time="0.2316327">
+        </testcase>
+        <testcase classname="src/app/pages/history/history.component.spec.ts" name="HistoryComponent &gt; should render PageHeader with h1 containing &quot;Seu Hist├│rico&quot;" time="0.0440836">
+        </testcase>
+        <testcase classname="src/app/pages/history/history.component.spec.ts" name="HistoryComponent &gt; should render PageHeader subtitle" time="0.0317067">
+        </testcase>
+        <testcase classname="src/app/pages/history/history.component.spec.ts" name="HistoryComponent &gt; should calculate duration correctly" time="0.0314448">
+        </testcase>
+        <testcase classname="src/app/pages/history/history.component.spec.ts" name="HistoryComponent &gt; should handle zero or negative duration" time="0.0384773">
+        </testcase>
+        <testcase classname="src/app/pages/history/history.component.spec.ts" name="HistoryComponent &gt; should load history with limit on init" time="0.0271046">
+        </testcase>
+        <testcase classname="src/app/pages/history/history.component.spec.ts" name="HistoryComponent &gt; should load more history when loadMore is called" time="0.0269186">
+        </testcase>
+        <testcase classname="src/app/pages/history/history.component.spec.ts" name="HistoryComponent &gt; should show &quot;Sem observa├º├Áes&quot; for default or empty notes" time="0.0268534">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/pages/home/home.component.spec.ts" timestamp="2026-03-13T17:06:57.555Z" hostname="us" tests="5" failures="1" errors="0" skipped="0" time="0.6573528">
+        <testcase classname="src/app/pages/home/home.component.spec.ts" name="HomeComponent &gt; should create" time="0.4088943">
+        </testcase>
+        <testcase classname="src/app/pages/home/home.component.spec.ts" name="HomeComponent &gt; should render PageHeader with h1 containing the page title" time="0.0823823">
+        </testcase>
+        <testcase classname="src/app/pages/home/home.component.spec.ts" name="HomeComponent &gt; should render PageHeader with a subtitle paragraph" time="0.0475619">
+        </testcase>
+        <testcase classname="src/app/pages/home/home.component.spec.ts" name="HomeComponent &gt; endSession &gt; should show info message and skip modal if session is too short" time="0.0964721">
+            <failure message="expected &quot;vi.fn()&quot; to be called at least once" type="AssertionError">
+AssertionError: expected &quot;vi.fn()&quot; to be called at least once
+ ÔØ» src/app/pages/home/home.component.spec.ts:114:36
+            </failure>
+        </testcase>
+        <testcase classname="src/app/pages/home/home.component.spec.ts" name="HomeComponent &gt; endSession &gt; should open modal if session duration is met" time="0.0201684">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/pages/login/login.component.spec.ts" timestamp="2026-03-13T17:06:57.558Z" hostname="us" tests="4" failures="0" errors="0" skipped="0" time="0.812284">
+        <testcase classname="src/app/pages/login/login.component.spec.ts" name="LoginComponent &gt; should create" time="0.4697713">
+        </testcase>
+        <testcase classname="src/app/pages/login/login.component.spec.ts" name="LoginComponent &gt; should call signInWithPassword on submit" time="0.1684392">
+        </testcase>
+        <testcase classname="src/app/pages/login/login.component.spec.ts" name="LoginComponent &gt; should set loginError signal on auth failure" time="0.105824">
+        </testcase>
+        <testcase classname="src/app/pages/login/login.component.spec.ts" name="LoginComponent &gt; should toggle password visibility when requested" time="0.0662986">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/pages/profile/profile.component.spec.ts" timestamp="2026-03-13T17:06:57.560Z" hostname="us" tests="4" failures="0" errors="0" skipped="0" time="0.9006784">
+        <testcase classname="src/app/pages/profile/profile.component.spec.ts" name="ProfileComponent &gt; should create" time="0.6229328">
+            <system-err>
+ApiService: No access token available for request
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/app/pages/profile/profile.component.spec.ts" name="ProfileComponent &gt; Rank Logic &gt; should return correct title for Top 1" time="0.1068437">
+            <system-err>
+GoTrueClient@sb-kkrwcwimkmpeexjhadlt-auth-token:1 (2.98.0) 2026-03-13T17:06:56.880Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+ApiService: No access token available for request
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/app/pages/profile/profile.component.spec.ts" name="ProfileComponent &gt; Rank Logic &gt; should return correct CSS class for supreme rank" time="0.0911597">
+            <system-err>
+GoTrueClient@sb-kkrwcwimkmpeexjhadlt-auth-token:2 (2.98.0) 2026-03-13T17:06:56.978Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+ApiService: No access token available for request
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/app/pages/profile/profile.component.spec.ts" name="ProfileComponent &gt; Rank Logic &gt; should return person icon for non-ranked users" time="0.0769698">
+            <system-err>
+GoTrueClient@sb-kkrwcwimkmpeexjhadlt-auth-token:3 (2.98.0) 2026-03-13T17:06:57.075Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+ApiService: No access token available for request
+
+            </system-err>
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/pages/progress/progress.component.spec.ts" timestamp="2026-03-13T17:06:57.563Z" hostname="us" tests="4" failures="0" errors="0" skipped="0" time="0.559117">
+        <testcase classname="src/app/pages/progress/progress.component.spec.ts" name="ProgressComponent &gt; should create and load data" time="0.3055368">
+            <system-out>
+DEBUG ProgressComponent Init - Production: [33mfalse[39m
+DEBUG ProgressComponent Init - API URL: http://localhost:80/api/v1
+DEBUG Progress Data: {
+  rangeDays: [33m7[39m,
+  streakDays: [33m3[39m,
+  avgScore: [33m85[39m,
+  avgSleepMinutes: [33m450[39m,
+  bestDay: { date: [32m&apos;2026-03-10&apos;[39m, score: [33m100[39m },
+  days: []
+}
+
+            </system-out>
+        </testcase>
+        <testcase classname="src/app/pages/progress/progress.component.spec.ts" name="ProgressComponent &gt; should format sleep minutes correctly" time="0.0291084">
+        </testcase>
+        <testcase classname="src/app/pages/progress/progress.component.spec.ts" name="ProgressComponent &gt; should return correct rank labels" time="0.0250784">
+        </testcase>
+        <testcase classname="src/app/pages/progress/progress.component.spec.ts" name="ProgressComponent &gt; should handle error loading data" time="0.1976703">
+            <system-out>
+DEBUG ProgressComponent Init - Production: [33mfalse[39m
+DEBUG ProgressComponent Init - API URL: http://localhost:80/api/v1
+
+            </system-out>
+            <system-err>
+Error: API Error
+    at C:/Users/myPC/Desktop/dev/personal/somnitide/frontend/src/app/pages/progress/progress.component.spec.ts:62:66
+    at Observable.init [as _subscribe] [90m(C:\Users\myPC\Desktop\dev\personal\somnitide\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\observable\throwError.js:8:64[90m)[39m
+    at Observable._trySubscribe [90m(C:\Users\myPC\Desktop\dev\personal\somnitide\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:41:25[90m)[39m
+    at [90mC:\Users\myPC\Desktop\dev\personal\somnitide\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:35:31
+    at Object.errorContext [90m(C:\Users\myPC\Desktop\dev\personal\somnitide\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\util\errorContext.js:22:9[90m)[39m
+    at Observable.subscribe [90m(C:\Users\myPC\Desktop\dev\personal\somnitide\frontend\[39mnode_modules\[4mrxjs[24m\dist\cjs\internal\Observable.js:26:24[90m)[39m
+    at _ProgressComponent.loadData (C:/Users/myPC/Desktop/dev/personal/somnitide/frontend/src/app/pages/progress/progress.component.ts:424:41)
+    at _ProgressComponent.ngOnInit (C:/Users/myPC/Desktop/dev/personal/somnitide/frontend/src/app/pages/progress/progress.component.ts:419:10)
+    at callHookInternal [90m(file:///C:/Users/myPC/Desktop/dev/personal/somnitide/frontend/[39mnode_modules/[4m@angular/core[24m/fesm2022/_debug_node-chunk.mjs:555:10[90m)[39m
+    at callHook [90m(file:///C:/Users/myPC/Desktop/dev/personal/somnitide/frontend/[39mnode_modules/[4m@angular/core[24m/fesm2022/_debug_node-chunk.mjs:570:7[90m)[39m
+
+            </system-err>
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/pages/ranking/ranking.component.spec.ts" timestamp="2026-03-13T17:06:57.565Z" hostname="us" tests="4" failures="0" errors="0" skipped="0" time="0.8205885">
+        <testcase classname="src/app/pages/ranking/ranking.component.spec.ts" name="RankingComponent ÔÇö Layout Contract &gt; should create" time="0.581732">
+        </testcase>
+        <testcase classname="src/app/pages/ranking/ranking.component.spec.ts" name="RankingComponent ÔÇö Layout Contract &gt; should render PageHeader with h1 containing &quot;Ranking Global&quot;" time="0.1346119">
+        </testcase>
+        <testcase classname="src/app/pages/ranking/ranking.component.spec.ts" name="RankingComponent ÔÇö Layout Contract &gt; should render PageHeader subtitle" time="0.0477879">
+        </testcase>
+        <testcase classname="src/app/pages/ranking/ranking.component.spec.ts" name="RankingComponent ÔÇö Layout Contract &gt; should call getTop100 on init" time="0.0541382">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/pages/register/register.component.spec.ts" timestamp="2026-03-13T17:06:57.566Z" hostname="us" tests="5" failures="0" errors="0" skipped="0" time="0.8644715">
+        <testcase classname="src/app/pages/register/register.component.spec.ts" name="RegisterComponent &gt; should create" time="0.4859975">
+        </testcase>
+        <testcase classname="src/app/pages/register/register.component.spec.ts" name="RegisterComponent &gt; should call signUp on submit if passwords match and are valid" time="0.1480148">
+        </testcase>
+        <testcase classname="src/app/pages/register/register.component.spec.ts" name="RegisterComponent &gt; should set registerError if passwords do not match" time="0.0994544">
+        </testcase>
+        <testcase classname="src/app/pages/register/register.component.spec.ts" name="RegisterComponent &gt; should set registerError if password is too short" time="0.0690717">
+        </testcase>
+        <testcase classname="src/app/pages/register/register.component.spec.ts" name="RegisterComponent &gt; should toggle visibility signals when requested" time="0.0597207">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/shared/page-container/page-container.component.spec.ts" timestamp="2026-03-13T17:06:57.567Z" hostname="us" tests="3" failures="0" errors="0" skipped="0" time="0.0285831">
+        <testcase classname="src/app/shared/page-container/page-container.component.spec.ts" name="PageContainerComponent ÔÇö Page Layout Contract &gt; should render the .page-container-root wrapper element" time="0.007208">
+        </testcase>
+        <testcase classname="src/app/shared/page-container/page-container.component.spec.ts" name="PageContainerComponent ÔÇö Page Layout Contract &gt; should project slotted content inside the container" time="0.0128847">
+        </testcase>
+        <testcase classname="src/app/shared/page-container/page-container.component.spec.ts" name="PageContainerComponent ÔÇö Page Layout Contract &gt; should have the correct selector &quot;app-page-container&quot;" time="0.0082452">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/shared/page-header/page-header.component.spec.ts" timestamp="2026-03-13T17:06:57.568Z" hostname="us" tests="4" failures="0" errors="0" skipped="0" time="0.0392457">
+        <testcase classname="src/app/shared/page-header/page-header.component.spec.ts" name="PageHeaderComponent ÔÇö Page Layout Contract &gt; should render h1 with the given title and p with the subtitle" time="0.0156892">
+        </testcase>
+        <testcase classname="src/app/shared/page-header/page-header.component.spec.ts" name="PageHeaderComponent ÔÇö Page Layout Contract &gt; should NOT render the subtitle element when subtitle is not provided" time="0.0071275">
+        </testcase>
+        <testcase classname="src/app/shared/page-header/page-header.component.spec.ts" name="PageHeaderComponent ÔÇö Page Layout Contract &gt; should apply gradient-text class to the h1 element" time="0.0086565">
+        </testcase>
+        <testcase classname="src/app/shared/page-header/page-header.component.spec.ts" name="PageHeaderComponent ÔÇö Page Layout Contract &gt; should render an h1 even when title is an empty string" time="0.0074894">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/pages/profile/public-profile/public-profile.component.spec.ts" timestamp="2026-03-13T17:06:57.569Z" hostname="us" tests="9" failures="0" errors="0" skipped="0" time="0.5335896">
+        <testcase classname="src/app/pages/profile/public-profile/public-profile.component.spec.ts" name="PublicProfileComponent &gt; should create" time="0.3031124">
+        </testcase>
+        <testcase classname="src/app/pages/profile/public-profile/public-profile.component.spec.ts" name="PublicProfileComponent &gt; Rank Logic &gt; should return correct title for Top 1" time="0.0396759">
+            <system-err>
+GoTrueClient@sb-kkrwcwimkmpeexjhadlt-auth-token:1 (2.98.0) 2026-03-13T17:06:56.176Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/app/pages/profile/public-profile/public-profile.component.spec.ts" name="PublicProfileComponent &gt; Rank Logic &gt; should return correct title for Top 2" time="0.0238665">
+            <system-err>
+GoTrueClient@sb-kkrwcwimkmpeexjhadlt-auth-token:2 (2.98.0) 2026-03-13T17:06:56.205Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/app/pages/profile/public-profile/public-profile.component.spec.ts" name="PublicProfileComponent &gt; Rank Logic &gt; should return correct title for Top 3" time="0.0218134">
+            <system-err>
+GoTrueClient@sb-kkrwcwimkmpeexjhadlt-auth-token:3 (2.98.0) 2026-03-13T17:06:56.231Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/app/pages/profile/public-profile/public-profile.component.spec.ts" name="PublicProfileComponent &gt; Rank Logic &gt; should return correct title for Top 10" time="0.0192689">
+            <system-err>
+GoTrueClient@sb-kkrwcwimkmpeexjhadlt-auth-token:4 (2.98.0) 2026-03-13T17:06:56.251Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/app/pages/profile/public-profile/public-profile.component.spec.ts" name="PublicProfileComponent &gt; Rank Logic &gt; should return correct title for Top 100" time="0.0172535">
+            <system-err>
+GoTrueClient@sb-kkrwcwimkmpeexjhadlt-auth-token:5 (2.98.0) 2026-03-13T17:06:56.266Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/app/pages/profile/public-profile/public-profile.component.spec.ts" name="PublicProfileComponent &gt; Rank Logic &gt; should return default title for others" time="0.0451977">
+            <system-err>
+GoTrueClient@sb-kkrwcwimkmpeexjhadlt-auth-token:6 (2.98.0) 2026-03-13T17:06:56.299Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/app/pages/profile/public-profile/public-profile.component.spec.ts" name="PublicProfileComponent &gt; Rank Logic &gt; should return correct CSS class for ranks" time="0.0331508">
+            <system-err>
+GoTrueClient@sb-kkrwcwimkmpeexjhadlt-auth-token:7 (2.98.0) 2026-03-13T17:06:56.342Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+            </system-err>
+        </testcase>
+        <testcase classname="src/app/pages/profile/public-profile/public-profile.component.spec.ts" name="PublicProfileComponent &gt; Rank Logic &gt; should return correct icon for ranks" time="0.026176">
+            <system-err>
+GoTrueClient@sb-kkrwcwimkmpeexjhadlt-auth-token:8 (2.98.0) 2026-03-13T17:06:56.369Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+            </system-err>
+        </testcase>
+    </testsuite>
+    <testsuite name="src/app/pages/home/components/assessment-dialog/assessment-dialog.component.spec.ts" timestamp="2026-03-13T17:06:57.571Z" hostname="us" tests="8" failures="0" errors="0" skipped="0" time="1.3567238">
+        <testcase classname="src/app/pages/home/components/assessment-dialog/assessment-dialog.component.spec.ts" name="AssessmentDialogComponent &gt; should create" time="0.8191535">
+        </testcase>
+        <testcase classname="src/app/pages/home/components/assessment-dialog/assessment-dialog.component.spec.ts" name="AssessmentDialogComponent &gt; should have all 4 questions" time="0.1651114">
+        </testcase>
+        <testcase classname="src/app/pages/home/components/assessment-dialog/assessment-dialog.component.spec.ts" name="AssessmentDialogComponent &gt; should disable submit button if form is invalid" time="0.1043155">
+        </testcase>
+        <testcase classname="src/app/pages/home/components/assessment-dialog/assessment-dialog.component.spec.ts" name="AssessmentDialogComponent &gt; should enable submit button after answering all questions" time="0.0674285">
+        </testcase>
+        <testcase classname="src/app/pages/home/components/assessment-dialog/assessment-dialog.component.spec.ts" name="AssessmentDialogComponent &gt; should close dialog with results on confirm" time="0.0640391">
+        </testcase>
+        <testcase classname="src/app/pages/home/components/assessment-dialog/assessment-dialog.component.spec.ts" name="AssessmentDialogComponent &gt; should show close button in header" time="0.0375128">
+        </testcase>
+        <testcase classname="src/app/pages/home/components/assessment-dialog/assessment-dialog.component.spec.ts" name="AssessmentDialogComponent &gt; should close dialog when onDismiss is confirmed" time="0.0400224">
+        </testcase>
+        <testcase classname="src/app/pages/home/components/assessment-dialog/assessment-dialog.component.spec.ts" name="AssessmentDialogComponent &gt; should NOT close dialog when onDismiss is cancelled" time="0.0569834">
         </testcase>
     </testsuite>
 </testsuites>

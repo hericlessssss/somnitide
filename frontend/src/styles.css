@@ -58,6 +58,13 @@
 
   /* Layout Tokens */
   --bottom-nav-height: 72px;
+
+  /* Page Layout Contract */
+  --page-max-width: 860px;
+  --page-padding-x: 18px;
+  --page-padding-top: 24px;
+  --page-header-gap: 10px;   /* gap t├¡tulo ÔåÆ subt├¡tulo */
+  --page-content-gap: 24px;  /* gap subt├¡tulo ÔåÆ conte├║do */
 }
 
 * {
@@ -275,6 +282,27 @@ a:hover {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   display: inline-block;
+  padding-bottom: 0.15em;
+  margin-bottom: -0.15em;
+}
+
+/* === Page Layout Contract === */
+/* Use these on every private page via PageHeader/PageContainer components */
+.page-title {
+  font-family: var(--font-title);
+  font-size: 2.1rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.page-subtitle {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: var(--page-header-gap) 0 0;
+  line-height: 1.5;
 }
 
 /* Base Component Classes */

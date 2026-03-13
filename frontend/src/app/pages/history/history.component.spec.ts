@@ -30,6 +30,21 @@ describe('HistoryComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  // Smoke test: PageHeader contract
+  it('should render PageHeader with h1 containing "Seu Hist├│rico"', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    const h1 = compiled.querySelector('h1.page-title');
+    expect(h1).toBeTruthy();
+    expect(h1?.textContent?.trim()).toContain('Seu Hist├│rico');
+  });
+
+  it('should render PageHeader subtitle', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    const sub = compiled.querySelector('p.page-subtitle');
+    expect(sub).toBeTruthy();
+    expect(sub?.textContent?.trim()).toContain('Acompanhe');
+  });
+
   it('should calculate duration correctly', () => {
     const start = '2024-03-11T20:00:00Z';
     const end = '2024-03-12T04:30:00Z';
@@ -53,11 +68,11 @@ describe('HistoryComponent', () => {
     expect(sleepServiceMock.getHistory).toHaveBeenCalledWith(20);
   });
 
-  it('should show "Sem observações" for default or empty notes', () => {
-    const sessionWithDefaultNote = { note: 'Avaliação concluída', startedAtUtc: '...', endedAtUtc: '...', qualityRating: 5 };
+  it('should show "Sem observa├º├Áes" for default or empty notes', () => {
+    const sessionWithDefaultNote = { note: 'Avalia├º├úo conclu├¡da', startedAtUtc: '...', endedAtUtc: '...', qualityRating: 5 };
     const sessionWithEmptyNote = { note: '', startedAtUtc: '...', endedAtUtc: '...', qualityRating: 5 };
     
     // This is partly template logic, but we can verify our helper logic or how we handle the display if needed.
-    // For now, the template handles this: {{ (session.note && session.note !== 'Avaliação concluída') ? session.note : 'Sem observações' }}
+    // For now, the template handles this: {{ (session.note && session.note !== 'Avalia├º├úo conclu├¡da') ? session.note : 'Sem observa├º├Áes' }}
   });
 });

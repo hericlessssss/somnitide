@@ -5,7 +5,7 @@ import java.util.UUID;
 
 /**
  * Domain entity representing a sleep session.
- * Pure Java — no Spring, no JPA annotations on the domain object.
+ * Pure Java ÔÇö no Spring, no JPA annotations on the domain object.
  * JPA mapping lives in the infrastructure layer.
  */
 public class SleepSession {
@@ -75,6 +75,13 @@ public class SleepSession {
             return true;
         long hours = java.time.Duration.between(sleepStartEstimatedAtUtc, endedAtUtc).toHours();
         return hours < MAX_SLEEP_HOURS;
+    }
+
+    public boolean isMinimumDurationMet(int cycleLengthMinutes) {
+        if (isOpen())
+            return false;
+        long minutes = java.time.Duration.between(sleepStartEstimatedAtUtc, endedAtUtc).toMinutes();
+        return minutes >= cycleLengthMinutes;
     }
 
     // ---- Getters ----

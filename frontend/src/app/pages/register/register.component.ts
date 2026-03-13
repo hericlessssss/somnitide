@@ -43,7 +43,7 @@ import { firstValueFrom } from 'rxjs';
         </div>
 
         <form (ngSubmit)="onRegister()" #registerForm="ngForm" class="auth-form" [attr.aria-describedby]="registerError() ? 'register-error' : null">
-          <mat-form-field appearance="outline" floatLabel="always">
+          <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic">
             <mat-label>Nome de exibição (@)</mat-label>
             <input matInput type="text" name="handle" [(ngModel)]="handle" 
                    placeholder="seu username" required minlength="3"
@@ -52,7 +52,7 @@ import { firstValueFrom } from 'rxjs';
             <mat-hint>Seu nome único no ranking. Ex: @joao_sono</mat-hint>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" floatLabel="always">
+          <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic">
             <mat-label>E-mail</mat-label>
             <input matInput type="email" name="email" [(ngModel)]="email" 
                    placeholder="seu@email.com" required email 
@@ -60,7 +60,7 @@ import { firstValueFrom } from 'rxjs';
             <mat-icon matPrefix class="secondary-icon" aria-hidden="true">email</mat-icon>
           </mat-form-field>
   
-          <mat-form-field appearance="outline" floatLabel="always">
+          <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic">
             <mat-label>Senha</mat-label>
             <input matInput [type]="hidePassword() ? 'password' : 'text'" 
                    name="password" [(ngModel)]="password" 
@@ -75,7 +75,7 @@ import { firstValueFrom } from 'rxjs';
             </button>
           </mat-form-field>
   
-          <mat-form-field appearance="outline" floatLabel="always">
+          <mat-form-field appearance="outline" floatLabel="always" subscriptSizing="dynamic">
             <mat-label>Confirmar Senha</mat-label>
             <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" 
                    name="confirmPassword" [(ngModel)]="confirmPassword" 
@@ -165,11 +165,16 @@ import { firstValueFrom } from 'rxjs';
     .auth-form {
       display: flex;
       flex-direction: column;
-      gap: 16px; /* Optimized gap for 3 fields */
+      gap: 12px; /* Balanced gap for dynamic sizing */
     }
     .secondary-icon {
       color: var(--color-text-muted);
       opacity: 0.7;
+    }
+    ::ng-deep .mat-mdc-form-field .mat-mdc-form-field-hint {
+      font-size: 11px !important;
+      opacity: 0.6;
+      font-weight: 500;
     }
     .error-banner {
       display: flex;
@@ -186,24 +191,29 @@ import { firstValueFrom } from 'rxjs';
     }
     .privacy-callout {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: var(--space-md);
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--color-border);
       padding: 12px var(--space-md);
       border-radius: var(--radius-md);
-      margin: 4px 0;
+      margin: 8px 0;
     }
     .privacy-callout mat-icon {
-      font-size: 19px;
-      width: 20px;
-      height: 20px;
+      font-size: 20px;
+      width: 24px;
+      height: 24px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: var(--color-text-muted);
+      flex-shrink: 0;
     }
     .privacy-callout p {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--color-text-muted);
-      line-height: 1.4;
+      line-height: 1.5;
       margin: 0;
     }
     .cta-button {
@@ -235,8 +245,8 @@ import { firstValueFrom } from 'rxjs';
       to { transform: rotate(360deg); }
     }
     .auth-footer {
-      padding: var(--space-xl) 0 0;
-      margin-top: var(--space-xl);
+      padding: var(--space-lg) 0 0;
+      margin-top: var(--space-lg);
       text-align: center;
     }
     .footer-text {
