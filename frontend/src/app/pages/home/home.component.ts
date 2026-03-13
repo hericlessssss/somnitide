@@ -37,27 +37,52 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
            Não está dentro do card. O card é só o relógio. -->
       <app-page-header
         title="Status do Sono"
-        subtitle="Pronto para descansar? Inicie sua sessão para monitorar seu ciclo." />
+        subtitle="Pronto para dormir? Inicie sua sessão." />
 
       <main class="content">
         <!-- Science Brief (Now a simple text block ABOVE the clock) -->
         <section class="science-brief-section fade-in">
           <div class="science-text">
             <p>O SomniTide utiliza algoritmos baseados na arquitetura cíclica do sono para estimar seus horários ideais.</p>
-            <a routerLink="/docs" class="science-link">Clique aqui e saiba tudo sobre a ciência por trás do seu sono</a>
+            <a routerLink="/docs" class="science-link">Clique aqui e entenda como podemos ajudar.</a>
           </div>
         </section>
 
         <mat-card class="hero-card glass">
-          <!-- mat-card-title removido: título agora está no PageHeader acima -->
           <mat-card-content class="hero-content">
+            <!-- 1. The Clock (Primary Focus) -->
             <div class="clock-display">
               <span class="label">Hora Atual</span>
               <h1 class="time">{{ currentTime() | date:'HH:mm:ss' }}</h1>
               <span class="timezone-label">{{ timezoneLabel() }}</span>
             </div>
 
-            <div *ngIf="activeSession(); else noSession" class="active-session-status" role="status" aria-live="polite">
+            <!-- 2. Primary Action Button -->
+            <div class="actions-container">
+              <button *ngIf="!activeSession()" 
+                      mat-flat-button 
+                      color="primary" 
+                      class="main-action-btn"
+                      (click)="startSession()" 
+                      [disabled]="loading()" 
+                      aria-label="Iniciar nova sessão de sono">
+                <mat-icon>bedtime</mat-icon>
+                VOU DORMIR AGORA
+              </button>
+              <button *ngIf="activeSession()" 
+                      mat-flat-button 
+                      color="warn" 
+                      class="main-action-btn warn"
+                      (click)="endSession()" 
+                      [disabled]="loading()" 
+                      aria-label="Acordar e encerrar sessão de sono">
+                <mat-icon>wb_sunny</mat-icon>
+                ACORDEI AGORA
+              </button>
+            </div>
+
+            <!-- 3. Secondary Status Text (Below the button) -->
+            <div *ngIf="activeSession(); else noSession" class="status-container active-session-status" role="status" aria-live="polite">
               <div class="status-badge">
                 <mat-icon>nights_stay</mat-icon>
                 <span>Sessão em andamento</span>
@@ -67,34 +92,12 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
             </div>
             
             <ng-template #noSession>
-              <div class="empty-status">
+              <div class="status-container empty-status">
                 <p>Nenhuma sessão ativa.</p>
               </div>
             </ng-template>
-          </mat-card-content>
 
-          <mat-card-actions class="actions-container">
-            <button *ngIf="!activeSession()" 
-                    mat-flat-button 
-                    color="primary" 
-                    class="main-action-btn"
-                    (click)="startSession()" 
-                    [disabled]="loading()" 
-                    aria-label="Iniciar nova sessão de sono">
-              <mat-icon>bedtime</mat-icon>
-              VOU DORMIR AGORA
-            </button>
-            <button *ngIf="activeSession()" 
-                    mat-flat-button 
-                    color="warn" 
-                    class="main-action-btn warn"
-                    (click)="endSession()" 
-                    [disabled]="loading()" 
-                    aria-label="Acordar e encerrar sessão de sono">
-              <mat-icon>wb_sunny</mat-icon>
-              ACORDEI AGORA
-            </button>
-          </mat-card-actions>
+          </mat-card-content>
         </mat-card>
 
         <section *ngIf="activeSession()?.suggestions" class="suggestions-section fade-in">
@@ -186,7 +189,7 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: var(--space-2xl);
+      gap: 16px; /* Reduced internal gap for 1-line look */
     }
 
     .glass {
@@ -207,7 +210,8 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: var(--space-2xl);
+      gap: var(--space-2xl); /* This gap naturally spaces the 3 main flow items: clock, button, status */
+      padding: var(--space-xl) var(--space-xl) var(--space-md) var(--space-xl);
     }
 
     .clock-display {
@@ -244,11 +248,40 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
       border-radius: 100px;
     }
 
-    .active-session-status {
+    /* Actions container is now inline flex child, not a card-action footer */
+    .actions-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .main-action-btn {
+      width: 100%;
+      max-width: 320px;
+      height: 56px !important;
+      border-radius: var(--radius-md) !important;
+      font-weight: 700 !important;
+      font-size: 0.9rem !important;
+      letter-spacing: 0.5px !important;
+      display: flex !important;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .main-action-btn.warn {
+      background-color: var(--color-danger) !important;
+      color: #fff !important;
+    }
+
+    /* Status Container at the bottom */
+    .status-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: var(--space-xs);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: var(--space-md);
+      width: 100%;
     }
 
     .status-badge {
@@ -279,29 +312,6 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
       font-size: 0.8rem;
       color: var(--color-text-muted);
       line-height: 1.5;
-    }
-
-    .actions-container {
-      padding: 0 var(--space-xl) var(--space-lg);
-      justify-content: center !important;
-    }
-
-    .main-action-btn {
-      width: 100%;
-      max-width: 320px;
-      height: 56px !important;
-      border-radius: var(--radius-md) !important;
-      font-weight: 700 !important;
-      font-size: 0.9rem !important;
-      letter-spacing: 0.5px !important;
-      display: flex !important;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .main-action-btn.warn {
-      background-color: var(--color-danger) !important;
-      color: #fff !important;
     }
 
     .suggestions-grid {
@@ -550,7 +560,7 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
     }
 
     .science-brief-section {
-      margin-top: var(--space-xl);
+      width: 100%;
     }
 
     .science-card {
@@ -560,14 +570,15 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
     }
 
     .science-text p {
-      font-size: 0.95rem;
+      font-size: 0.78rem; /* Smaller as requested */
       color: var(--color-text-muted);
-      line-height: 1.6;
-      margin: 0 0 var(--space-md) 0;
+      opacity: 0.7; /* More discrete */
+      line-height: 1.4;
+      margin: 0 0 4px 0;
     }
 
     .science-link {
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       font-weight: 700;
       color: var(--color-primary);
       text-decoration: none;
@@ -626,40 +637,40 @@ export class HomeComponent {
 
   getHealthStatus(cycles: number): { level: string, icon: string, message: string, label: string } {
     if (cycles <= 2) {
-      return { 
-        level: 'critical', 
-        icon: 'dangerous', 
+      return {
+        level: 'critical',
+        icon: 'dangerous',
         message: 'Duração crítica. Alto risco de comprometimento cognitivo e fadiga severa.',
         label: 'Crítico'
       };
     }
     if (cycles === 3) {
-      return { 
-        level: 'critical', 
-        icon: 'error_outline', 
+      return {
+        level: 'critical',
+        icon: 'error_outline',
         message: 'Sono insuficiente. Risco de irritabilidade e baixa concentração.',
         label: 'Insuficiente'
       };
     }
     if (cycles === 4) {
-      return { 
-        level: 'warning', 
-        icon: 'report_problem', 
+      return {
+        level: 'warning',
+        icon: 'report_problem',
         message: 'Abaixo do recomendado. Pode causar sonolência diurna.',
         label: 'Mínimo'
       };
     }
     if (cycles >= 5 && cycles <= 6) {
-      return { 
-        level: 'info', 
-        icon: 'check_circle_outline', 
+      return {
+        level: 'info',
+        icon: 'check_circle_outline',
         message: '7h 30min é a duração padrão ouro para recuperação total.',
         label: 'Ideal'
       };
     }
-    return { 
-      level: 'warning', 
-      icon: 'info_outline', 
+    return {
+      level: 'warning',
+      icon: 'info_outline',
       message: 'Sono prolongado. Pode resultar em inércia do sono ao despertar.',
       label: 'Longo'
     };
@@ -722,7 +733,7 @@ export class HomeComponent {
         next: () => {
           this.activeSession.set(null);
           this.loading.set(false);
-          this.snack.open('Notamos que você ainda não completou um ciclo de sono. Que pena que não conseguiu dormir ainda! Esta sessão não será computada.', 'OK', { 
+          this.snack.open('Notamos que você ainda não completou um ciclo de sono. Que pena que não conseguiu dormir ainda! Esta sessão não será computada.', 'OK', {
             duration: 8000,
             panelClass: ['info-snackbar']
           });

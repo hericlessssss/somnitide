@@ -28,7 +28,7 @@ import { Router, RouterLink } from '@angular/router';
     <mat-card class="auth-card">
       <mat-card-header class="auth-card-header">
         <div class="brand-container" aria-label="SomniTide Brand">
-          <mat-icon class="brand-icon" aria-hidden="true">waves</mat-icon>
+          <img src="logo.png" alt="SomniTide Logo" class="brand-icon">
           <h1 class="brand-name gradient-text">SomniTide</h1>
         </div>
         <p class="brand-caption">Métricas do seu sono</p>
@@ -115,13 +115,10 @@ import { Router, RouterLink } from '@angular/router';
       width: 100%;
     }
     .brand-icon {
-      font-size: 27px;
-      width: 28px;
-      height: 28px;
-      color: var(--color-primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      margin-bottom: var(--space-sm);
     }
     .brand-name {
       font-size: clamp(2.42rem, 8.8vw, 3.08rem);

@@ -16,7 +16,7 @@ import { RouterLink } from '@angular/router';
           <mat-icon>arrow_back</mat-icon>
         </button>
         <h1 class="article-title gradient-text">A Ciência por trás do Ciclo do Sono e do SomniTide</h1>
-        <p class="article-meta">Um guia completo sobre a arquitetura do sono, inércia do despertar e a nossa metodologia de pontuação.</p>
+        <p class="article-meta">Neste artigo você verá um guia completo sobre a arquitetura do sono, inércia do despertar e a nossa metodologia de pontuação.</p>
         <div class="article-divider"></div>
       </header>
 
@@ -354,4 +354,4 @@ import { RouterLink } from '@angular/router';
     }
   `
 })
-export class DocsComponent {}
+export class DocsComponent { }

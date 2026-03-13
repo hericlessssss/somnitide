@@ -203,16 +203,22 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
     .stat-hint {
       font-size: 10px;
       color: var(--color-text-muted);
-      opacity: 0.7;
+      opacity: 0.5;
       margin-top: 4px;
       display: block;
     }
     .member-since {
+      font-size: 9px;
+      color: var(--color-text-muted);
+      opacity: 0.4;
+      margin-top: 2px;
+      display: block;
+    }
+    /* Material form field hint overrides */
+    .handle-field ::ng-deep .mat-mdc-form-field-hint {
       font-size: 10px;
       color: var(--color-text-muted);
       opacity: 0.5;
-      margin-top: 2px;
-      display: block;
     }
     .truncate-id { 
       overflow: hidden; 

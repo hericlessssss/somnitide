@@ -84,7 +84,7 @@ describe('HomeComponent', () => {
         const compiled = fixture.nativeElement as HTMLElement;
         const sub = compiled.querySelector('p.page-subtitle');
         expect(sub).toBeTruthy();
-        expect(sub?.textContent?.trim()).toContain('Pronto para descansar');
+        expect(sub?.textContent?.trim()).toContain('Pronto para dormir');
     });
     describe('endSession', () => {
         it('should show info message and skip modal if session is too short', async () => {

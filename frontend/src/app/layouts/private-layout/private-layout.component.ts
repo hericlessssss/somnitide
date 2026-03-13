@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
     CommonModule,
     RouterOutlet,
     RouterLink,
+    RouterLinkActive,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule
@@ -23,7 +24,7 @@ import { Router } from '@angular/router';
       <mat-toolbar class="main-toolbar" role="banner">
         <div class="toolbar-content">
           <div class="brand clickable" routerLink="/home" aria-label="SomniTide Home">
-            <mat-icon class="brand-icon" aria-hidden="true">waves</mat-icon>
+            <img src="logo.png" alt="SomniTide Logo" class="brand-icon">
             <span class="brand-name">SomniTide</span>
           </div>
           
@@ -58,23 +59,23 @@ import { Router } from '@angular/router';
 
     <nav class="mobile-nav-container fade-in" aria-label="Navegação inferior">
       <div class="mobile-nav-bar">
-        <a routerLink="/home" routerLinkActive="active" class="mobile-nav-item" aria-label="Ir para Home">
+        <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="mobile-nav-item" aria-label="Ir para Home">
           <mat-icon aria-hidden="true">home</mat-icon>
           <span>Home</span>
         </a>
-        <a routerLink="/history" routerLinkActive="active" class="mobile-nav-item" aria-label="Ir para Histórico">
+        <a routerLink="/history" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="mobile-nav-item" aria-label="Ir para Histórico">
           <mat-icon aria-hidden="true">history</mat-icon>
           <span>Histórico</span>
         </a>
-        <a routerLink="/insights" routerLinkActive="active" class="mobile-nav-item" aria-label="Ir para Insights">
+        <a routerLink="/insights" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="mobile-nav-item" aria-label="Ir para Insights">
           <mat-icon aria-hidden="true">insights</mat-icon>
           <span>Insights</span>
         </a>
-        <a routerLink="/progress" routerLinkActive="active" class="mobile-nav-item" aria-label="Ir para Progresso">
+        <a routerLink="/progress" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="mobile-nav-item" aria-label="Ir para Progresso">
           <mat-icon aria-hidden="true">trending_up</mat-icon>
           <span>Progresso</span>
         </a>
-        <a routerLink="/ranking" routerLinkActive="active" class="mobile-nav-item" aria-label="Ir para Ranking">
+        <a routerLink="/ranking" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="mobile-nav-item" aria-label="Ir para Ranking">
           <mat-icon aria-hidden="true">emoji_events</mat-icon>
           <span>Ranking</span>
         </a>
@@ -128,13 +129,9 @@ import { Router } from '@angular/router';
     .brand:hover { opacity: 0.8; }
 
     .brand-icon {
-      color: var(--color-primary);
-      font-size: 24px;
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
     }
 
     .brand-name {
@@ -282,16 +279,18 @@ import { Router } from '@angular/router';
     }
 
     .mobile-nav-item.active {
-      color: var(--color-primary);
+      color: var(--color-primary) !important;
     }
 
     .mobile-nav-item.active span {
-      font-weight: 600;
+      font-weight: 700;
     }
 
-    /* Glow effect for active item */
+    /* Active Glow and Micro-interaction */
     .mobile-nav-item.active mat-icon {
-      filter: drop-shadow(0 0 8px var(--color-primary-glow));
+      transform: translateY(-2px) scale(1.1);
+      filter: drop-shadow(0 0 8px rgba(66, 214, 198, 0.6));
+      color: var(--color-primary);
     }
   `
 })
