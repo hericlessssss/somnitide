@@ -135,7 +135,7 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 800;
+      font-weight: 900;
       font-size: 14px;
       border: 2px solid var(--color-surface);
     }
@@ -169,12 +169,11 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
       border-radius: var(--radius-lg);
       padding: var(--space-xl);
     }
-    .section-title {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: var(--space-lg);
-      color: var(--color-text);
-      text-align: center;
+    .list-card {
+      background: rgba(255,255,255,0.03) !important;
+      border: 1px solid var(--color-border) !important;
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
     }
     .list-items { display: flex; flex-direction: column; gap: 8px; }
     .list-item {

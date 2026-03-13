@@ -12,6 +12,10 @@ import { CommonModule } from '@angular/common';
     </header>
   `,
   styles: [`
+    :host {
+      display: block;
+      width: 100%;
+    }
     .page-header {
       padding-top: var(--page-padding-top);
       width: 100%;

@@ -62,13 +62,13 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
                 [class.avatar-bad]="session.qualityRating && session.qualityRating <= 2">
                 <mat-icon>{{ getQualityIcon(session.qualityRating) }}</mat-icon>
               </div>
-              <div class="header-text">
-                <div class="card-title-premium">
-                  {{ session.startedAtUtc | date:'dd' }} de {{ session.startedAtUtc | date:'MMMM' }}
-                </div>
+                <div class="header-text">
+                  <div class="section-title">
+                    {{ session.startedAtUtc | date:'dd' }} de {{ session.startedAtUtc | date:'MMMM' }}
+                  </div>
                 <!-- Time and Duration Info -->
                 <div class="time-meta-group">
-                  <div class="card-subtitle-premium">
+                  <div class="sub-section-title">
                     <mat-icon class="tiny-icon">access_time</mat-icon>
                     {{ session.startedAtUtc | date:'HH:mm' }} — {{ session.endedAtUtc | date:'HH:mm' }}
                   </div>
@@ -113,6 +113,10 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
     </app-page-container>
   `,
   styles: [`
+    :host {
+      display: block;
+      width: 100%;
+    }
     /* Container handled by PageContainer. Header handled by PageHeader. */
     .history-container { /* legacy class kept for smoke tests — remove in future */ }
 
@@ -187,26 +191,15 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
     }
 
     .header-text { display: flex; flex-direction: column; gap: 8px; }
-    .card-title-premium { 
-      font-family: var(--font-title); 
-      font-weight: 700;
-      font-size: 1.15rem; 
-      color: var(--color-text); 
-      margin: 0;
-      line-height: 1.2;
-    }
     .time-meta-group {
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
-    .card-subtitle-premium { 
-      color: var(--color-primary); 
-      font-size: 0.8rem;
-      font-weight: 700; 
+    .time-meta-group {
       display: flex;
-      align-items: center;
-      gap: 6px;
+      flex-direction: column;
+      gap: 4px;
     }
     .duration-badge {
       font-size: 0.7rem;

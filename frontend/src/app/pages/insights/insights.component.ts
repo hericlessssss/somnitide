@@ -62,8 +62,8 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
       <div class="charts-grid">
         <mat-card class="chart-card fade-in">
           <header class="chart-header">
-            <h3>Duração do Sono</h3>
-            <span>Últimos 7 dias</span>
+            <h3 class="section-title">Duração do Sono</h3>
+            <span class="sub-section-title">Últimos 7 dias</span>
           </header>
           <mat-card-content>
             <div class="chart-wrapper">
@@ -78,8 +78,8 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
 
         <mat-card class="chart-card fade-in">
           <header class="chart-header">
-            <h3>Níveis de Qualidade</h3>
-            <span>Frequência por estrela</span>
+            <h3 class="section-title">Níveis de Qualidade</h3>
+            <span class="sub-section-title">Frequência por estrela</span>
           </header>
           <mat-card-content>
             <div class="chart-wrapper">
@@ -141,18 +141,12 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
     .stat-icon-bg.warn { background: rgba(255, 92, 122, 0.1); color: var(--color-danger); }
 
     .stat-label {
-      font-family: var(--font-title);
-      font-size: 0.65rem;
-      color: var(--color-text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      font-weight: 700;
       margin-bottom: var(--space-xs);
     }
     .stat-value-group { display: flex; align-items: baseline; justify-content: center; gap: 4px; }
     .stat-value {
       font-size: 2.9rem;
-      font-weight: 800;
+      font-weight: 900;
       color: var(--color-text);
       font-family: var(--font-title);
       line-height: 1;
@@ -183,18 +177,6 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
     }
     .chart-header {
       margin-bottom: var(--space-lg);
-    }
-    .chart-header h3 {
-      font-family: var(--font-title);
-      font-size: 1.0rem;
-      font-weight: 700;
-      margin: 0;
-      color: var(--color-text);
-    }
-    .chart-header span {
-      font-size: 0.7rem;
-      color: var(--color-text-muted);
-      font-weight: 500;
     }
     .chart-wrapper {
       height: 300px;

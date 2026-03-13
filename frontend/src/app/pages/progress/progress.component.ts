@@ -57,8 +57,8 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
                 <header class="premium-header">
                   <mat-icon class="status-icon avatar-good">stars</mat-icon>
                   <div class="header-text">
-                    <div class="card-title-premium">Score Médio</div>
-                    <div class="card-subtitle-premium">Últimos {{ data()?.rangeDays }} dias</div>
+                    <div class="section-title">Score Médio</div>
+                    <div class="sub-section-title">Últimos {{ data()?.rangeDays }} dias</div>
                   </div>
                 </header>
                 <div class="card-body">
@@ -78,8 +78,8 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
                 <header class="premium-header">
                   <mat-icon class="status-icon avatar-regular">local_fire_department</mat-icon>
                   <div class="header-text">
-                    <div class="card-title-premium">Sequência</div>
-                    <div class="card-subtitle-premium">Dias consecutivos</div>
+                    <div class="section-title">Sequência</div>
+                    <div class="sub-section-title">Dias consecutivos</div>
                   </div>
                 </header>
                 <div class="card-body">
@@ -97,8 +97,8 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
                 <header class="premium-header">
                   <mat-icon class="status-icon avatar-accent">emoji_events</mat-icon>
                   <div class="header-text">
-                    <div class="card-title-premium">Pontos no Período</div>
-                    <div class="card-subtitle-premium">Últimos {{ data()?.rangeDays }} dias</div>
+                    <div class="section-title">Pontos no Período</div>
+                    <div class="sub-section-title">Últimos {{ data()?.rangeDays }} dias</div>
                   </div>
                 </header>
                 <div class="card-body">
@@ -272,9 +272,6 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
     .avatar-accent { color: #A272FF; }
 
     .header-text { display: flex; flex-direction: column; gap: 4px; }
-    .card-title-premium { font-weight: 700; font-size: 1.1rem; color: var(--color-text); line-height: 1.2; }
-    .card-subtitle-premium { font-size: 0.75rem; color: var(--color-text-muted); font-weight: 600; }
-
     .card-body { 
       padding: 0;
       display: flex;
@@ -283,7 +280,7 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
     }
 
     .score-display { display: flex; align-items: baseline; gap: 4px; }
-    .score-value { font-size: 3rem; font-weight: 800; color: var(--color-text); line-height: 1; font-family: var(--font-title); }
+    .score-value { font-size: 3rem; font-weight: 900; color: var(--color-text); line-height: 1; font-family: var(--font-title); }
     .score-total { font-size: 1.1rem; color: var(--color-text-muted); font-weight: 600; }
 
     .rank-badge {
@@ -293,18 +290,18 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
       color: var(--color-primary);
       border-radius: 100px;
       font-size: 0.7rem;
-      font-weight: 800;
+      font-weight: 900;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     .streak-display { display: flex; align-items: baseline; gap: 6px; margin-bottom: var(--space-md); }
-    .streak-value { font-size: 3rem; font-weight: 800; color: var(--color-warning); line-height: 1; font-family: var(--font-title); }
+    .streak-value { font-size: 3rem; font-weight: 900; color: var(--color-warning); line-height: 1; font-family: var(--font-title); }
     .streak-unit { font-size: 1.1rem; color: var(--color-text-muted); font-weight: 600; }
     .streak-note { font-size: 0.8rem; color: var(--color-text-muted); font-weight: 500; }
 
     .total-display { display: flex; align-items: baseline; gap: 6px; }
-    .total-value { font-size: 3rem; font-weight: 800; color: #A272FF; line-height: 1; font-family: var(--font-title); }
+    .total-value { font-size: 3rem; font-weight: 900; color: #A272FF; line-height: 1; font-family: var(--font-title); }
     .total-unit { font-size: 1.1rem; color: var(--color-text-muted); font-weight: 600; }
     .total-note { font-size: 0.8rem; color: var(--color-text-muted); font-weight: 500; }
 
@@ -330,14 +327,6 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
 
     /* Timeline List */
     .nights-history { margin-top: var(--space-xl); }
-    .sub-section-title {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--color-text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-bottom: var(--space-lg);
-    }
 
     .timeline-list { display: flex; flex-direction: column; gap: var(--space-md); position: relative; }
     .timeline-day { position: relative; }
@@ -365,7 +354,7 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
     .day-date-group {
       display: flex; flex-direction: column; align-items: center; min-width: 48px;
     }
-    .date-day { font-size: 1.2rem; font-weight: 800; color: var(--color-text); line-height: 1; }
+    .date-day { font-size: 1.2rem; font-weight: 900; color: var(--color-text); line-height: 1; }
     .date-month { font-size: 0.65rem; text-transform: uppercase; color: var(--color-text-muted); font-weight: 700; }
 
     .day-content { flex: 1; display: flex; flex-direction: column; gap: 4px; }

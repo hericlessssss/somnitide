@@ -30,12 +30,11 @@ describe('HistoryComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // Smoke test: PageHeader contract
-  it('should render PageHeader with h1 containing "Seu Hist├│rico"', () => {
+  it('should render PageHeader with h1 containing "Seu Histórico"', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const h1 = compiled.querySelector('h1.page-title');
     expect(h1).toBeTruthy();
-    expect(h1?.textContent?.trim()).toContain('Seu Hist├│rico');
+    expect(h1?.textContent?.trim()).toContain('Seu Histórico');
   });
 
   it('should render PageHeader subtitle', () => {

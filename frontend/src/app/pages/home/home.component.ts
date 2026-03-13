@@ -40,6 +40,14 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
         subtitle="Pronto para descansar? Inicie sua sessão para monitorar seu ciclo." />
 
       <main class="content">
+        <!-- Science Brief (Now a simple text block ABOVE the clock) -->
+        <section class="science-brief-section fade-in">
+          <div class="science-text">
+            <p>O SomniTide utiliza algoritmos baseados na arquitetura cíclica do sono para estimar seus horários ideais.</p>
+            <a routerLink="/docs" class="science-link">Clique aqui e saiba tudo sobre a ciência por trás do seu sono</a>
+          </div>
+        </section>
+
         <mat-card class="hero-card glass">
           <!-- mat-card-title removido: título agora está no PageHeader acima -->
           <mat-card-content class="hero-content">
@@ -163,24 +171,14 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
             </div>
           </div>
         </section>
-
-        <!-- Science Brief CTA -->
-        <section class="science-brief-section fade-in">
-          <mat-card class="science-card glass">
-            <mat-card-content>
-              <div class="science-content">
-                <div class="science-text">
-                  <p>O SomniTide utiliza algoritmos baseados na arquitetura cíclica do sono para estimar seus horários ideais.</p>
-                  <a routerLink="/docs" class="science-link">Clique aqui e saiba tudo sobre a ciência por trás do seu sono</a>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-card>
-        </section>
       </main>
     </app-page-container>
   `,
   styles: `
+    :host {
+      display: block;
+      width: 100%;
+    }
     /* Page container handled by PageContainer component */
     .home-container { }
 
@@ -228,13 +226,13 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
     }
 
     .clock-display .time {
-      font-size: clamp(3.5rem, 15vw, 5rem);
-      font-weight: 800;
+      font-size: clamp(4.18rem, 17.6vw, 6.05rem);
+      font-weight: 900;
       color: var(--color-primary);
       margin: 0;
       line-height: 1;
       font-family: var(--font-title);
-      letter-spacing: -2px;
+      letter-spacing: -3px;
     }
 
     .timezone-label {
@@ -306,13 +304,6 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
       color: #fff !important;
     }
 
-    .section-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--color-text);
-      margin-bottom: var(--space-lg);
-    }
-
     .suggestions-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -321,16 +312,6 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
 
     .pinned-suggestion {
       margin-bottom: var(--space-xl);
-    }
-
-    .sub-section-title {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--color-text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-bottom: var(--space-lg);
-      padding-left: var(--space-xs);
     }
 
     .hero-suggestion {
@@ -400,7 +381,7 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
 
     .wake-time {
       font-size: clamp(2rem, 10vw, 2.65rem);
-      font-weight: 800;
+      font-weight: 900;
       color: var(--color-text);
       font-family: var(--font-title);
       line-height: 1;
@@ -563,9 +544,6 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
       .clock-display .time {
         font-size: 4rem;
       }
-      .content {
-        padding: var(--space-lg) var(--space-md);
-      }
       .suggestions-grid {
         grid-template-columns: 1fr;
       }
@@ -577,44 +555,29 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
 
     .science-card {
       border: 1px solid rgba(255, 255, 255, 0.05) !important;
-      background: rgba(255, 255, 255, 0.02) !important;
-    }
-
-    .science-content {
-      display: flex;
-      align-items: center;
-      gap: var(--space-lg);
-      padding: var(--space-md);
-    }
-
-    .science-icon {
-      color: var(--color-primary);
-      opacity: 0.6;
-      font-size: 24px;
-      width: 24px;
-      height: 24px;
+      width: 100%;
+      text-align: left;
     }
 
     .science-text p {
-      margin: 0;
-      font-size: 0.8rem;
+      font-size: 0.95rem;
       color: var(--color-text-muted);
-      line-height: 1.5;
+      line-height: 1.6;
+      margin: 0 0 var(--space-md) 0;
     }
 
     .science-link {
-      display: inline-block;
-      margin-top: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-size: 0.95rem;
+      font-weight: 700;
       color: var(--color-primary);
       text-decoration: none;
-      cursor: pointer;
-      transition: opacity 0.2s ease;
+      transition: opacity var(--transition-fast);
+      display: inline-block;
     }
 
     .science-link:hover {
       opacity: 0.8;
+      text-decoration: underline;
     }
   `
 

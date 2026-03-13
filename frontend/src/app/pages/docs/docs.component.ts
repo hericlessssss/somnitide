@@ -15,7 +15,7 @@ import { RouterLink } from '@angular/router';
         <button mat-icon-button routerLink="/home" aria-label="Voltar para home" class="back-btn">
           <mat-icon>arrow_back</mat-icon>
         </button>
-        <h1 class="article-title">A Ciência por trás do Ciclo do Sono e do SomniTide</h1>
+        <h1 class="article-title gradient-text">A Ciência por trás do Ciclo do Sono e do SomniTide</h1>
         <p class="article-meta">Um guia completo sobre a arquitetura do sono, inércia do despertar e a nossa metodologia de pontuação.</p>
         <div class="article-divider"></div>
       </header>
@@ -172,11 +172,11 @@ import { RouterLink } from '@angular/router';
     }
 
     .article-title {
-      font-size: 2.2rem;
-      font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 16px;
-      color: var(--color-text);
+      font-size: clamp(2.64rem, 11vw, 3.74rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      letter-spacing: -2px;
     }
 
     .article-meta {

@@ -629,6 +629,7 @@ Para máxima segurança, configure as seguintes regras na branch `main`:
 - [x] Deploy Frontend (Cloudflare Pages) configurado com `_redirects`
 - [x] Job de verificação unificada (`ci-success`) implementado
 - [x] `PROJECT.md` atualizado com todas as etapas
+- [x] Globalização de estilos de títulos (Padrão bold forte unificado)
 
 ---
 
@@ -683,6 +684,7 @@ Para máxima segurança, configure as seguintes regras na branch `main`:
 5.  **Score de Sono (Progresso)**: Implementado Score V1 baseado em Duração (60pts), Qualidade (40pts) e Streak (10pts). Agrupamento por dia (UTC) com prioridade para a sessão mais longa do dia. [2026-03-11]
 6.  **Refinamento UI/UX Progresso**: Harmonizada a página de Progresso com o tema "Midnight Premium". Centralização do layout (800px), uso de cards glassmorphism, avatar de sessão com cores semânticas e timeline de histórico idêntica à página de Histórico. [2026-03-11]
 7.  **Métricas de Progresso**: Adicionado o "Total Somado" do período e validado o reset de streak para dias sem sessão (UTC). Cobertura de testes expandida para garantir integridade da lógica de consistência. [2026-03-11]
+8.  **Globalização de Títulos e Estilos (Premium standardization)**: Padronização da hierarquia visual em todo o app. Títulos de página agora possuem `font-weight: 900` e efeito gradient unificado. Criação das classes globais `.section-title` e `.sub-section-title` para consistência em cards e listagens. [2026-03-13]
 
 ## Decisões Técnicas
 
@@ -736,3 +738,39 @@ Para máxima segurança, configure as seguintes regras na branch `main`:
 | Desalinhamento Login/Cadastro | Removidas margens negativas residuais em `LoginComponent`. |
 | Sessões "esquecidas" quebravam streak | Implementada lógica de invalidacao automática para sessões > 14h. |
 | Inexistência de comunidade | Implementado Ranking Global, Perfis Públicos e handles únicos (@). |
+| Inconsistência nos pesos e tamanhos de títulos | Criadas classes globais `.section-title` e `.sub-section-title` em `styles.css`. O título principal (`.page-title`) foi elevado para `font-weight: 900`. |
+
+---
+
+## Globalização de Estilos de Título ✅
+
+### Resumo
+- **Padronização Visual**: Unificação de todos os títulos de página e seções para seguir a identidade "Midnight Premium".
+- **Refatoração Global**: Removidas definições locais de títulos nos componentes `Home`, `Ranking`, `Progress`, `Insights`, `History` e `Profile`.
+- **CSS Tokens**: Implementadas classes utilitárias no `styles.css` para garantir que futuras páginas sigam automaticamente o padrão visual.
+
+### Decisões Técnicas
+- **Font-Weight 900 (Black)**: Corrigido o loading via `index.html` para garantir que o peso máximo seja realmente aplicado.
+- **Efeito "Fat" (Gordinha)**: Adicionado `text-shadow: 0 0 1px currentColor` e `-webkit-font-smoothing: subpixel-antialiased` para maximizar a massa visual das fontes.
+- **Degradê Reimplementado**: O gradiente foi restaurado nos títulos de página para manter a estética premium sem perder a força do negrito.
+- **Hierarquia de Títulos**:
+  - `.page-title` (3.6rem max, extra-bold 900, gradient) -> Presença massiva no topo.
+  - `.section-title` (1.5rem, bold 900) -> Destaques internos reforçados.
+
+### Refinamento Títulos "Extra-Bold Gradient" (2026-03-13)
+- **O que foi feito**: Unificação visual de todos os títulos principais (`h1`) da aplicação para adotarem o estilo superdimensionado com gradiente e peso extra. As telas impactadas incluem: Home (relógio), Login, Registro, Docs, Perfil Público e Histórico.
+- **Técnica CSS**: 
+  - A classe `.gradient-text` recebeu um `filter: drop-shadow(...)` e `-webkit-text-stroke` para ampliar consideravelmente a espessura percebida do elemento mantendo o fundo gradiente de clipagem.
+  - A classe `.page-title` teve seu tamanho ampliado (`clamp(2.6rem, 11vw, 3.6rem)`) e um `text-shadow` sutil adicionado.
+- **Hurdles & Fixes**:
+  - **Testes Falhando por Encoding**: O teste unitário do `HistoryComponent` quebrava ao comparar "Seu Histórico" pois antes dependia de uma string com double-encoding (`Seu Hist├│rico`). O `.spec.ts` foi atualizado para UTF-8 puro.
+  - **Sobrescrita de Mock em Testes de Componentes Standalone**: O `HomeComponent` importava o `MatSnackBarModule` diretamente, o que estava sobrepondo a injeção do mock no `TestBed.configureTestingModule`. O problema foi corrigido utilizando `TestBed.overrideComponent(HomeComponent, { add: { providers: [ ... ] } })`.
+
+### Ajustes Finos Títulos e Espaçamentos (2026-03-13)
+- **Aumento de 10% nas Fontes**: Todos os títulos com estilo "Extra-Bold Gradient" tiveram um incremento adicional de tamanho (+10% em relação aos `clamp` originais) em `Home`, `Login`, `Registro`, `Docs`, `Perfil Público` e `Histórico`.
+- **Aproximação Título/Subtítulo (Gap Global)**: O valor do token global CSS `--page-header-gap` foi reduzido pela metade (de `10px` para `5px` e forçado globalmente na classe `.page-subtitle`), colando visualmente o subtítulo ao título em todas as exibições dependentes de `PageHeader`.
+- **Enforcing de Font-Weight e "Gordinho" Clássico**: Confirmado que a importação do pacote de pesos `700` e `800` da _Plus Jakarta Sans_ já estava presente na tag `<link>` raiz. Ajustado a classe base global `.page-title` para usar `font-weight: 800 !important`, garantindo que não há supressões acidentais por overrides padrão do Angular Material (`mat-typography`) que possam remover o feeling "gordinho" das fontes, ao mesmo tempo que mantém a consistência com o web deploy antigo.
+- **Remoção de Efeitos Luminosos e Gradientes (Neon/Gradient)**: Eliminadas as propriedades de sombreamento (`drop-shadow`, `text-shadow`) atendendo à preferência por tipografia pura sem brilho ou reflexos. Além disso, a classe `.gradient-text` foi universalmente removida do projeto (em `Home`, `Login`, `Registro`, `Docs`, `Profile` e `PageHeader`), estabelecendo a cor primária sólida (`var(--color-primary)`) como o padrão absoluto para esses títulos de destaque. Testes unitários rodados com sucesso.
+- **Alinhamento Simétrico de Container e Host Context**: Identificada uma regressão de posicionamento (padding/margens desalinhados à direita). Como custom elements (`<app-page-header>`, `<app-home>`) têm `display: inline` nativo no Angular, o flex container acaba desalinhando blocos filhos contra textos do header. Adicionada enforcing de `:host { display: block; width: 100%; }` em componentes base, aliado à padronização do `--page-padding-x` para `24px` e margin `0` nos `.mat-mdc-card`. Adicionalmente, foi removido um `@media (max-width: 600px)` no `HomeComponent.styles` que injetava um padding lateral redundante de 12px, garantindo que o alinhamento de 24px seja absoluto e estrito até nas menores telas mobile.
+- **Movimentação da Seção "Science Brief"**: Conforme requisitado por fluxo elegante de navegação, o texto explicativo sobre "O SomniTide utiliza algoritmos..." foi extraído de dentro do `mat-card`, transformado em uma declaração *plain text* limpa (`.science-text`) com formatação tipográfica suave, e reinjetado **acima** do mostrador principal da Hora Atual na `Home`, antecipando o contexto científico para o usuário antes dele lidar com as sessões propriamente ditas.
+---

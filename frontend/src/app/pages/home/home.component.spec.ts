@@ -48,10 +48,17 @@ describe('HomeComponent', () => {
                 { provide: SleepService, useValue: mockSleepService },
                 { provide: PreferencesService, useValue: mockPreferencesService },
                 { provide: MatDialog, useValue: mockDialog },
-                { provide: MatSnackBar, useValue: mockSnack },
                 provideRouter([])
             ]
-        }).compileComponents();
+        })
+        .overrideComponent(HomeComponent, {
+            add: {
+                providers: [
+                    { provide: MatSnackBar, useValue: mockSnack }
+                ]
+            }
+        })
+        .compileComponents();
 
         fixture = TestBed.createComponent(HomeComponent);
         component = fixture.componentInstance;
@@ -110,7 +117,7 @@ describe('HomeComponent', () => {
             fixture.detectChanges();
             
             expect(mockDialog.open).not.toHaveBeenCalled();
-            expect(mockSleepService.endSession).toHaveBeenCalledWith(null, 'Sess├úo muito curta');
+            expect(mockSleepService.endSession).toHaveBeenCalledWith(null, 'Sessão muito curta');
             expect(mockSnack.open).toHaveBeenCalled();
             expect(component.activeSession()).toBeNull();
         });

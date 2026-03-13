@@ -120,11 +120,10 @@ import { ProfileService, UserProfile } from '../../../services/profile.service';
       to { box-shadow: 0 0 25px rgba(255, 215, 0, 0.6), inset 0 0 15px rgba(255, 215, 0, 0.2); }
     }
     .handle {
-      font-size: 32px;
-      font-weight: 800;
-      letter-spacing: -1px;
+      font-size: clamp(2.64rem, 8.8vw, 3.52rem);
+      font-weight: 900;
+      letter-spacing: -2px;
       margin: 0;
-      color: var(--color-text);
     }
     .join-date {
       color: var(--color-text-muted);

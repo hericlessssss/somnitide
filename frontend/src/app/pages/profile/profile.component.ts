@@ -52,9 +52,8 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
               <mat-hint>Este é o seu nome único no Ranking Global.</mat-hint>
             </mat-form-field>
 
-            <div class="stats-container">
               <div class="stat-card rank-status-card" [class]="getRankClass(profile()?.rankPosition)">
-                <span class="stat-label">Status SomniTide</span>
+                <span class="sub-section-title">Status SomniTide</span>
                 <div class="status-row">
                   <mat-icon>{{ getRankIcon(profile()?.rankPosition) }}</mat-icon>
                   <span class="stat-value">{{ getRankTitle(profile()?.rankPosition) }}</span>
@@ -65,14 +64,14 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
               </div>
 
               <div class="stat-card score-card">
-                <span class="stat-label">Pontuação Global</span>
+                <span class="sub-section-title">Pontuação Global</span>
                 <span class="stat-value text-primary large">{{ profile()?.totalScore || 0 }} pts</span>
                 <span class="stat-hint">Soma de toda a sua jornada</span>
               </div>
               
               <div class="stat-card id-card clickable" (click)="copyId()">
                 <div class="id-wrapper">
-                  <span class="stat-label">ID de Usuário</span>
+                  <span class="sub-section-title">ID de Usuário</span>
                   <div class="id-value-row">
                     <span class="stat-value truncate-id">{{ auth.user?.id }}</span>
                     <mat-icon class="copy-icon">content_copy</mat-icon>
@@ -80,7 +79,6 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
                 </div>
                 <mat-hint class="copy-hint">Toque para copiar o ID</mat-hint>
               </div>
-            </div>
 
             <button mat-flat-button color="primary" class="save-btn clickable" 
                     [disabled]="loading() || !profileForm.valid">
@@ -194,16 +192,9 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
       justify-content: space-between;
       gap: var(--space-sm);
     }
-    .stat-label { 
-      font-size: 11px; 
-      color: var(--color-text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 700;
-    }
     .stat-value { 
       font-size: 16px; 
-      font-weight: 700; 
+      font-weight: 900; 
       color: var(--color-text); 
     }
     .stat-value.large {

@@ -9,6 +9,10 @@ import { Component } from '@angular/core';
     </div>
   `,
   styles: [`
+    :host {
+      display: block;
+      width: 100%;
+    }
     .page-container {
       max-width: var(--page-max-width);
       width: 100%;
