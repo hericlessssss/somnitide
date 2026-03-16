@@ -248,8 +248,16 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
     @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
     @media (max-width: 768px) {
-      .podium-section { flex-direction: column; align-items: center; gap: var(--space-md); }
-      .rank-1, .rank-2, .rank-3 { order: unset; width: 100%; max-width: 300px; }
+      .podium-section { 
+        flex-direction: column; 
+        align-items: stretch; 
+        gap: var(--space-md); 
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-top: var(--space-sm);
+      }
+      .rank-1, .rank-2, .rank-3 { order: unset; width: 100%; max-width: unset; }
       .remaining-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
     }
   `]

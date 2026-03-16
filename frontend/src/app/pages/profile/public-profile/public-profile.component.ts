@@ -6,76 +6,97 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ProfileService, UserProfile } from '../../../services/profile.service';
 
+import { PageContainerComponent } from '../../../shared/page-container/page-container.component';
+
 @Component({
   selector: 'app-public-profile',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, RouterLink],
+  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, RouterLink, PageContainerComponent],
   template: `
-    <div class="profile-layout">
-      <div *ngIf="loading()" class="loading-state">
-        <mat-icon class="spin">refresh</mat-icon>
-        <span>Carregando perfil...</span>
-      </div>
+    <app-page-container>
+      <div class="profile-layout">
+        <div *ngIf="loading()" class="loading-state">
+          <mat-icon class="spin">refresh</mat-icon>
+          <span>Carregando perfil...</span>
+        </div>
 
-      <div *ngIf="!loading() && profile()" class="profile-content fade-in">
-        <button mat-icon-button routerLink="/ranking" class="back-btn">
-          <mat-icon>arrow_back</mat-icon>
-        </button>
+        <div *ngIf="!loading() && profile()" class="profile-content fade-in">
+          <button mat-icon-button routerLink="/ranking" class="back-btn">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
 
-        <mat-card class="user-header-card">
-          <div class="user-header">
-            <img [src]="getAvatar(profile()?.avatarSeed || '')" 
-                 class="avatar" [class]="getRankClass(profile()?.rankPosition)">
-            <div class="user-meta">
-              <h1 class="handle gradient-text">{{ profile()?.handle }}</h1>
-              <p class="join-date" [class]="getRankClass(profile()?.rankPosition)">
-                {{ getRankTitle(profile()?.rankPosition) }}
-              </p>
-              <p class="member-since" *ngIf="profile()?.createdAtUtc">
-                membro desde {{ profile()?.createdAtUtc | date:'MMMM yyyy' }}
-              </p>
-            </div>
-          </div>
-
-          <div class="stats-grid">
-            <div class="stat-card">
-              <mat-icon>emoji_events</mat-icon>
-              <div class="stat-info">
-                <span class="value">{{ profile()?.totalScore }}</span>
-                <span class="label">Pontos Totais</span>
+          <mat-card class="user-header-card">
+            <div class="user-header">
+              <img [src]="getAvatar(profile()?.avatarSeed || '')" 
+                   class="avatar" [class]="getRankClass(profile()?.rankPosition)">
+              <div class="user-meta">
+                <h1 class="handle">{{ profile()?.handle }}</h1>
+                <p class="join-date" [class]="getRankClass(profile()?.rankPosition)">
+                  {{ getRankTitle(profile()?.rankPosition) }}
+                </p>
+                <p class="member-since" *ngIf="profile()?.createdAtUtc">
+                  membro desde {{ profile()?.createdAtUtc | date:'MMMM yyyy' }}
+                </p>
               </div>
             </div>
+
+            <div class="stats-grid">
+              <div class="stat-card">
+                <mat-icon>emoji_events</mat-icon>
+                <div class="stat-info">
+                  <span class="value">{{ profile()?.totalScore }}</span>
+                  <span class="label">Pontos Totais</span>
+                </div>
+              </div>
+              
+              <div class="stat-card" [class]="getRankClass(profile()?.rankPosition)">
+                <mat-icon>{{ getRankIcon(profile()?.rankPosition) }}</mat-icon>
+                <div class="stat-info">
+                  <span class="value">{{ getRankShortTitle(profile()?.rankPosition) }}</span>
+                  <span class="label">Status</span>
+                </div>
+              </div>
+            </div>
+          </mat-card>
+
+          <mat-card class="summary-card">
+            <div class="summary-header">
+              <h2 class="title">Resumo de Atividade</h2>
+              <div class="achievement-icon" matTooltip="Participante do Ranking">
+                <mat-icon>stars</mat-icon>
+              </div>
+            </div>
+            <p class="description">
+              Este {{ getRankShortTitle(profile()?.rankPosition).toLowerCase() }} do sono acumulou um total de <strong>{{ profile()?.totalScore }}</strong> pontos 
+              otimizando seus ciclos de descanso e foco diário.
+            </p>
             
-            <div class="stat-card" [class]="getRankClass(profile()?.rankPosition)">
-              <mat-icon>{{ getRankIcon(profile()?.rankPosition) }}</mat-icon>
-              <div class="stat-info">
-                <span class="value">{{ getRankShortTitle(profile()?.rankPosition) }}</span>
-                <span class="label">Status</span>
+            <div class="summary-metrics-grid">
+              <div class="mini-metric">
+                <mat-icon class="metric-icon insights-icon">emoji_events</mat-icon>
+                <div class="metric-data">
+                  <span class="value">#{{ profile()?.rankPosition || '-' }}</span>
+                  <span class="label">Posição Global</span>
+                </div>
+              </div>
+              <div class="mini-metric">
+                <mat-icon class="metric-icon progress-icon">bolt</mat-icon>
+                <div class="metric-data">
+                  <span class="value">{{ getLastActive() }}</span>
+                  <span class="label">Última Atividade</span>
+                </div>
               </div>
             </div>
-          </div>
-        </mat-card>
+          </mat-card>
+        </div>
 
-        <mat-card class="summary-card">
-          <h2 class="title">Resumo de Atividade</h2>
-          <p class="description">
-            Este {{ getRankShortTitle(profile()?.rankPosition).toLowerCase() }} do sono acumulou um total de <strong>{{ profile()?.totalScore }}</strong> pontos 
-            otimizando seus ciclos de descanso.
-          </p>
-          <div class="achievements">
-            <div class="achievement-icon" matTooltip="Participante do Ranking">
-              <mat-icon>stars</mat-icon>
-            </div>
-          </div>
-        </mat-card>
+        <div *ngIf="!loading() && !profile()" class="error-state">
+          <mat-icon>search_off</mat-icon>
+          <h2>Perfil não encontrado</h2>
+          <button mat-flat-button color="primary" routerLink="/ranking">Voltar ao Ranking</button>
+        </div>
       </div>
-
-      <div *ngIf="!loading() && !profile()" class="error-state">
-        <mat-icon>search_off</mat-icon>
-        <h2>Perfil não encontrado</h2>
-        <button mat-flat-button color="primary" routerLink="/ranking">Voltar ao Ranking</button>
-      </div>
-    </div>
+    </app-page-container>
   `,
   styles: [`
     .profile-layout {
@@ -83,12 +104,16 @@ import { ProfileService, UserProfile } from '../../../services/profile.service';
       margin: 40px auto;
       padding: 0 var(--space-md);
     }
+    .profile-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+    }
     .user-header-card {
       background: var(--color-surface) !important;
       border: 1px solid var(--color-border) !important;
       border-radius: var(--radius-lg);
       padding: var(--space-2xl);
-      margin-bottom: var(--space-lg);
     }
     .user-header {
       display: flex;
@@ -166,8 +191,41 @@ import { ProfileService, UserProfile } from '../../../services/profile.service';
       border: 1px solid var(--color-border) !important;
       padding: var(--space-xl);
     }
-    .summary-card .title { font-size: 18px; font-weight: 700; margin-bottom: var(--space-md); }
-    .summary-card .description { color: var(--color-text-muted); line-height: 1.6; }
+    .summary-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-md);
+    }
+    .summary-header .title { font-size: 18px; font-weight: 700; margin: 0; }
+    .achievement-icon mat-icon { color: var(--color-primary); }
+    .summary-card .description { color: var(--color-text-muted); line-height: 1.6; margin-bottom: var(--space-lg); }
+    
+    .summary-metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-md);
+    }
+    .mini-metric {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      background: rgba(255,255,255,0.03);
+      padding: var(--space-md) var(--space-lg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+    }
+    .metric-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+    .insights-icon { color: var(--color-warning); }
+    .progress-icon { color: var(--color-success); }
+    
+    .metric-data { display: flex; flex-direction: column; }
+    .metric-data .value { font-size: 16px; font-weight: 700; color: var(--color-text); }
+    .metric-data .label { font-size: 10px; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
     /* Rank Styles */
     .rank-supreme { 
@@ -213,6 +271,7 @@ import { ProfileService, UserProfile } from '../../../services/profile.service';
     @media (max-width: 480px) {
       .user-header { flex-direction: column; text-align: center; }
       .stats-grid { grid-template-columns: 1fr; }
+      .summary-metrics-grid { grid-template-columns: 1fr; }
     }
   `]
 })
@@ -247,6 +306,24 @@ export class PublicProfileComponent implements OnInit {
 
   getAvatar(seed: string): string {
     return `https://api.dicebear.com/7.x/identicon/svg?seed=${seed}`;
+  }
+
+  getLastActive(): string {
+    const p = this.profile();
+    if (!p || !p.updatedAtUtc) return '-';
+    
+    const lastDate = new Date(p.updatedAtUtc);
+    const now = new Date();
+    const diffMs = Math.abs(now.getTime() - lastDate.getTime());
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMins < 60) return `Há ${diffMins}m`;
+    if (diffHours < 24) return `Há ${diffHours}h`;
+    if (diffDays === 0) return 'Hoje';
+    if (diffDays === 1) return 'Ontem';
+    return `Há ${diffDays}d`;
   }
 
   getRankTitle(pos?: number): string {
