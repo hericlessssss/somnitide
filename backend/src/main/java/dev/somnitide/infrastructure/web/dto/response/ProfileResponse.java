@@ -10,13 +10,20 @@ public record ProfileResponse(
     int totalScore,
     Instant updatedAtUtc,
     Instant createdAtUtc,
-    Integer rankPosition
+    Integer rankPosition,
+    Integer lastSleepMinutes,
+    Double avgScore,
+    Integer streakDays
 ) {
     public static ProfileResponse fromDomain(UserProfile domain) {
-        return fromDomain(domain, null);
+        return fromDomain(domain, null, null, null, null);
     }
 
     public static ProfileResponse fromDomain(UserProfile domain, Integer rankPosition) {
+        return fromDomain(domain, rankPosition, null, null, null);
+    }
+
+    public static ProfileResponse fromDomain(UserProfile domain, Integer rankPosition, Integer lastSleepMinutes, Double avgScore, Integer streakDays) {
         return new ProfileResponse(
             domain.getUserId(),
             domain.getHandle(),
@@ -24,7 +31,10 @@ public record ProfileResponse(
             domain.getTotalScore(),
             domain.getUpdatedAtUtc(),
             domain.getCreatedAtUtc(),
-            rankPosition
+            rankPosition,
+            lastSleepMinutes,
+            avgScore,
+            streakDays
         );
     }
 }

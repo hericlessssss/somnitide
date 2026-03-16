@@ -169,15 +169,25 @@ select {
   outline-offset: 2px;
 }
 
-/* --- Autofill Neutralization --- */
+/* --- Nuclear Autofill Neutralization (Force Dark Theme) --- */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 100px var(--color-surface-2) inset !important;
+input:-webkit-autofill:active,
+input:autofill,
+input:autofill:hover,
+input:autofill:focus,
+input:autofill:active,
+input.mat-mdc-input-element:-webkit-autofill {
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
   -webkit-text-fill-color: #FFFFFF !important;
-  border: none !important;
-  transition: background-color 5000s ease-in-out 0s;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 0 1000px #0F1622 inset !important;
+  -webkit-box-shadow: 0 0 0 1000px #0F1622 inset !important;
+  caret-color: #FFFFFF !important;
+  transition: background-color 5000000s ease-in-out 0s !important;
+  filter: none !important;
 }
 
 /* --- Material Form Field Overrides (Robust Contrast) --- */

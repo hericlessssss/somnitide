@@ -23,9 +23,9 @@ import { Router } from '@angular/router';
     <header class="app-header">
       <mat-toolbar class="main-toolbar" role="banner">
         <div class="toolbar-content">
-          <div class="brand clickable" routerLink="/home" aria-label="SomniTide Home">
-            <img src="logo.png" alt="SomniTide Logo" class="brand-icon">
-            <span class="brand-name">SomniTide</span>
+          <div class="brand clickable" routerLink="/home" aria-label="somnitide Home">
+            <img src="logo.png" alt="somnitide Logo" class="brand-icon">
+            <span class="brand-name">somnitide</span>
           </div>
           
           <nav class="desktop-nav" aria-label="Navegação principal">

@@ -20,7 +20,7 @@ public interface GetProgress {
     record Response(
             int rangeDays,
             int streakDays,
-            double avgScore,
+            Double avgScore,
             double totalScore,
             int avgSleepMinutes,
             BestDay bestDay,

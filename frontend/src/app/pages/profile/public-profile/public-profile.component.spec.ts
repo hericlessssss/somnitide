@@ -49,15 +49,15 @@ describe('PublicProfileComponent', () => {
     });
 
     it('should return default title for others', () => {
-      expect(component.getRankTitle(101)).toBe('Membro SomniTide');
-      expect(component.getRankTitle(undefined)).toBe('Membro SomniTide');
+      expect(component.getRankTitle(101)).toBe('Membro somnitide');
+      expect(component.getRankTitle(undefined)).toBe('Membro somnitide');
     });
 
     it('should return correct CSS class for ranks', () => {
       expect(component.getRankClass(1)).toBe('rank-supreme');
-      expect(component.getRankClass(10)).toBe('rank-legend');
+      expect(component.getRankClass(10)).toBe('rank-legendary');
       expect(component.getRankClass(50)).toBe('rank-elite');
-      expect(component.getRankClass(101)).toBe('');
+      expect(component.getRankClass(101)).toBe('rank-member');
     });
 
     it('should return correct icon for ranks', () => {

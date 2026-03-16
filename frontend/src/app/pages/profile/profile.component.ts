@@ -31,7 +31,7 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
     <app-page-container>
       <app-page-header
         title="Configurações de Perfil"
-        subtitle="Gerencie sua identidade no SomniTide" />
+        subtitle="Gerencie sua identidade no somnitide" />
 
       <mat-card class="profile-card">
         <mat-card-content>
@@ -53,7 +53,7 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
             </mat-form-field>
 
               <div class="stat-card rank-status-card" [class]="getRankClass(profile()?.rankPosition)">
-                <span class="sub-section-title">Status SomniTide</span>
+                <span class="sub-section-title">Status somnitide</span>
                 <div class="status-row">
                   <mat-icon>{{ getRankIcon(profile()?.rankPosition) }}</mat-icon>
                   <span class="stat-value">{{ getRankTitle(profile()?.rankPosition) }}</span>
@@ -317,13 +317,13 @@ export class ProfileComponent implements OnInit {
   }
 
   getRankTitle(pos?: number): string {
-    if (!pos) return 'Membro SomniTide';
+    if (!pos) return 'Membro somnitide';
     if (pos === 1) return 'Mestre Supremo do Sono';
     if (pos === 2) return 'Mestre do Sono';
     if (pos === 3) return 'Guardião do Descanso';
     if (pos <= 10) return 'Lendário do Sono';
     if (pos <= 100) return 'Elite do Sono';
-    return 'Membro SomniTide';
+    return 'Membro somnitide';
   }
 
   getRankClass(pos?: number): string {

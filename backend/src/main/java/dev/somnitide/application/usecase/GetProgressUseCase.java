@@ -92,7 +92,7 @@ public class GetProgressUseCase implements GetProgress {
             }
         }
 
-        double avgScore = dayResults.isEmpty() ? 0 : totalScoreSum / dayResults.size();
+        Double avgScore = dayResults.isEmpty() ? null : totalScoreSum / dayResults.size();
         int avgSleepMinutes = dayResults.isEmpty() ? 0 : (int) (totalSleepMinutesSum / dayResults.size());
         BestDay bestDay = bestDayDate != null ? new BestDay(bestDayDate, maxScore) : null;
 

@@ -15,7 +15,7 @@ import { RouterLink } from '@angular/router';
         <button mat-icon-button routerLink="/home" aria-label="Voltar para home" class="back-btn">
           <mat-icon>arrow_back</mat-icon>
         </button>
-        <h1 class="article-title gradient-text">A Ciência por trás do Ciclo do Sono e do SomniTide</h1>
+        <h1 class="article-title gradient-text">A Ciência por trás do Ciclo do Sono e do somnitide</h1>
         <p class="article-meta">Neste artigo você verá um guia completo sobre a arquitetura do sono, inércia do despertar e a nossa metodologia de pontuação.</p>
         <div class="article-divider"></div>
       </header>
@@ -24,7 +24,7 @@ import { RouterLink } from '@angular/router';
         <!-- Introduction -->
         <section class="doc-section">
           <p class="lead-text">
-            O SomniTide foi projetado com base em princípios fundamentais da cronobiologia e medicina do sono. 
+            O somnitide foi projetado com base em princípios fundamentais da cronobiologia e medicina do sono. 
             Nosso objetivo é fornecer ao usuário não apenas um despertador, mas uma ferramenta de otimização baseada 
             na alternância rítmica das fases cerebrais durante o descanso.
           </p>
@@ -81,7 +81,7 @@ import { RouterLink } from '@angular/router';
             desencadeia uma inércia mais severa, fazendo com que você se sinta "grogue" por muito mais tempo.
           </p>
           <p>
-            O SomniTide utiliza algoritmos para sugerir janelas de despertar que coincidam com o final de um ciclo (geralmente após a fase REM), 
+            O somnitide utiliza algoritmos para sugerir janelas de despertar que coincidam com o final de um ciclo (geralmente após a fase REM), 
             minimizando a probabilidade de uma interrupção em sono profundo e facilitando a transição para a vigília ativa.
           </p>
         </section>
@@ -90,7 +90,7 @@ import { RouterLink } from '@angular/router';
         <section class="doc-section methodology">
           <h2>3. Algoritmo de Pontuação e Ranking</h2>
           <p>
-            O Ranking do SomniTide não é uma corrida de quem dorme mais, mas sim um medidor de <strong>Eficiência e Mentalidade de Sono</strong>. 
+            O Ranking do somnitide não é uma corrida de quem dorme mais, mas sim um medidor de <strong>Eficiência e Mentalidade de Sono</strong>. 
             Sua pontuação diária é calculada através de três pilares fundamentais, totalizando até <strong>110 pontos</strong> por sessão.
           </p>
 
@@ -143,7 +143,7 @@ import { RouterLink } from '@angular/router';
 
         <section class="doc-footer">
           <p>
-            <strong>Transparência Científica:</strong> SomniTide não captura ondas cerebrais. 
+            <strong>Transparência Científica:</strong> somnitide não captura ondas cerebrais. 
             Somos um modelo matemático-estatístico baseado na literatura médica atual. 
             Para distúrbios crônicos, consulte sempre um especialista.
           </p>

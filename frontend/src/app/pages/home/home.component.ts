@@ -43,7 +43,7 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
         <!-- Science Brief (Now a simple text block ABOVE the clock) -->
         <section class="science-brief-section fade-in">
           <div class="science-text">
-            <p>O SomniTide utiliza algoritmos baseados na arquitetura cíclica do sono para estimar seus horários ideais.</p>
+            <p>O somnitide utiliza algoritmos baseados na arquitetura cíclica do sono para estimar seus horários ideais.</p>
             <a routerLink="/docs" class="science-link">Clique aqui e entenda como podemos ajudar.</a>
           </div>
         </section>

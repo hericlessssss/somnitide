@@ -34,7 +34,7 @@ describe('PrivateLayoutComponent', () => {
         const compiled = fixture.nativeElement as HTMLElement;
 
         // Brand
-        expect(compiled.querySelector('.brand-name')?.textContent).toContain('SomniTide');
+        expect(compiled.querySelector('.brand-name')?.textContent).toContain('somnitide');
 
         // Desktop Nav
         expect(compiled.querySelector('.desktop-nav a[routerLink="/home"]')).toBeTruthy();

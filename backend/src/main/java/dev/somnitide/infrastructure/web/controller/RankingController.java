@@ -35,7 +35,13 @@ public class RankingController {
     @GetMapping("/profile/{handle}")
     public ResponseEntity<ProfileResponse> getPublicProfile(@PathVariable String handle) {
         return getPublicProfile.execute(handle)
-                .map(p -> ResponseEntity.ok(ProfileResponse.fromDomain(p.profile(), p.rankPosition())))
+                .map(p -> ResponseEntity.ok(ProfileResponse.fromDomain(
+                    p.profile(), 
+                    p.rankPosition(),
+                    p.lastSleepMinutes(),
+                    p.avgScore(),
+                    p.streakDays()
+                )))
                 .orElse(ResponseEntity.notFound().build());
     }
 }

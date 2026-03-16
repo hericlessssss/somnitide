@@ -170,7 +170,7 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
           </section>
 
           <footer class="score-footer fade-in">
-            <p>O Score SomniTide V1 é calculado com base na Duração (máx 60pts), Qualidade (máx 40pts) e Sequência (bônus 10pts). O seu rank reflete a sua consistência semanal.</p>
+            <p>O Score somnitide V1 é calculado com base na Duração (máx 60pts), Qualidade (máx 40pts) e Sequência (bônus 10pts). O seu rank reflete a sua consistência semanal.</p>
           </footer>
         </div>
       </ng-container>

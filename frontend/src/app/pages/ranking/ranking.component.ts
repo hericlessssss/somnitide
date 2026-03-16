@@ -17,7 +17,7 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
     <app-page-container>
       <app-page-header
         title="Ranking Global"
-        subtitle="Os 100 mestres do sono SomniTide" />
+        subtitle="Os 100 mestres do sono somnitide" />
 
       <div *ngIf="loading()" class="loading-state">
         <mat-icon class="spin">refresh</mat-icon>

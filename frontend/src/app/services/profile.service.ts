@@ -10,6 +10,9 @@ export interface UserProfile {
   updatedAtUtc: string;
   createdAtUtc: string;
   rankPosition?: number;
+  lastSleepMinutes?: number;
+  avgScore?: number;
+  streakDays?: number;
 }
 
 @Injectable({
