@@ -29,7 +29,7 @@ import { Router, RouterLink } from '@angular/router';
       <mat-card-header class="auth-card-header">
         <div class="brand-container" aria-label="SomniTide Brand">
           <img src="logo.png" alt="SomniTide Logo" class="brand-icon">
-          <h1 class="brand-name gradient-text">SomniTide</h1>
+          <h1 class="brand-name gradient-text">somnitide</h1>
         </div>
         <p class="brand-caption">Métricas do seu sono</p>
       </mat-card-header>
