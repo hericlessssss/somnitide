@@ -43,3 +43,9 @@ dist/
 # Logs and temporaries
 *.log
 test_output.txt
+backend.log
+
+# files
+walkthrough.md
+RELATORIO_EXECUTIVO.md
+RELATORIO_TECNICO.md

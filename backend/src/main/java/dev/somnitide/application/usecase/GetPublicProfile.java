@@ -57,7 +57,8 @@ public class GetPublicProfile {
         if (!lastSessions.isEmpty()) {
             SleepSession s = lastSessions.get(0);
             if (s.getEndedAtUtc() != null && s.getSleepStartEstimatedAtUtc() != null) {
-                lastSleep = (int) java.time.Duration.between(s.getSleepStartEstimatedAtUtc(), s.getEndedAtUtc()).toMinutes();
+                long minutes = java.time.Duration.between(s.getSleepStartEstimatedAtUtc(), s.getEndedAtUtc()).toMinutes();
+                lastSleep = (int) Math.max(0, minutes);
             }
         }
         

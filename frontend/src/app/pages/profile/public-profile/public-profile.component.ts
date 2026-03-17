@@ -20,7 +20,7 @@ import { PageContainerComponent } from '../../../shared/page-container/page-cont
           <span>Carregando perfil...</span>
         </div>
 
-        <div *ngIf="!loading() && profile()" class="profile-content fade-in">
+        <div *ngIf="!loading() && profile() as user" class="profile-content fade-in">
           <div class="profile-nav">
             <button mat-icon-button routerLink="/ranking" class="back-btn" aria-label="Voltar para o ranking">
               <mat-icon>chevron_left</mat-icon>
@@ -28,9 +28,8 @@ import { PageContainerComponent } from '../../../shared/page-container/page-cont
             <span class="nav-title">Perfil do Usuário</span>
           </div>
 
-        <div class="profile-layout" *ngIf="profile() as user">
-        <!-- Intelligent Header: User Info & Core Stats -->
-        <div class="profile-header-card" [class]="getRankClass(user.rankPosition)">
+          <!-- Intelligent Header: User Info & Core Stats -->
+          <div class="profile-header-card" [class]="getRankClass(user.rankPosition)">
           <div class="user-main-info">
             <div class="avatar-container">
               <img [src]="getAvatar(user.avatarSeed)" [alt]="user.handle" class="avatar">
@@ -40,7 +39,7 @@ import { PageContainerComponent } from '../../../shared/page-container/page-cont
               <h2 class="display-name">{{ user.handle.startsWith('@') ? user.handle : '@' + user.handle }}</h2>
               <div class="member-since">
                 <mat-icon>calendar_today</mat-icon>
-                Membro desde {{ user.createdAtUtc | date:'MMM yyyy' }}
+                Membro desde {{ user.createdAtUtc | date:'mediumDate' }}
               </div>
             </div>
           </div>
@@ -113,9 +112,8 @@ import { PageContainerComponent } from '../../../shared/page-container/page-cont
           </div>
         </div>
       </div>
-        </div>
 
-        <div *ngIf="!loading() && !profile()" class="error-state">
+      <div *ngIf="!loading() && !profile()" class="error-state">
           <mat-icon>search_off</mat-icon>
           <h2>Perfil não encontrado</h2>
           <button mat-flat-button color="primary" routerLink="/ranking">Voltar ao Ranking</button>
@@ -373,7 +371,7 @@ import { PageContainerComponent } from '../../../shared/page-container/page-cont
       color: var(--color-primary) !important;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 480px) {
       .profile-dashboard-grid { grid-template-columns: 1fr; }
       .header-stats { flex-direction: column; align-items: flex-start; }
       .stat-divider { display: none; }
@@ -392,6 +390,8 @@ export class PublicProfileComponent implements OnInit {
     this.route.params.subscribe(params => {
       const handle = params['handle'];
       if (handle) {
+        // Reset state during new handle load to prevent stale data display
+        this.profile.set(null); 
         this.loadProfile(handle);
       }
     });
@@ -464,8 +464,9 @@ export class PublicProfileComponent implements OnInit {
 
   formatMinutes(minutes?: number): string {
     if (minutes === undefined || minutes === null) return '--';
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
+    const totalMinutes = Math.max(0, minutes);
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
     return `${h}h ${m}m`;
   }
 

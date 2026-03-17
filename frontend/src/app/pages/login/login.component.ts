@@ -205,6 +205,9 @@ import { Router, RouterLink } from '@angular/router';
     .cta-button:not(:disabled):active {
       transform: scale(0.98);
     }
+    .cta-button * {
+      pointer-events: none;
+    }
     .loading-state {
       display: flex;
       align-items: center;
@@ -236,7 +239,14 @@ import { Router, RouterLink } from '@angular/router';
       text-decoration: none;
       font-weight: 600;
       margin-left: 0;
-      padding: 4px 0;
+      padding: 8px 12px;
+      margin: -8px -12px;
+      display: inline-block;
+      border-radius: var(--radius-sm);
+      transition: background-color var(--transition-fast);
+    }
+    .footer-link:hover {
+      background: rgba(66, 214, 198, 0.08);
     }
     
     ::ng-deep .mat-mdc-form-field.mat-focused .mdc-floating-label {
@@ -277,8 +287,6 @@ import { Router, RouterLink } from '@angular/router';
     .social-icon:hover {
       fill: var(--color-primary);
       transform: translateY(-2px);
-    }
-
     }
 
     @media (max-width: 480px) {

@@ -4,158 +4,155 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
+import { PageContainerComponent } from '../../shared/page-container/page-container.component';
 
 @Component({
   selector: 'app-docs',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, RouterLink],
+  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, RouterLink, PageContainerComponent],
   template: `
-    <div class="docs-container fade-in">
-      <header class="docs-header">
-        <button mat-icon-button routerLink="/home" aria-label="Voltar para home" class="back-btn">
-          <mat-icon>arrow_back</mat-icon>
-        </button>
-        <h1 class="article-title gradient-text">A Ciência por trás do Ciclo do Sono e do somnitide</h1>
-        <p class="article-meta">Neste artigo você verá um guia completo sobre a arquitetura do sono, inércia do despertar e a nossa metodologia de pontuação.</p>
-        <div class="article-divider"></div>
-      </header>
+    <app-page-container>
+      <div class="docs-content-wrapper fade-in">
+        <header class="docs-header">
+          <button mat-icon-button routerLink="/home" aria-label="Voltar para home" class="back-btn">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <h1 class="article-title gradient-text">A Ciência por trás do Ciclo do Sono e do somnitide</h1>
+          <p class="article-meta">Neste artigo você verá um guia completo sobre a arquitetura do sono, inércia do despertar e a nossa metodologia de pontuação.</p>
+          <div class="article-divider"></div>
+        </header>
 
-      <article class="docs-content">
-        <!-- Introduction -->
-        <section class="doc-section">
-          <p class="lead-text">
-            O somnitide foi projetado com base em princípios fundamentais da cronobiologia e medicina do sono. 
-            Nosso objetivo é fornecer ao usuário não apenas um despertador, mas uma ferramenta de otimização baseada 
-            na alternância rítmica das fases cerebrais durante o descanso.
-          </p>
-        </section>
-
-        <!-- Section 1: Sleep Architecture -->
-        <section class="doc-section">
-          <h2>1. A Arquitetura do Sono: Estágios e Ciclos</h2>
-          <p>
-            O sono humano é um processo biológico complexo e altamente estruturado, dividido em dois tipos principais: 
-            <strong>NREM</strong> (Non-Rapid Eye Movement) e <strong>REM</strong> (Rapid Eye Movement). 
-            A transição entre esses estados ocorre em ciclos recorrentes ao longo da noite.
-          </p>
-
-          <div class="article-grid">
-            <div class="article-column">
-              <h3>Fases NREM (N1, N2, N3)</h3>
-              <p>
-                As fases N1 e N2 representam o sono leve, onde a atividade cerebral começa a desacelerar. 
-                O estágio <strong>N3</strong>, também conhecido como "sono de ondas lentas" ou sono profundo, 
-                é o momento crucial para a restauração física, liberação de hormônios de crescimento e reparação tecidual.
-              </p>
-            </div>
-            <div class="article-column">
-              <h3>A Fase REM</h3>
-              <p>
-                O sono REM é caracterizado por intensa atividade cerebral, similar ao estado de vigília. 
-                É nesta fase que ocorrem os sonhos vívidos e o processamento emocional. O REM desempenha um papel 
-                vital na consolidação da memória e na saúde cognitiva.
-              </p>
-            </div>
-          </div>
-
-          <p>
-            Um ciclo completo (N1 &rarr; N2 &rarr; N3 &rarr; REM) dura em média de <strong>80 a 110 minutos</strong>. 
-            Em uma noite saudável, passamos por 4 a 6 desses ciclos. É fundamental notar que a composição dos ciclos 
-            muda: o sono profundo predomina nos primeiros ciclos, enquanto o sono REM torna-se mais longo e frequente 
-            nos ciclos finais, próximos ao amanhecer.
-          </p>
-          <p class="source-citation">Fonte: NIH/NHLBI - How Sleep Works & NINDS - Brain Basics.</p>
-        </section>
-
-        <!-- Section 2: Sleep Inertia -->
-        <section class="doc-section">
-          <h2>2. Sleep Inertia: O Desafio de Acordar</h2>
-          <p>
-            A transição do sono para o estado de alerta pleno não é instantânea. A ciência denomina este período 
-            de <strong>Sleep Inertia</strong> (Inércia do Sono). Trata-se de um estado de confusão mental, 
-            atenção reduzida e desempenho cognitivo prejudicado que ocorre imediatamente após o despertar.
-          </p>
-          <p>
-            Estudos (Hilditch & Dorrian, 2019) indicam que a gravidade da inércia do sono é diretamente influenciada 
-            pelo estágio em que você acorda. Despertar abruptamente durante o <strong>sono profundo (N3)</strong> 
-            desencadeia uma inércia mais severa, fazendo com que você se sinta "grogue" por muito mais tempo.
-          </p>
-          <p>
-            O somnitide utiliza algoritmos para sugerir janelas de despertar que coincidam com o final de um ciclo (geralmente após a fase REM), 
-            minimizando a probabilidade de uma interrupção em sono profundo e facilitando a transição para a vigília ativa.
-          </p>
-        </section>
-
-        <!-- Section 3: Methodology & Ranking -->
-        <section class="doc-section methodology">
-          <h2>3. Algoritmo de Pontuação e Ranking</h2>
-          <p>
-            O Ranking do somnitide não é uma corrida de quem dorme mais, mas sim um medidor de <strong>Eficiência e Mentalidade de Sono</strong>. 
-            Sua pontuação diária é calculada através de três pilares fundamentais, totalizando até <strong>110 pontos</strong> por sessão.
-          </p>
-
-          <div class="ranking-math-container">
-            <div class="math-card">
-              <div class="math-header">Duração (Até 60 pts)</div>
-              <p>Premiamos a permanência na janela ideal de saúde (6 a 9 horas).</p>
-              <ul class="math-list">
-                <li><strong>6h a 9h:</strong> 60 pontos (Pontuação Máxima)</li>
-                <li><strong>3h a 6h:</strong> Pontuação proporcional (ex: 4.5h = 20 pts)</li>
-                <li><strong>Mais de 9h:</strong> Penalidade leve (Inércia do sono prolongado)</li>
-                <li><strong>Menos de 3h:</strong> 0 pontos (Duração crítica)</li>
-              </ul>
-            </div>
-
-            <div class="math-card">
-              <div class="math-header">Qualidade (Até 40 pts)</div>
-              <p>Sua percepção subjetiva informada no despertar.</p>
-              <ul class="math-list">
-                <li><strong>Ótima (5 estrelas):</strong> 40 pontos</li>
-                <li><strong>Boa:</strong> 30 pontos | <strong>Regular:</strong> 20 pts</li>
-                <li><strong>Ruim:</strong> 10 pts | <strong>Péssima:</strong> 0 pts</li>
-              </ul>
-            </div>
-
-            <div class="math-card">
-              <div class="math-header">Constância (Até 10 pts)</div>
-              <p>Bônus de Streak para quem mantém o hábito.</p>
-              <ul class="math-list">
-                <li><strong>14+ dias seguidos:</strong> +10 pontos</li>
-                <li><strong>7 a 13 dias:</strong> +8 pontos</li>
-                <li><strong>2 a 6 dias:</strong> +2 a +6 pontos</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="example-box">
-            <h4>Exemplo Prático de Pontuação</h4>
-            <p>
-              O usuário <strong>@chico</strong> dormiu <strong>7 horas e 30 minutos</strong> (ponto ideal), avaliou seu sono como 
-              <strong>"Ótimo"</strong> e está em seu <strong>15º dia seguido</strong> usando o app:
+        <article class="docs-content">
+          <section class="doc-section">
+            <p class="lead-text">
+              O somnitide foi projetado com base em princípios fundamentais da cronobiologia e medicina do sono. 
+              Nosso objetivo é fornecer ao usuário não apenas um despertador, mas uma ferramenta de otimização baseada 
+              na alternância rítmica das fases cerebrais durante o descanso.
             </p>
-            <div class="calculation-row">
-              <span>60 (Duração) + 40 (Qualidade) + 10 (Bônus)</span>
-              <span class="total-result">= 110 Pontos</span>
-            </div>
-            <p class="example-note">Este é o "Perfect Score" que leva os usuários ao topo do Ranking Global.</p>
-          </div>
-        </section>
+          </section>
 
-        <section class="doc-footer">
-          <p>
-            <strong>Transparência Científica:</strong> somnitide não captura ondas cerebrais. 
-            Somos um modelo matemático-estatístico baseado na literatura médica atual. 
-            Para distúrbios crônicos, consulte sempre um especialista.
-          </p>
-        </section>
-      </article>
-    </div>
+          <section class="doc-section">
+            <h2>1. A Arquitetura do Sono: Estágios e Ciclos</h2>
+            <p>
+              O sono humano é um processo biológico complexo e altamente estruturado, dividido em dois tipos principais: 
+              <strong>NREM</strong> (Non-Rapid Eye Movement) e <strong>REM</strong> (Rapid Eye Movement). 
+              A transição entre esses estados ocorre em ciclos recorrentes ao longo da noite.
+            </p>
+
+            <div class="article-grid">
+              <div class="article-column">
+                <h3>Fases NREM (N1, N2, N3)</h3>
+                <p>
+                  As fases N1 e N2 representam o sono leve, onde a atividade cerebral começa a desacelerar. 
+                  O estágio <strong>N3</strong>, também conhecido como "sono de ondas lentas" ou sono profundo, 
+                  é o momento crucial para a restauração física, liberação de hormônios de crescimento e reparação tecidual.
+                </p>
+              </div>
+              <div class="article-column">
+                <h3>A Fase REM</h3>
+                <p>
+                  O sono REM é caracterizado por intensa atividade cerebral, similar ao estado de vigília. 
+                  É nesta fase que ocorrem os sonhos vívidos e o processamento emocional. O REM desempenha um papel 
+                  vital na consolidação da memória e na saúde cognitiva.
+                </p>
+              </div>
+            </div>
+
+            <p>
+              Um ciclo completo (N1 &rarr; N2 &rarr; N3 &rarr; REM) dura em média de <strong>80 a 110 minutos</strong>. 
+              Em uma noite saudável, passamos por 4 a 6 desses ciclos. É fundamental notar que a composição dos ciclos 
+              muda: o sono profundo predomina nos primeiros ciclos, enquanto o sono REM torna-se mais longo e frequente 
+              nos ciclos finais, próximos ao amanhecer.
+            </p>
+            <p class="source-citation">Fonte: NIH/NHLBI - How Sleep Works & NINDS - Brain Basics.</p>
+          </section>
+
+          <section class="doc-section">
+            <h2>2. Sleep Inertia: O Desafio de Acordar</h2>
+            <p>
+              A transição do sono para o estado de alerta pleno não é instantânea. A ciência denomina este período 
+              de <strong>Sleep Inertia</strong> (Inércia do Sono). Trata-se de um estado de confusão mental, 
+              atenção reduzida e desempenho cognitivo prejudicado que ocorre imediatamente após o despertar.
+            </p>
+            <p>
+              Estudos (Hilditch & Dorrian, 2019) indicam que a gravidade da inércia do sono é diretamente influenciada 
+              pelo estágio em que você acorda. Despertar abruptamente durante o <strong>sono profundo (N3)</strong> 
+              desencadeia uma inércia mais severa, fazendo com que você se sinta "grogue" por muito mais tempo.
+            </p>
+            <p>
+              O somnitide utiliza algoritmos para sugerir janelas de despertar que coincidam com o final de um ciclo (geralmente após a fase REM), 
+              minimizando a probabilidade de uma interrupção em sono profundo e facilitando a transição para a vigília ativa.
+            </p>
+          </section>
+
+          <section class="doc-section methodology">
+            <h2>3. Algoritmo de Pontuação e Ranking</h2>
+            <p>
+              O Ranking do somnitide não é uma corrida de quem dorme mais, mas sim um medidor de <strong>Eficiência e Mentalidade de Sono</strong>. 
+              Sua pontuação diária é calculada através de três pilares fundamentais, totalizando até <strong>110 pontos</strong> por sessão.
+            </p>
+
+            <div class="ranking-math-container">
+              <div class="math-card">
+                <div class="math-header">Duração (Até 60 pts)</div>
+                <p>Premiamos a permanência na janela ideal de saúde (6 a 9 horas).</p>
+                <ul class="math-list">
+                  <li><strong>6h a 9h:</strong> 60 pontos (Pontuação Máxima)</li>
+                  <li><strong>3h a 6h:</strong> Pontuação proporcional (ex: 4.5h = 20 pts)</li>
+                  <li><strong>Mais de 9h:</strong> Penalidade leve (Inércia do sono prolongado)</li>
+                  <li><strong>Menos de 3h:</strong> 0 pontos (Duração crítica)</li>
+                </ul>
+              </div>
+
+              <div class="math-card">
+                <div class="math-header">Qualidade (Até 40 pts)</div>
+                <p>Sua percepção subjetiva informada no despertar.</p>
+                <ul class="math-list">
+                  <li><strong>Ótima (5 estrelas):</strong> 40 pontos</li>
+                  <li><strong>Boa:</strong> 30 pontos | <strong>Regular:</strong> 20 pts</li>
+                  <li><strong>Ruim:</strong> 10 pts | <strong>Péssima:</strong> 0 pts</li>
+                </ul>
+              </div>
+
+              <div class="math-card">
+                <div class="math-header">Constância (Até 10 pts)</div>
+                <p>Bônus de Streak para quem mantém o hábito.</p>
+                <ul class="math-list">
+                  <li><strong>14+ dias seguidos:</strong> +10 pontos</li>
+                  <li><strong>7 a 13 dias:</strong> +8 pontos</li>
+                  <li><strong>2 a 6 dias:</strong> +2 a +6 pontos</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="example-box">
+              <h4>Exemplo Prático de Pontuação</h4>
+              <p>
+                O usuário <strong>@chico</strong> dormiu <strong>7 horas e 30 minutos</strong> (ponto ideal), avaliou seu sono como 
+                <strong>"Ótimo"</strong> e está em seu <strong>15º dia seguido</strong> usando o app:
+              </p>
+              <div class="calculation-row">
+                <span>60 (Duração) + 40 (Qualidade) + 10 (Bônus)</span>
+                <span class="total-result">= 110 Pontos</span>
+              </div>
+              <p class="example-note">Este é o "Perfect Score" que leva os usuários ao topo do Ranking Global.</p>
+            </div>
+          </section>
+
+          <footer class="doc-footer">
+            <p>
+              <strong>Transparência Científica:</strong> somnitide não captura ondas cerebrais. 
+              Somos um modelo matemático-estatístico baseado na literatura médica atual. 
+              Para distúrbios crônicos, consulte sempre um especialista.
+            </p>
+          </footer>
+        </article>
+      </div>
+    </app-page-container>
   `,
-  styles: `
-    .docs-container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 60px 24px;
+  styles: [`
+    .docs-content-wrapper {
+      width: 100%;
       color: var(--color-text);
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
     }
@@ -348,10 +345,10 @@ import { RouterLink } from '@angular/router';
       .article-title {
         font-size: 1.7rem;
       }
-      .docs-container {
-        padding: 40px 20px;
+      .docs-content-wrapper {
+        padding-bottom: 20px;
       }
     }
-  `
+  `]
 })
 export class DocsComponent { }

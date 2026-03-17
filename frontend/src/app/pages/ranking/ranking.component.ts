@@ -61,7 +61,7 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
 
         <!-- Others: Distributed Grid -->
         <div class="grid-section">
-          <h2 class="section-title">Elite (11 - 100)</h2>
+          <h2 class="section-title">Elite do Sono (11 - 100)</h2>
           <div class="remaining-grid">
             <div *ngFor="let p of others()" 
                  class="grid-item"
@@ -74,6 +74,13 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
             </div>
           </div>
         </div>
+      </div>
+
+      <div *ngIf="!loading() && players().length === 0" class="empty-state">
+        <mat-icon>emoji_events</mat-icon>
+        <h2>Nenhum mestre do sono encontrado</h2>
+        <p>Seja o primeiro a conquistar o topo do ranking!</p>
+        <button mat-flat-button color="primary" routerLink="/home">Começar Jornada</button>
       </div>
     </app-page-container>
   `,
@@ -246,6 +253,20 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
     }
     .spin { animation: rotate 1.5s linear infinite; }
     @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-2xl);
+      text-align: center;
+      color: var(--color-text-muted);
+      gap: var(--space-md);
+      margin-top: 40px;
+    }
+    .empty-state mat-icon { font-size: 64px; width: 64px; height: 64px; opacity: 0.2; }
+    .empty-state h2 { font-size: 1.5rem; color: var(--color-text); }
 
     @media (max-width: 768px) {
       .podium-section { 
@@ -281,7 +302,10 @@ export class RankingComponent implements OnInit {
         this.others.set(data.slice(10));
         this.loading.set(false);
       },
-      error: () => this.loading.set(false)
+      error: (err) => {
+        console.error('Failed to load ranking:', err);
+        this.loading.set(false);
+      }
     });
   }
 

@@ -433,8 +433,9 @@ export class ProgressComponent implements OnInit {
   }
 
   formatSleepMinutes(minutes: number): string {
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
+    const totalMinutes = Math.max(0, minutes);
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
     return `${h}h ${m.toString().padStart(2, '0')}m`;
   }
 }

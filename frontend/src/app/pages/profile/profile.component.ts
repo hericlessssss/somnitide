@@ -60,7 +60,7 @@ import { PageContainerComponent } from '../../shared/page-container/page-contain
                 </div>
                 <span class="stat-hint" *ngIf="profile()?.rankPosition">Posição #{{ profile()?.rankPosition }} no Ranking Global</span>
                 <span class="stat-hint" *ngIf="!profile()?.rankPosition">Dê o seu melhor para entrar no Top 100!</span>
-                <span class="member-since" *ngIf="profile()?.createdAtUtc">membro desde {{ profile()?.createdAtUtc | date:'MMMM yyyy' }}</span>
+                <span class="member-since" *ngIf="profile()?.createdAtUtc">membro desde {{ profile()?.createdAtUtc | date:'mediumDate' }}</span>
               </div>
 
               <div class="stat-card score-card">
